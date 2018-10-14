@@ -3,7 +3,7 @@
         <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <router-link class="navbar-item" to="/">
-            <img src="../assets/logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28">
+            <img src="../assets/logo.svg" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28">
             </router-link>
 
             <a role="button" class="navbar-burger" @click="showHamburger" :class="{'is-active':navIsActive}" data-target="navMenu" aria-label="menu" aria-expanded="false">
@@ -47,7 +47,13 @@ export default {
         logout () {
             store.dispatch("fetchUserProfile");
         }
+    },
+    watch:{
+        loggedIn (val) {
+            console.log("Logged in is " +val);
+        }
     }
+
 }
 </script>
 

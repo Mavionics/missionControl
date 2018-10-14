@@ -3,16 +3,16 @@
     <section class="hero is-info is-fullheight">
       <div class="hero-head">
         <Navbar/>
+        
+         <img src="../assets/logo.svg"/>
       </div>
       <div class="hero-body has-text-centered">
         <div class="container">
           <div class="columns">
-          <div class="column is-6 is-offset-3">
-        <Login/>
+            <div class="column is-6 is-offset-3">
+              <Login/>
+            </div>
           </div>
-            <!-- <img class="" src="../assets/clouds.jpg"> -->
-        </div>
-
         </div>
       </div>
     </section>
@@ -21,7 +21,7 @@
 
 <style>
 section.hero.is-info {
-  background: linear-gradient(rgb(17, 70, 100), rgba(32, 105, 148, 0.61)),
+  background: linear-gradient(rgb(32, 105, 148, 0.9), rgba(32, 105, 148, 0.4)),
     url(../assets/clouds.jpg) no-repeat center center;
   background-size: cover;
 }
