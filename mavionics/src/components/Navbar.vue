@@ -3,7 +3,7 @@
         <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <router-link class="navbar-item" to="/">
-            <img src="../assets/logo.svg" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28">
+            <img v-if="showBrand" src="../assets/logo.svg" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28" >
             </router-link>
 
             <a role="button" class="navbar-burger" @click="showHamburger" :class="{'is-active':navIsActive}" data-target="navMenu" aria-label="menu" aria-expanded="false">
@@ -25,38 +25,42 @@
 </template>
 
 <script>
-import store from "../store.js";
+  import store from "../store.js";
 
-export default {
+  export default {
     name: "Navbar",
 
-    data () {
-        return {
-            navIsActive: false
-        }
+    data() {
+      return {
+        navIsActive: false
+      };
     },
     computed: {
-        loggedIn () {
-            return store.state.currentUser != null;
-        }
+      loggedIn() {
+        return store.state.currentUser != null;
+      }
     },
     methods: {
-        showHamburger: function () {
-            this.navIsActive = !this.navIsActive;
-        },
-        logout () {
-            store.dispatch("fetchUserProfile");
-        }
+      showHamburger: function() {
+        this.navIsActive = !this.navIsActive;
+      },
+      logout() {
+        store.dispatch("fetchUserProfile");
+      }
     },
-    watch:{
-        loggedIn (val) {
-            console.log("Logged in is " +val);
-        }
+    props: {
+      showBrand: {
+        type: Boolean,
+        default: true
+      }
+    },
+    watch: {
+      loggedIn(val) {
+        console.log("Logged in is " + val);
+      }
     }
-
-}
+  };
 </script>
 
 <style>
-
 </style>

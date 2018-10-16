@@ -2,7 +2,7 @@
   <div class="home">
     <section class="hero is-info is-fullheight">
       <div class="hero-head">
-        <Navbar/>
+        <Navbar :showBrand="false" />
         
          <img src="../assets/logo.svg"/>
       </div>
