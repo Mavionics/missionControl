@@ -3,7 +3,8 @@ import Vuex from 'vuex'
 import {
   auth,
   usersCollection,
-  vehiclesCollection
+  vehiclesCollection, 
+  mapsCollection
 } from './firebaseConfig.js';
 // import {
 //   state
@@ -14,6 +15,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     currentUser: null,
+    cesiumKey: "",
     userProfile: {},
     vehicles: []
   },
@@ -23,6 +25,9 @@ export default new Vuex.Store({
     },
     setUserProfile(state, val) {
       state.userProfile = val
+    },
+    setCesiumKey(state, val) {
+      state.cesiumKey = val
     }
   },
   actions: {
@@ -40,6 +45,13 @@ export default new Vuex.Store({
           console.log(doc.id, " => ", doc.data());
           state.vehicles.push(doc.data());
         })
+      }, err => {
+        console.log(err)
+      });
+
+      mapsCollection.doc("cesium").get().then(
+        res=>{
+          commit('setCesiumKey', res.data().default)
       }, err => {
         console.log(err)
       });

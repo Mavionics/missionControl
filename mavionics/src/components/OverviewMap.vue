@@ -20,9 +20,8 @@
   export default {
     name: "OverviewMap",
     mounted() {
-      Cesium.Ion.defaultAccessToken =
-        "***REMOVED***";
-
+      Cesium.Ion.defaultAccessToken = this.$store.state.cesiumKey;
+      
       this.viewer = new Cesium.Viewer("cesiumContainer", {
         imageryProvider: Cesium.createWorldImagery(), // use the Bing Maps Aerial imagery from ion (this is the default)
         terrainProvider: Cesium.createWorldTerrain(), // use the Cesium World Terrain from ion

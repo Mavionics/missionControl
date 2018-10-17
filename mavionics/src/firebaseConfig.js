@@ -28,11 +28,13 @@ db.settings(settings)
 // firebase collections
 const usersCollection = db.collection('users')
 const vehiclesCollection = db.collection('vehicles')
+const mapsCollection = db.collection('maps')
 
 export {
     db,
     auth,
     currentUser,
     usersCollection,
-    vehiclesCollection
+    vehiclesCollection,
+    mapsCollection
 }
