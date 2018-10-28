@@ -1,8 +1,19 @@
 // https://docs.cypress.io/api/introduction/api.html
 
-describe('My First Test', () => {
-  it('Visits the app root url', () => {
+describe('Login', () => {
+  it('Sign-in should be visible', () => {
     cy.visit('/')
-    cy.contains('h1', 'Welcome to Your Vue.js App')
-  })
+    cy.get('#firebaseui-auth-container').should('be.visible')
+  }),
+  it.only('Valid Email should show password box'), () => {
+    const email = "test@test.com"
+    cy.visit('/')
+    cy.get('.mdl-textfield__input').click()
+
+
+    cy.get('.firebaseui-id-email')
+    .type(email)
+    .should('have.value', email)
+
+  }
 })
