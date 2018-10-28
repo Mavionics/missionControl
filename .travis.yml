@@ -6,3 +6,7 @@ node_js:
 install:
   - cd mavionics
   - npm install
+
+script:
+  - cd mavionics
+  - npm run-script build
