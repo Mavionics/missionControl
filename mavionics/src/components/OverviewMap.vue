@@ -14,6 +14,7 @@
 </style>
 
 <script>
+  import * as log from 'loglevel';
   import Cesium from "cesium/Cesium";
   require("cesium/Widgets/widgets.css");
 
@@ -38,13 +39,13 @@
       vehicles(val) {
         val.forEach(vehicle => {
           if (vehicle.position) {
-            console.log(
+            log.info(
               vehicle.position.longitude + " " + vehicle.position.latitude
             );
 
             var v = this.viewer.entities.getById(vehicle.name);
             if (!v) {
-              console.log("New vehicle");
+              log.info("New vehicle");
 
               var pinBuilder = new Cesium.PinBuilder();
               this.viewer.entities.add({
@@ -67,7 +68,7 @@
                 vehicle.position.longitude,
                 vehicle.position.latitude
               );
-              console.log("Position updated " + v.position);
+              log.info("Position updated " + v.position);
             }
           }
         });

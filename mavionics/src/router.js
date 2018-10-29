@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import firebase from 'firebase'
 
+import * as log from 'loglevel';
+
 Vue.use(Router)
 
 const router = new Router({
@@ -53,7 +55,7 @@ router.beforeEach((to, from, next) => {
   // firebase.auth().signOut();
   
   if (requiresAuth && !currentUser) {
-    console.log("Not logged in! Redirecting!")
+      log.warn("Not logged in! Redirecting!")
       next('/')
   } else if (requiresAuth && currentUser) {
       next()
