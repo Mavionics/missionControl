@@ -16,11 +16,11 @@
         </div>
         <div class="navbar-end">      
             <router-link name="Home" class="navbar-item" to="/">Home</router-link>
-            <router-link name="ControlRoom" class="navbar-item" to="/controlroom">ControlRoom</router-link>
+            <router-link name="ControlRoom" class="navbar-item" to="/controlroom" v-show="isAuthenticated">ControlRoom</router-link>
             <router-link name="About" class="navbar-item" to="/about">About</router-link>
-            <div class="navbar-item">
+            <div class="navbar-item" v-show="isAuthenticated">
               <div class="buttons">
-                <router-link name="Logout" class="button is-light" to="/logout" v-show="loggedIn" @click="logout">Logout</router-link>
+                <router-link name="Logout" class="button is-light" to="/logout" @click="logout">Logout</router-link>
               </div>
             </div>
         </div>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-  import store from "../store.js";
+  import { mapGetters, mapActions } from "vuex";
 
   export default {
     name: "Navbar",
@@ -39,28 +39,21 @@
         navIsActive: false
       };
     },
-    computed: {
-      loggedIn() {
-        return store.state.currentUser != null;
-      }
-    },
+    computed: 
+      mapGetters(['currentUser', 'isAuthenticated'])
+    ,
     methods: {
       showHamburger: function() {
         this.navIsActive = !this.navIsActive;
       },
-      logout() {
-        store.dispatch("fetchUserProfile");
-      }
+      ...mapActions([
+      'logout'
+    ])
     },
     props: {
       showBrand: {
         type: Boolean,
         default: true
-      }
-    },
-    watch: {
-      loggedIn(val) {
-        console.log("Logged in is " + val);
       }
     }
   };

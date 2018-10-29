@@ -9,51 +9,63 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(Router)
 
-const store = new Vuex.Store({
-  state: {
-    currentUser: "Anna"
-  }
-})
-
 const stubs = 
 {
   RouterLink: RouterLinkStub
-} 
+}
+
+function createStore(name)
+{
+  return new Vuex.Store({
+    getters:{
+      currentUser: ()=>name,
+      isAuthenticated: ()=>name != null
+    }
+  })
+}
+
+function createMount(store, props)
+{
+  return shallowMount(Navbar, { 
+    store, 
+    localVue,
+    stubs, 
+    propsData: props
+  })
+}
+
+let store = createStore("Ana");
 
 describe('Navbar.vue', () => {
   it("Hide logout if not logged in", () => {
-    const wrapper = shallowMount(Navbar, { 
-      store, 
-      localVue,
-      stubs
-    })
-
+    let store = createStore();
+    const wrapper = createMount(store);
     expect(wrapper.find("router-link-stub[name='Logout']").isVisible()).to.be.false
   }),
   
   it("show logout if logged in", () => {
-    const wrapper = shallowMount(Navbar, { 
-      store, 
-      localVue,
-      stubs
-    })
-console.log(wrapper.html());
-
-    // Not working
-    //expect(wrapper.find("router-link-stub[name='Logout']").isVisible()).to.be.true
+    const wrapper = createMount(store);
+    expect(wrapper.find("router-link-stub[name='Logout']").isVisible()).to.be.true
   }),
+
+  it("Hide controlroom if not logged in", () => {
+    let store = createStore();
+    const wrapper = createMount(store);
+    expect(wrapper.find("router-link-stub[name='ControlRoom']").isVisible()).to.be.false
+  }),
+  
+  it("show controlroom if logged in", () => {
+    const wrapper = createMount(store);
+    expect(wrapper.find("router-link-stub[name='ControlRoom']").isVisible()).to.be.true
+  }),
+
   it('hide logo based on prop', () => {
-    const wrapper = shallowMount(Navbar, {
-      propsData: { showBrand : false },
-      stubs
-    })
+    const wrapper = createMount(store, { showBrand : false });
     expect(wrapper.contains('#navbar-brand-img')).to.equal(false)
   }),
+
   it('show logo based on prop', () => {
-    const wrapper = shallowMount(Navbar, {
-      propsData: { showBrand : true },
-      stubs
-    })
+    const wrapper = createMount(store, { showBrand : true });
     expect(wrapper.contains('#navbar-brand-img')).to.equal(true)
   })
 })

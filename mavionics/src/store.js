@@ -30,6 +30,14 @@ export default new Vuex.Store({
       state.cesiumKey = val
     }
   },
+  getters: {
+    currentUser(state) {
+      return state.currentUser;
+    },
+    isAuthenticated(state) {
+      return state.currentUser != null;
+    }
+  },
   actions: {
     fetchUserProfile({      commit,      state    }) {
       usersCollection.doc(state.currentUser.uid).get().then(res => {
