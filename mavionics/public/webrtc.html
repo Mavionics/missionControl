@@ -1,82 +1,120 @@
 <html>
-    <meta charset="UTF-8">
-  <head>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <style> video {
+<meta charset="UTF-8">
+
+<head>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    video {
       background-color: #ddd;
       border-radius: 7px;
       margin: 10px 0px 0px 10px;
       width: 320px;
       height: 240px;
     }
-    button {
+    button, .centredBox {
       margin: 5px 0px 0px 10px !important;
       width: 654px;
     }</style>
-  </head>
-  <body onload="showMyFace()">
-    <video id="yourVideo" autoplay muted playsinline></video>
-    <video id="friendsVideo" autoplay playsinline></video>
-    <br />
-    <button onclick="showFriendsFace()" type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> Call</button>
-    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
-    <script>//Create an account on Firebase, and use the credentials they give you in place of the following
-      var config = {
-          apiKey: "AIzaSyBjv7aOSY09CZl4tkMEBMUNDjPf1aCKpNU",
-          authDomain: "spike-webrtc.firebaseapp.com",
-          databaseURL: "https://spike-webrtc.firebaseio.com",
-          projectId: "spike-webrtc",
-          storageBucket: "spike-webrtc.appspot.com",
-          messagingSenderId: "745638652153"
-        };
-      firebase.initializeApp(config);
-      
-      var database = firebase.database().ref();
-      var yourVideo = document.getElementById("yourVideo");
-      var friendsVideo = document.getElementById("friendsVideo");
-      var yourId = Math.floor(Math.random()*1000000000);
-      //Create an account on Viagenie (http://numb.viagenie.ca/), and replace {'urls': 'turn:numb.viagenie.ca','credential': 'websitebeaver','username': 'websitebeaver@email.com'} with the information from your account
-      var servers = {'iceServers': [{'urls': 'stun:stun.services.mozilla.com'}, {'urls': 'stun:stun.l.google.com:19302'}, {'urls': 'turn:numb.viagenie.ca','credential': 'testtest','username': 'alex.o.poole@gmail.com'}]};
-      var pc = new RTCPeerConnection(servers);
-      pc.onicecandidate = (event => event.candidate?sendMessage(yourId, JSON.stringify({'ice': event.candidate})):console.log("Sent All Ice") );
-      pc.onaddstream = (event => friendsVideo.srcObject = event.stream);
-      
-      database.set(null);
-      function sendMessage(senderId, data) {
-          var msg = database.push({ sender: senderId, message: data });
-  setTimeout(()=>{
-    msg.remove();
-  }, 1000);
-      }
-      
-      function readMessage(data) {
-          var msg = JSON.parse(data.val().message);
-          var sender = data.val().sender;
-          if (sender != yourId) {
-              if (msg.ice != undefined)
-                  pc.addIceCandidate(new RTCIceCandidate(msg.ice));
-              else if (msg.sdp.type == "offer")
-                  pc.setRemoteDescription(new RTCSessionDescription(msg.sdp))
-                    .then(() => pc.createAnswer())
-                    .then(answer => pc.setLocalDescription(answer))
-                    .then(() => sendMessage(yourId, JSON.stringify({'sdp': pc.localDescription})));
-              else if (msg.sdp.type == "answer")
-                  pc.setRemoteDescription(new RTCSessionDescription(msg.sdp));
-          }
+</head>
+
+<body onload="showMyFace()">
+  <video id="yourVideo" autoplay muted playsinline></video>
+  <video id="friendsVideo" autoplay playsinline></video>
+  <br />
+  <div id="msg" class="centredBox"></div>
+  <br />
+  <button onclick="showFriendsFace()" type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-facetime-video"
+      aria-hidden="true"></span> Call</button>
+  <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+  <script>//Create an account on Firebase, and use the credentials they give you in place of the following
+    var config = {
+      apiKey: "AIzaSyBjv7aOSY09CZl4tkMEBMUNDjPf1aCKpNU",
+      authDomain: "spike-webrtc.firebaseapp.com",
+      databaseURL: "https://spike-webrtc.firebaseio.com",
+      projectId: "spike-webrtc",
+      storageBucket: "spike-webrtc.appspot.com",
+      messagingSenderId: "745638652153"
+    };
+    firebase.initializeApp(config);
+
+    var database = firebase.database().ref();
+    var yourVideo = document.getElementById("yourVideo");
+    var friendsVideo = document.getElementById("friendsVideo");
+    var messageBox = document.getElementById("msg");
+    var yourId = Math.floor(Math.random() * 1000000000);
+    //Create an account on Viagenie (http://numb.viagenie.ca/), and replace {'urls': 'turn:numb.viagenie.ca','credential': 'websitebeaver','username': 'websitebeaver@email.com'} with the information from your account
+    var servers = { 'iceServers': [{ 'urls': 'stun:stun.services.mozilla.com' }, { 'urls': 'stun:stun.l.google.com:19302' }, { 'urls': 'turn:numb.viagenie.ca', 'credential': 'testtest', 'username': 'alex.o.poole@gmail.com' }] };
+    var pc = new RTCPeerConnection(servers);
+    pc.onicecandidate = (event => event.candidate ? sendMessage(yourId, JSON.stringify({ 'ice': event.candidate })) : console.log("Sent All Ice"));
+    pc.onaddstream = (event => friendsVideo.srcObject = event.stream);
+    pc.ondatachannel = (ev) => {
+      console.log('Data channel is created!');
+      ev.channel.onopen = () => {
+        console.log('Data channel is open and ready to be used.');
       };
-      
-      database.on('child_added', readMessage);
-      
-      function showMyFace() {
-        navigator.mediaDevices.getUserMedia({audio:true, video:true})
-          .then(stream => yourVideo.srcObject = stream)
-          .then(stream => pc.addStream(stream));
+      ev.channel.onmessage = (event) => {
+        messageBox.innerText = event.data;
+      };
+    };
+    const dataChannelOptions = {
+      ordered: false, // do not guarantee order
+      maxPacketLifeTime: 3000, // in milliseconds
+    };
+
+    const dataChannel =
+      pc.createDataChannel("myLabel", dataChannelOptions);
+
+    dataChannel.onerror = (error) => {
+      console.log("Data Channel Error:", error);
+    };
+
+    dataChannel.onmessage = (event) => {
+      console.log("Got Data Channel Message:", event.data);
+    };
+
+    dataChannel.onopen = () => {
+      dataChannel.send("Hello World!");
+    };
+
+    dataChannel.onclose = () => {
+      console.log("The Data Channel is Closed");
+    };
+
+    database.set(null);
+    function sendMessage(senderId, data) {
+      var msg = database.push({ sender: senderId, message: data });
+      setTimeout(() => { msg.remove() }, 1000);
+    }
+
+    function readMessage(data) {
+      var msg = JSON.parse(data.val().message);
+      var sender = data.val().sender;
+      if (sender != yourId) {
+        if (msg.ice != undefined)
+          pc.addIceCandidate(new RTCIceCandidate(msg.ice));
+        else if (msg.sdp.type == "offer")
+          pc.setRemoteDescription(new RTCSessionDescription(msg.sdp))
+            .then(() => pc.createAnswer())
+            .then(answer => pc.setLocalDescription(answer))
+            .then(() => sendMessage(yourId, JSON.stringify({ 'sdp': pc.localDescription })));
+        else if (msg.sdp.type == "answer")
+          pc.setRemoteDescription(new RTCSessionDescription(msg.sdp));
       }
-      
-      function showFriendsFace() {
-        pc.createOffer()
-          .then(offer => pc.setLocalDescription(offer) )
-          .then(() => sendMessage(yourId, JSON.stringify({'sdp': pc.localDescription})) );
-      }</script>
-  </body>
+    };
+
+    database.on('child_added', readMessage);
+
+    function showMyFace() {
+      navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+        .then(stream => yourVideo.srcObject = stream)
+        .then(stream => pc.addStream(stream));
+    }
+
+    function showFriendsFace() {
+      pc.createOffer()
+        .then(offer => pc.setLocalDescription(offer))
+        .then(() => sendMessage(yourId, JSON.stringify({ 'sdp': pc.localDescription })));
+    }</script>
+</body>
+
 </html>
