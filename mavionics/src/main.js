@@ -9,7 +9,7 @@ Vue.config.productionTip = false
 
 // handle page reloads
 let app 
-auth.onAuthStateChanged(user => {
+auth.onAuthStateChanged(() => {
       if (!app) {
         app = new Vue({
           router,
