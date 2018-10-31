@@ -37,14 +37,14 @@ npm run test:e2e
 * Firebase: mavionics (mavionics-a142a)
 * URL: mavionics-a142a.firebaseapp.com
 * Build: npm run build
-* Deploy: firebase deploy --only hosting
+* Deploy: firebase deploy -P default
 
 ### Development
 * Branch: develop
 * Firebase: mavionics-dev
 * URL: https://mavionics-dev.firebaseio.com
 * Build: npm run build --mode development
-* Deploy: firebase deploy --only hosting -P development
+* Deploy: firebase deploy -P develop
 
 ### Test
 Not implemented yet

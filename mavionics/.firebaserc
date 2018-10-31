@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "mavionics-a142a"
+    "default": "mavionics-a142a",
+    "develop": "mavionics-dev"
   }
 }

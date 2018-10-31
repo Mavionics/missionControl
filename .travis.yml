@@ -9,14 +9,27 @@ install:
 script:
 - npm run test:unit
 - npm run build
-
-deploy:
-  provider: script
-  script: firebase deploy --only hosting --token $FIREBASE_TOKEN
+  on: 
+    branch: master
+    repo: Mavionics/missionControl
+- npm run build --mode development
   on:
     branch: develop
     repo: Mavionics/missionControl
 
+deploy:
+  # deploy Production to the default environment
+  - provider: script
+    script: firebase deploy -P default --token $FIREBASE_TOKEN
+    on:
+      branch: master
+      repo: Mavionics/missionControl
+  # deploy Develop to the develop environment
+  - provider: script
+    script: firebase deploy -P develop --token $FIREBASE_TOKEN
+    on:
+      branch: develop
+      repo: Mavionics/missionControl
 
 notifications:
   slack:
