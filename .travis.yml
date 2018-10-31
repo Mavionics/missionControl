@@ -5,7 +5,8 @@ install:
 - cd mavionics
 - npm install
 script:
-- npm run-script build
+- npm run build
+- npm run test:unit
 notifications:
   slack:
     secure: KUR1h3HY3LoLTH+lOCijT2MssuwEFIVt9bu1+p6t1CK1Zj6aWOWO5lqN8VIwngljx//isYDLj09nrmmg3ikrT/r29feolgSaw74l4qDICTWlfpWmtPcskMM8Cp7OKf5kq1ZolqbcI8sThBK/6Fln3pmm1Rxbh+xnaJSksBMOCyvjBkA7jTTedM1LNHllaBkV7d42KtrHEcVay2BXWZSBzOBUkFguxwoCZ5nfuppS9O6EaPTusDFvPekkyR7+NidaTDIvEW9IsQ0yuug6vJNGDlKo3R+Ul+lrOaH3af7PX+4TiXfzx+G/bvsVR29GsIY7xr+Ckr/KkW3qknN0Aezsl7xk2UuDElQ0qgpBBfZ4PSkuKXqT98xPkWHBsuPepNF/4TGY7tfjPm+p2lXBo6oW6wqXmKQmpLGSXdHxo5FDAs86g/sZl1QY/WpUu5FznIVhETHlqTpNc2aH6bCaVJ98JTKUgLAVfBSF7IIAPBI6tUIaReghJCGPW+0Wb3AatZSl3rp5Gm2yktXSfBlEv2otfUB8SGPuISX//CQ6qlSv2Y+hdxGzVvAGyhfVTmPwSfhYI0vtvaQGH1C8trA6cnTm3W0Ubb24vqqpzY8Jw/4adbHkBY0k7+IHz4LhAt+3H9poIaRGWoJPkimt3DLYX/a8BK79cmgnViXRNCBzUxRkRi8=
