@@ -7,7 +7,7 @@ import {  } from "./assets/customs.css";
 
 Vue.config.productionTip = false
 
-// handle page reloads
+// handle page reloads. Needs to know auth state before creating router
 let app 
 auth.onAuthStateChanged(() => {
       if (!app) {

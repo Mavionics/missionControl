@@ -7,9 +7,6 @@ import {
   vehiclesCollection, 
   mapsCollection
 } from './firebaseConfig.js';
-// import {
-//   state
-// } from 'fs';
 
 Vue.use(Vuex)
 

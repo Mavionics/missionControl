@@ -29,3 +29,29 @@ npm run test:unit
 ```
 npm run test:e2e
 ```
+
+
+## Stages
+### Production
+* Branch: master
+* Firebase: mavionics (mavionics-a142a)
+* URL: mavionics-a142a.firebaseapp.com
+* Build: npm run build
+* Deploy: firebase deploy --only hosting
+
+### Development
+* Branch: develop
+* Firebase: mavionics-dev
+* URL: https://mavionics-dev.firebaseio.com
+* Build: npm run build --mode development
+* Deploy: firebase deploy --only hosting -P development
+
+### Test
+Not implemented yet
+* Firebase: mavionics-test 
+* URL: 
+* Build: npm run test:e2e --mode test
+
+
+
+
