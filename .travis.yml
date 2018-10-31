@@ -4,14 +4,14 @@ node_js:
 install:
 - cd mavionics
 - npm install
+- npm install -g firebase-tools
 script:
 - npm run test:unit
 - npm run build
 
-before-deploy:
-  - npm install -g firebase-tools
 deploy:
-  - firebase deploy --token $FIREBASE_TOKEN
+  provider: script
+  script: firebase deploy --token $FIREBASE_TOKEN
   on:
     branch: develop
     repo: Mavionics/missionControl
