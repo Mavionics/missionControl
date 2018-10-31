@@ -8,9 +8,10 @@ script:
 - npm run test:unit
 - npm run build
 
+before-deploy:
+  - npm install -g firebase-tools
 deploy:
-  provider: firebase
-  token: $FIREBASE_TOKEN
+  - firebase deploy --token $FIREBASE_TOKEN
   on:
     branch: develop
     repo: Mavionics/missionControl
