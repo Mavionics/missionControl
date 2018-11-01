@@ -18,7 +18,7 @@ script:
 - npm run test:unit
 #- echo "run on master"
 #- echo "run on feature/getDeploying"
-- npm run build
+#- npm run build
 #on:
 #  branch: master
 #  repo: Mavionics/missionControl
@@ -27,7 +27,7 @@ script:
 #  branch: feature/getDeploying
 #  repo: Mavionics/missionControl
 
-#deploy:
+deploy:
   # deploy Production to the default environment
 #  - provider: script
 #    script: firebase deploy -P default --token $FIREBASE_TOKEN
@@ -35,11 +35,11 @@ script:
 #      branch: master
 #      repo: Mavionics/missionControl
   # deploy Develop to the develop environment
-#  - provider: script
-#    script: firebase deploy -P develop --token $FIREBASE_TOKEN
-#    on:
-#      branch: feature/getDeploying
-#      repo: Mavionics/missionControl
+  - provider: script
+    script: firebase deploy -P develop --token $FIREBASE_TOKEN
+    on:
+      branch: feature/getDeploying
+      repo: Mavionics/missionControl
 
 notifications:
   slack:
