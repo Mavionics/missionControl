@@ -2,9 +2,17 @@ sudo: required
 language: node_js
 node_js:
 - 8
+
+## Cache NPM folder and Cypress binary
+## to avoid downloading Cypress again and again
+cache:
+  directories:
+    - ~/.npm
+    - ~/.cache
+
 install:
 - cd mavionics
-- npm install
+- npm ci
 - npm install -g firebase-tools
 script:
 - npm run test:unit
