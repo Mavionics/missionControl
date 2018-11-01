@@ -5,10 +5,10 @@ node_js:
 install:
 - cd mavionics
 - npm install
+- npm install -g firebase-tools
 script:
 - npm run test:unit
 - npm run build
-- npm install -g firebase-tools
   on: 
     branch: master
     repo: Mavionics/missionControl
@@ -20,13 +20,13 @@ script:
 deploy:
   # deploy Production to the default environment
   - provider: script
-    script: firebase deploy -P default --token $FIREBASE_TOKEN --only hosting
+    script: firebase deploy -P default --token $FIREBASE_TOKEN
     on:
       branch: master
       repo: Mavionics/missionControl
   # deploy Develop to the develop environment
   - provider: script
-    script: firebase deploy -P develop --token $FIREBASE_TOKEN --only hosting
+    script: firebase deploy -P develop --token $FIREBASE_TOKEN
     on:
       branch: develop
       repo: Mavionics/missionControl
