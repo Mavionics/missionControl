@@ -14,7 +14,8 @@ script:
     repo: Mavionics/missionControl
 - npm run build --mode development
   on:
-    branch: develop
+    all_branches: true
+    condition: NOT $TRAVIS_BRANCH = master
     repo: Mavionics/missionControl
 
 deploy:
