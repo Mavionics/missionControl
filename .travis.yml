@@ -20,10 +20,10 @@ script:
 on:
   branch: master
   repo: Mavionics/missionControl
-#- npm run build --mode development
-#  on:
-#    branch: feature/getDeploying
-#    repo: Mavionics/missionControl
+- npm run build --mode development
+on:
+  branch: feature/getDeploying
+  repo: Mavionics/missionControl
 
 #deploy:
   # deploy Production to the default environment
