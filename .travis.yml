@@ -17,12 +17,11 @@ install:
 script:
 - npm run test:unit
 #- echo "run on master"
+#- echo "run on feature/getDeploying"
 - npm run build
 on:
   branch: master
   repo: Mavionics/missionControl
-
-#- echo "run on feature/getDeploying"
 - npm run build --mode development
 on:
   branch: feature/getDeploying
