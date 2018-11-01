@@ -19,13 +19,13 @@ script:
 #- echo "run on master"
 #- echo "run on feature/getDeploying"
 - npm run build
-on:
-  branch: master
-  repo: Mavionics/missionControl
+#on:
+#  branch: master
+#  repo: Mavionics/missionControl
 - npm run build --mode development
-on:
-  branch: feature/getDeploying
-  repo: Mavionics/missionControl
+#on:
+#  branch: feature/getDeploying
+#  repo: Mavionics/missionControl
 
 #deploy:
   # deploy Production to the default environment
