@@ -22,7 +22,7 @@ script:
 #on:
 #  branch: master
 #  repo: Mavionics/missionControl
-- npm run build --mode development
+- npm run dev-build
 #on:
 #  branch: feature/getDeploying
 #  repo: Mavionics/missionControl
