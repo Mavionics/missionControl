@@ -6,14 +6,13 @@ describe('Login', () => {
     cy.get('#firebaseui-auth-container').should('be.visible')
   }),
   it('Valid Email should show password box'), () => {
-    const email = "test@test.com"
-    cy.visit('/')
-    cy.get('.mdl-textfield__input').click()
+    // const email = "test@test.com"
+    // cy.visit('/')
+    // cy.get('.mdl-textfield__input').click()
 
 
-    cy.get('.firebaseui-id-email')
-    .type(email)
-    .should('have.value', email)
+    // cy.get('input.firebaseui-id-email').type('email')
+    // .should('have.value', email)
 
   }
 })
