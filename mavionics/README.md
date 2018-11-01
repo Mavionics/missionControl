@@ -35,7 +35,7 @@ npm run test:e2e
 ### Production
 * Branch: master
 * Firebase: mavionics (mavionics-a142a)
-* URL: mavionics-a142a.firebaseapp.com
+* URL: https://mavionics-a142a.firebaseapp.com
 * Build: npm run build
 * Deploy: firebase deploy -P default
 
@@ -47,10 +47,9 @@ npm run test:e2e
 * Deploy: firebase deploy -P develop
 
 ### Test
-Not implemented yet
-* Firebase: mavionics-test 
-* URL: 
-* Build: npm run test:e2e --mode test
+Not for hosting just to run automatic e2e tests
+* Firebase: mavionics-test
+* Build/Run: npm run test:e2e --mode test
 
 
 

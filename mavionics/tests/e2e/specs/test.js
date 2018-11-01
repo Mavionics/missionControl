@@ -5,7 +5,7 @@ describe('Login', () => {
     cy.visit('/')
     cy.get('#firebaseui-auth-container').should('be.visible')
   }),
-  it.only('Valid Email should show password box'), () => {
+  it('Valid Email should show password box'), () => {
     const email = "test@test.com"
     cy.visit('/')
     cy.get('.mdl-textfield__input').click()
