@@ -17,9 +17,9 @@ install:
 script:
 - npm run test:unit
 - npm run build
-  on:
-    branch: master
-    repo: Mavionics/missionControl
+on:
+  branch: master
+  repo: Mavionics/missionControl
 #- npm run build --mode development
 #  on:
 #    branch: feature/getDeploying
