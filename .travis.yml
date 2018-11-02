@@ -14,8 +14,6 @@ install:
 - cd mavionics
 - npm ci
 - npm install -g firebase-tools
-- npm install -g firebase-functions
-- npm install -g firebase-admin
 script:
 - npm run test:unit
 #- echo "run on master"
@@ -38,7 +36,7 @@ deploy:
 #      repo: Mavionics/missionControl
   # deploy Develop to the develop environment
   - provider: script
-    script: firebase deploy -P develop --token $FIREBASE_TOKEN
+    script: firebase deploy -P develop --token $FIREBASE_TOKEN --only hosting
     on:
       branch: feature/getDeploying
       repo: Mavionics/missionControl
