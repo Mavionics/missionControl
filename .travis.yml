@@ -30,7 +30,7 @@ script:
 deploy:
   # deploy Production to the default environment
 #  - provider: script
-#    script: firebase deploy -P default --token $FIREBASE_TOKEN
+#    script: cd mavionics & firebase deploy -P default --token $FIREBASE_TOKEN
 #    on:
 #      branch: master
 #      repo: Mavionics/missionControl
