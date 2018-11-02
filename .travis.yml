@@ -36,7 +36,8 @@ deploy:
 #      repo: Mavionics/missionControl
   # deploy Develop to the develop environment
   - provider: script
-    script: cd mavionics & firebase deploy -P default --token $FIREBASE_TOKEN --only hosting
+    skip_cleanup: true
+    script: firebase deploy -P default --token $FIREBASE_TOKEN --only hosting
     on:
       branch: feature/getDeploying
       repo: Mavionics/missionControl
