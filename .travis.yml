@@ -11,14 +11,14 @@ cache:
     - ~/.cache
 
 install:
-  cd mavionics
-  npm ci
-  npm install -g firebase-tools
+- cd mavionics
+- npm ci
+- npm install -g firebase-tools
 before_script:
-  - chmod +x ../scripts/build.sh
+- chmod +x ../scripts/build.sh
 script:
-  npm run test:unit
-  ./../scripts/build.sh
+- npm run test:unit
+- ./../scripts/build.sh
 
 notifications:
   slack:
