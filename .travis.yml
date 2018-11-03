@@ -25,29 +25,17 @@ stages:
 jobs:
   include:
     - stage: install
-      cd mavionics
-      npm ci
-      npm install -g firebase-tools
+      script: cd mavionics & npm ci & npm install -g firebase-tools
     - stage: test
-      npm run test:unit
+      script: npm run test:unit
     - stage: build
-      npm run build
+      script: npm run build
     - stage: dev-build
-      npm run build #dev-build
+      script: npm run build #dev-build
     - stage: deploy
-        - provider: script
-          skip_cleanup: true
-          script: firebase deploy -P default --token $FIREBASE_TOKEN --only hosting
-          on:
-            branch: feature/getDeploying
-            repo: Mavionics/missionControl
+      script: firebase deploy -P default --token $FIREBASE_TOKEN --only hosting
     - stage: dev-deploy
-      - provider: script
-        skip_cleanup: true
-        script: firebase deploy -P default --token $FIREBASE_TOKEN --only hosting # firebase deploy -P develop --token $FIREBASE_TOKEN --only hosting
-        on:
-          branch: feature/getDeploying
-          repo: Mavionics/missionControl
+      script: firebase deploy -P default --token $FIREBASE_TOKEN --only hosting # firebase deploy -P develop --token $FIREBASE_TOKEN --only hosting
 
 notifications:
   slack:
