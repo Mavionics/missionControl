@@ -16,25 +16,36 @@ stages:
   - name: build
     if: branch = master
   - name: dev-build
-    if: branch != master
+    if: branch != master # develop
   - name: deploy
     if: branch = master
   - name: dev-deploy
-    if: branch = feature/getDeploying # = develop
+    if: branch != master # develop
 
 jobs:
   include:
     - stage: install
+      name: install
       script: cd mavionics & npm ci & npm install -g firebase-tools
+
     - stage: test
+      name: test
       script: npm run test:unit
+
     - stage: build
+      name: build app for deployment
       script: npm run build
+
     - stage: dev-build
+      name: build app for deployment
       script: npm run build #dev-build
+
     - stage: deploy
+      name: deploy to production
       script: firebase deploy -P default --token $FIREBASE_TOKEN --only hosting
+
     - stage: dev-deploy
+      name: deploy to development
       script: firebase deploy -P default --token $FIREBASE_TOKEN --only hosting # firebase deploy -P develop --token $FIREBASE_TOKEN --only hosting
 
 notifications:
