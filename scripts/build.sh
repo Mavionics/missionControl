@@ -10,6 +10,7 @@ if [ "$branch" == "master" ]; then
 
   npm run build
   firebase deploy -P default --token $FIREBASE_TOKEN --only hosting
+
 elif [ "$branch" == "develop" ]; then
   echo "Compiling and deploying $branch to development..."
 
@@ -17,5 +18,5 @@ elif [ "$branch" == "develop" ]; then
   firebase deploy -P develop --token $FIREBASE_TOKEN --only hosting
 
 else
-    echo "Will not publish from a branch other than master or develop.\nPlease merge your changes into master and try again.\n\n"
+    echo "Not on master or develop so no deployment will be done"
 fi
