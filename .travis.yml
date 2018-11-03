@@ -19,7 +19,7 @@ stages:
 jobs:
   include:
     - stage: build-On-Master
-      - script: cd mavionics && 
+      script: cd mavionics && 
         echo "\n**** CURRENT FOLDER *****\n" && pwd &&
         echo "\n**** CONTENT *****\n" && ls . &&
         echo "\n**** INSTALL DEPS *****\n" &&
@@ -32,7 +32,7 @@ jobs:
         firebase deploy -P default --token $FIREBASE_TOKEN --only hosting
 
     - stage: build-On-Development
-      - script: cd mavionics && 
+      script: cd mavionics && 
         echo "\n**** CURRENT FOLDER *****\n" && pwd &&
         echo "\n**** CONTENT *****\n" && ls . &&
         echo "\n**** INSTALL DEPS *****\n" &&
