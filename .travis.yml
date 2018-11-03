@@ -10,50 +10,15 @@ cache:
     - ~/.npm
     - ~/.cache
 
-stages:
-  - name: build-On-Master
-    if: branch = master
-  - name: build-On-Development
-    if: branch = develop
-  - name: build-On-Feature
-    if: (branch != develop) AND (branch != master)
-
-jobs:
-  include:
-    - stage: build-On-Master
-      script: cd mavionics &&
-        printf  "\n**** CURRENT FOLDER *****\n" && pwd &&
-        printf  "\n**** CONTENT *****\n" && ls . &&
-        printf  "\n**** INSTALL DEPS *****\n" &&
-        npm ci && npm install -g firebase-tools &&
-        printf  "\n**** RUN TESTS *****\n" &&
-        npm run test:unit &&
-        printf  "\n**** BUILD FOR DEVELOPMENT *****\n" &&
-        npm run build &&
-        printf  "\n**** DEPLOY TO PRODUCTION *****\n" &&
-        firebase deploy -P default --token $FIREBASE_TOKEN --only hosting
-
-    - stage: build-On-Development
-      script: cd mavionics &&
-        printf  "\n**** CURRENT FOLDER *****\n" && pwd &&
-        printf  "\n**** CONTENT *****\n" && ls . &&
-        printf  "\n**** INSTALL DEPS *****\n" &&
-        npm ci && npm install -g firebase-tools &&
-        printf  "\n**** RUN TESTS *****\n" &&
-        npm run test:unit &&
-        printf  "\n**** BUILD FOR DEVELOPMENT *****\n" &&
-        npm run dev-build &&
-        printf  "\n**** DEPLOY TO DEVELOPMENT *****\n" &&
-        firebase deploy -P develop --token $FIREBASE_TOKEN --only hosting
-
-        - stage: build-On-Feature
-      script: cd mavionics &&
-        printf  "\n**** CURRENT FOLDER *****\n" && pwd &&
-        printf  "\n**** CONTENT *****\n" && ls . &&
-        printf  "\n**** INSTALL DEPS *****\n" &&
-        npm ci && npm install -g firebase-tools &&
-        printf  "\n**** RUN TESTS *****\n" &&
-        npm run test:unit
+install:
+  cd mavionics
+  npm ci
+  npm install -g firebase-tools
+before_script:
+  - chmod +x ../scripts/build.sh
+script:
+  npm run test:unit
+  ./../scripts/build.sh
 
 notifications:
   slack:
