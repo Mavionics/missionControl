@@ -16,7 +16,7 @@ install:
 - npm install -g firebase-tools
 script:
 - npm run test:unit
-- $(npm bin)/cypress run
+#- $(npm bin)/cypress run
 
 deploy:
     # deploy Production to the default environment
