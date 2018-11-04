@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "$TRAVIS_PULL_REQUEST_BRANCH"
+
 # Only push this update to the server if the current branch is the Master branch
 if [ "$TRAVIS_PULL_REQUEST_BRANCH" != "false" ]; then
 
