@@ -3,7 +3,7 @@
 echo "$TRAVIS_PULL_REQUEST_BRANCH"
 
 # Only push this update to the server if the current branch is the Master branch
-if [ "$TRAVIS_PULL_REQUEST_BRANCH" != "false" ]; then
+if [ "$TRAVIS_PULL_REQUEST_BRANCH" != "" ]; then
 
   echo "Current commit is on a Pull request skipping deploy"
 
