@@ -23,8 +23,6 @@ deploy:
   - provider: script
     scripts: ./../scripts/build.sh
     skip_cleanup: true
-    on:
-      repo: mavionics/missionControl
 
 notifications:
   slack:
