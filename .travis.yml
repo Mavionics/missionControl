@@ -17,14 +17,7 @@ install:
 script:
 - npm run test:unit
 #- $(npm bin)/cypress run
-
-deploy:
-    # deploy Production to the default environment
-  - provider: script
-    scripts: ./../scripts/build.sh
-    skip_cleanup: true
-    on:
-      all_branches: true
+- ./../scripts/build.sh
 
 notifications:
   slack:
