@@ -5,14 +5,23 @@ describe('Login', () => {
     cy.visit('/')
     cy.get('#firebaseui-auth-container').should('be.visible')
   }),
-  it('Valid Email should show password box'), () => {
-    // const email = "test@test.com"
-    // cy.visit('/')
-    // cy.get('.mdl-textfield__input').click()
+  it('Login should redirect to controlroom', () => {
+    const email = "test@test.com"
+    cy.visit('/')
+    cy.get('.mdl-textfield__input').click()
 
 
-    // cy.get('input.firebaseui-id-email').type('email')
-    // .should('have.value', email)
+    cy.get('input.firebaseui-id-email').type(email)
+    .should('have.value', email)
+    .type('{enter}')
 
-  }
+    cy.get('input.firebaseui-id-password').type('testtest')
+    .type('{enter}')
+
+    cy.url().should('include', 'controlroom')
+  }),
+  it.skip('Log in', ()=> {
+    cy.visit('/')
+    // cy.login()
+  })
 })
