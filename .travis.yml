@@ -22,6 +22,10 @@ deploy:
     # deploy Production to the default environment
   - provider: script
     scripts: ./../scripts/build.sh
+    skip_cleanup: true
+    on:
+      condition: branch = master OR branch = develop
+      repo: mavionics/missionControl
 
 notifications:
   slack:
