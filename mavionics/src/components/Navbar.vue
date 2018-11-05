@@ -20,7 +20,7 @@
             <router-link name="About" class="navbar-item" to="/about">About</router-link>
             <div class="navbar-item" v-show="isAuthenticated">
               <div class="buttons">
-                <router-link name="Logout" class="button is-light" to="/logout" @click="logout">Logout</router-link>
+                <router-link name="Logout" class="button is-light" to="/logout">Logout</router-link>
               </div>
             </div>
         </div>
@@ -45,10 +45,7 @@
     methods: {
       showHamburger: function() {
         this.navIsActive = !this.navIsActive;
-      },
-      ...mapActions([
-      'logout'
-    ])
+      }
     },
     props: {
       showBrand: {

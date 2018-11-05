@@ -12,6 +12,9 @@ export default {
   name: "logout",
   components: {
     Navbar
+  }, 
+  mounted() {
+    this.$store.dispatch("logout")
   }
 };
 </script>

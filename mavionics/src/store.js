@@ -4,7 +4,7 @@ import * as log from 'loglevel';
 import {
   auth,
   usersCollection,
-  vehiclesCollection, 
+  vehiclesCollection,
   mapsCollection
 } from './firebaseConfig.js';
 
@@ -37,13 +37,13 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    fetchUserProfile({      commit,      state    }) {
+    fetchUserProfile({ commit, state }) {
       usersCollection.doc(state.currentUser.uid).get().then(res => {
         commit('setUserProfile', res.data())
       }).catch(err => {
         log.error(err)
       });
-      
+
       vehiclesCollection.where("owner", "==", state.currentUser.uid).onSnapshot(querySnapshot => {
         state.vehicles = []
         querySnapshot.forEach(doc => {
@@ -56,16 +56,17 @@ export default new Vuex.Store({
       });
 
       mapsCollection.doc("cesium").get().then(
-        res=>{
+        res => {
           commit('setCesiumKey', res.data().default)
-      }, err => {
-        log.error(err)
-      });
+        }, err => {
+          log.error(err)
+        });
+    },
+    logout({ commit }) {
+      auth.signOut().then(() => {
+        commit('setUserProfile', null)
+        commit('setCurrentUser', null)
+      })
     }
-  },
-  logout({commit}){
-    auth.logout();
-    commit('setUserProfile', null)
-    commit('setCurrentUser', null)
   }
 })
