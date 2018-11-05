@@ -1,5 +1,8 @@
 <template>
+<div>
     <div id="cesiumContainer" class="fullscreen"></div>
+    <div>{{myPosition.longitude}}, {{myPosition.latitude}}</div>
+</div>
 </template>
 
 
@@ -14,65 +17,97 @@
 </style>
 
 <script>
-  import * as log from 'loglevel';
-  import Cesium from "cesium/Cesium";
-  require("cesium/Widgets/widgets.css");
+import * as log from "loglevel";
+import Cesium from "cesium/Cesium";
+require("cesium/Widgets/widgets.css");
 
-  export default {
-    name: "OverviewMap",
-    mounted() {
-      Cesium.Ion.defaultAccessToken = this.$store.state.cesiumKey;
-      
-      this.viewer = new Cesium.Viewer("cesiumContainer", {
-        imageryProvider: Cesium.createWorldImagery(), // use the Bing Maps Aerial imagery from ion (this is the default)
-        terrainProvider: Cesium.createWorldTerrain(), // use the Cesium World Terrain from ion
-        timeline: false, // Hide widgets
-        infoBox: false,
-        animation: false,
-        fullscreenButton: false
+export default {
+  name: "OverviewMap",
+  mounted() {
+    Cesium.Ion.defaultAccessToken = this.$store.state.cesiumKey;
+
+    this.viewer = new Cesium.Viewer("cesiumContainer", {
+      imageryProvider: Cesium.createWorldImagery(), // use the Bing Maps Aerial imagery from ion (this is the default)
+      terrainProvider: Cesium.createWorldTerrain(), // use the Cesium World Terrain from ion
+      timeline: false, // Hide widgets
+      infoBox: false,
+      animation: false,
+      fullscreenButton: false
+    });
+
+    navigator.geolocation.getCurrentPosition(pos => {
+      log.warn(pos);
+      this.myPosition = pos.coords;
+    });
+  },
+  props: {
+    vehicles: Array
+  },
+  data() {
+    return {
+      myPosition: String
+    };
+  },
+  watch: {
+    myPosition(userPos) {
+      log.info(userPos.longitude + " " + userPos.latitude);
+      var pinBuilder = new Cesium.PinBuilder();
+      this.viewer.entities.add({
+        id: "user",
+        position: Cesium.Cartesian3.fromDegrees(
+          userPos.longitude,
+          userPos.latitude
+        ),
+        point : {
+          pixelSize: 10,
+          color: Cesium.Color.RED, 
+          outlineColor: Cesium.Color.WHITE, 
+          outlineWidth:1
+        }
+        // billboard: {
+        //   verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+        //   heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+        //   disableDepthTestDistance: Number.POSITIVE_INFINITY
+        // }
       });
     },
-    props: {
-      vehicles: Array
-    },
-    watch: {
-      vehicles(val) {
-        val.forEach(vehicle => {
-          if (vehicle.position) {
-            log.info(
-              vehicle.position.longitude + " " + vehicle.position.latitude
-            );
+    vehicles(val) {
+      val.forEach(vehicle => {
+        if (vehicle.position) {
+          log.info(
+            vehicle.position.longitude + " " + vehicle.position.latitude
+          );
 
-            var v = this.viewer.entities.getById(vehicle.name);
-            if (!v) {
-              log.info("New vehicle");
+          var v = this.viewer.entities.getById(vehicle.name);
+          if (!v) {
+            log.info("New vehicle");
 
-              var pinBuilder = new Cesium.PinBuilder();
-              this.viewer.entities.add({
-                id: vehicle.name,
-                position: Cesium.Cartesian3.fromDegrees(
-                  vehicle.position.longitude,
-                  vehicle.position.latitude
-                ),
-                billboard: {
-                  image: pinBuilder
-                    .fromText(vehicle.name, Cesium.Color.BLACK, 70)
-                    .toDataURL(),
-                  verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                  heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
-                  disableDepthTestDistance: Number.POSITIVE_INFINITY
-                }
-              });
-            } else {
-              v.position = Cesium.Cartesian3.fromDegrees(
+            var pinBuilder = new Cesium.PinBuilder();
+            this.viewer.entities.add({
+              id: vehicle.name,
+              position: Cesium.Cartesian3.fromDegrees(
                 vehicle.position.longitude,
                 vehicle.position.latitude
-              );
-              log.info("Position updated " + v.position);
-            }
+              ),
+              billboard: {
+                image: pinBuilder
+                  .fromText(vehicle.name, Cesium.Color.BLACK, 70)
+                  .toDataURL(),
+                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                disableDepthTestDistance: Number.POSITIVE_INFINITY
+              }
+            });
+          } else {
+            v.position = Cesium.Cartesian3.fromDegrees(
+              vehicle.position.longitude,
+              vehicle.position.latitude
+            );
+            log.info("Position updated " + v.position);
           }
-        });
-      }
+        }
+      });
     }
-  };
+  }
+};
 </script>
