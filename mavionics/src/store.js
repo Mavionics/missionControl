@@ -1,14 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import * as log from 'loglevel';
 import {
   auth,
   usersCollection,
-  vehiclesCollection, 
+  vehiclesCollection,
   mapsCollection
 } from './firebaseConfig.js';
-// import {
-//   state
-// } from 'fs';
 
 Vue.use(Vuex)
 
@@ -30,35 +28,45 @@ export default new Vuex.Store({
       state.cesiumKey = val
     }
   },
+  getters: {
+    currentUser(state) {
+      return state.currentUser;
+    },
+    isAuthenticated(state) {
+      return state.currentUser != null;
+    }
+  },
   actions: {
-    fetchUserProfile({      commit,      state    }) {
+    fetchUserProfile({ commit, state }) {
       usersCollection.doc(state.currentUser.uid).get().then(res => {
         commit('setUserProfile', res.data())
       }).catch(err => {
-        console.log(err)
+        log.error(err)
       });
-      
+
       vehiclesCollection.where("owner", "==", state.currentUser.uid).onSnapshot(querySnapshot => {
         state.vehicles = []
         querySnapshot.forEach(doc => {
           // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
+          log.info(doc.id, " => ", doc.data());
           state.vehicles.push(doc.data());
         })
       }, err => {
-        console.log(err)
+        log.error(err)
       });
 
       mapsCollection.doc("cesium").get().then(
-        res=>{
+        res => {
           commit('setCesiumKey', res.data().default)
-      }, err => {
-        console.log(err)
-      });
+        }, err => {
+          log.error(err)
+        });
+    },
+    logout({ commit }) {
+      auth.signOut().then(() => {
+        commit('setUserProfile', null)
+        commit('setCurrentUser', null)
+      })
     }
-  },
-  logout({commit, state}){
-    auth.logout();
-    commit('setUserProfile', null)
   }
 })

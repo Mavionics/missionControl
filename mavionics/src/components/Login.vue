@@ -12,6 +12,7 @@ import "firebaseui/dist/firebaseui.css";
 import {auth, usersCollection} from "../firebaseConfig.js";
 import store from "../store.js";
 import router from "../router.js";
+import * as log from 'loglevel';
 
 // Initialize the FirebaseUI Widget using Firebase.
 var ui = new firebaseui.auth.AuthUI(auth);
@@ -36,16 +37,16 @@ export default {
         }
       ],
       callbacks: {
-        signInSuccessWithAuthResult: (authResult, redirectUrl) => {
+        signInSuccessWithAuthResult: (authResult) => {
           // User successfully signed in.
           // Return type determines whether we continue the redirect automatically
           // or whether we leave that to developer to handle.
+          // second parameter available for redirectUrl
           
           store.commit("setCurrentUser", authResult.user);
-          console.log(authResult.user.uid);
 
           // create user obj
-          var promise = usersCollection
+          usersCollection
             .doc(authResult.user.uid)
             .set({
               name: authResult.user.displayName,
@@ -57,7 +58,7 @@ export default {
             })
             .catch(err => {
               // eslint-disable-next-line
-              console.log(err);
+              log.error(err);
               // router.push("/home");
               return false;
             });

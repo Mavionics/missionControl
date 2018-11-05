@@ -1,16 +1,14 @@
 import firebase from 'firebase'
-import 'firebase/firestore'
-
 
 // Initialize Firebase
 var config = {
-    apiKey: "AIzaSyB_kVeuLIVb4gRSpbt60qml04oTgXd9lg4",
-    authDomain: "mavionics-a142a.firebaseapp.com",
-    databaseURL: "https://mavionics-a142a.firebaseio.com",
-    projectId: "mavionics-a142a",
-    storageBucket: "mavionics-a142a.appspot.com",
-    messagingSenderId: "539361306649"
-};
+    apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+    authDomain:process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+    databaseURL:process.env.VUE_APP_FIREBASE_DATABASE_URL,
+    projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+    storageBucket:process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId:process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID
+}
 
 firebase.initializeApp(config);
 

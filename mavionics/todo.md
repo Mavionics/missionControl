@@ -3,7 +3,5 @@
 [ ] Fix warnings about console
 [ ] Use beutfy?
 [ ] Logout does not work
-[ ] Indicate active page in navbar
 [ ] Link hover indication between map and list
-[ ] Icon
 [ ] Setup database on new user

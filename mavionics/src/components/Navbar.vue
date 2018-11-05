@@ -1,9 +1,9 @@
 <template>
     <div class="content">
-        <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <router-link class="navbar-item" to="/">
-            <img id="navbar-brand-img" v-if="showBrand" src="../assets/logo.svg" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28" >
+            <router-link class="navbar-item" v-if="showBrand" to="/">
+              <img id="navbar-brand-img" src="../assets/logo.svg" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28" />
             </router-link>
 
             <a role="button" class="navbar-burger" @click="showHamburger" :class="{'is-active':navIsActive}" data-target="navMenu" aria-label="menu" aria-expanded="false">
@@ -13,19 +13,23 @@
             </a>
         </div>
         <div class="navbar-menu" :class="{'is-active':navIsActive}">
-        <div class="navbar-end">      
-            <router-link class="navbar-item" to="/">Home</router-link>
-            <router-link class="navbar-item" to="/controlroom">ControlRoom</router-link>
-            <router-link class="navbar-item" to="/about">About</router-link>
-            <router-link class="navbar-item" to="/logout" v-show="loggedIn" @click="logout"><div class="button">Logout</div></router-link>
         </div>
+        <div class="navbar-end">      
+            <router-link name="Home" class="navbar-item" to="/">Home</router-link>
+            <router-link name="ControlRoom" class="navbar-item" to="/controlroom" v-show="isAuthenticated">ControlRoom</router-link>
+            <router-link name="About" class="navbar-item" to="/about">About</router-link>
+            <div class="navbar-item" v-show="isAuthenticated">
+              <div class="buttons">
+                <router-link name="Logout" class="button is-light" to="/logout">Logout</router-link>
+              </div>
+            </div>
         </div>
         </nav>
     </div>
 </template>
 
 <script>
-  import store from "../store.js";
+  import { mapGetters, mapActions } from "vuex";
 
   export default {
     name: "Navbar",
@@ -35,17 +39,12 @@
         navIsActive: false
       };
     },
-    computed: {
-      loggedIn() {
-        return store.state.currentUser != null;
-      }
-    },
+    computed: 
+      mapGetters(['currentUser', 'isAuthenticated'])
+    ,
     methods: {
       showHamburger: function() {
         this.navIsActive = !this.navIsActive;
-      },
-      logout() {
-        store.dispatch("fetchUserProfile");
       }
     },
     props: {
@@ -53,14 +52,13 @@
         type: Boolean,
         default: true
       }
-    },
-    watch: {
-      loggedIn(val) {
-        console.log("Logged in is " + val);
-      }
     }
   };
 </script>
 
 <style>
+.router-link-exact-active {
+  border-bottom: 2px solid;
+  border-radius: 2px;
+}
 </style>

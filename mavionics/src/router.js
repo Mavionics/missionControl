@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import firebase from 'firebase'
+import store from "./store.js";
+
+import * as log from 'loglevel';
 
 Vue.use(Router)
 
@@ -49,13 +51,12 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
-  const currentUser = firebase.auth().currentUser
-  // firebase.auth().signOut();
+  const isAuth = store.getters.isAuthenticated
   
-  if (requiresAuth && !currentUser) {
-    console.log("Not logged in! Redirecting!")
+  if (requiresAuth && !isAuth) {
+      log.warn("Not logged in! Redirecting!")
       next('/')
-  } else if (requiresAuth && currentUser) {
+  } else if (requiresAuth && isAuth) {
       next()
   } else {
       next()
