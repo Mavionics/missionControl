@@ -10,7 +10,6 @@ describe('Login', () => {
     cy.visit('/')
     cy.get('.mdl-textfield__input').click()
 
-
     cy.get('input.firebaseui-id-email').type(email)
     .should('have.value', email)
     .type('{enter}')
@@ -20,8 +19,11 @@ describe('Login', () => {
 
     cy.url().should('include', 'controlroom')
   }),
-  it.skip('Log in', ()=> {
-    cy.visit('/')
-    // cy.login()
+  it.only('Logout', ()=> {
+    cy.login()
+    cy.wait(7000)
+    cy.get('a[name="Logout"]').should('be.visible')
+    .click()
+    cy.url().should('include', 'Logout');
   })
 })
