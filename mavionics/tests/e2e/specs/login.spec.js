@@ -19,11 +19,11 @@ describe('Login', () => {
 
     cy.url().should('include', 'controlroom')
   }),
-  it.only('Logout', ()=> {
+  it('Logout', ()=> {
     cy.login()
     cy.wait(7000)
     cy.get('a[name="Logout"]').should('be.visible')
     .click()
-    cy.url().should('include', 'Logout');
+    cy.url().should('include', 'logout');
   })
 })
