@@ -20,7 +20,6 @@ import OverviewMap from "@/components/OverviewMap.vue"
 export default {
   name: "ControlRoom",
   components: {
-    OverviewMap
     Layout,
     OverviewMap,
   },
