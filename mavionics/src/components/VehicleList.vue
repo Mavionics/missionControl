@@ -11,8 +11,8 @@
     <tbody>
       <tr v-for="vehicle in vehicles" 
           v-bind:key="vehicle.id">
-        <th>{{vehicle.name}}</th>
-        <td></td>
+        <td data-testid="vehicleStatus">Live</td>
+        <th data-testid="vehicleName">{{vehicle.name}}</th>
 
         <td v-if="vehicle.position">{{vehicle.position.latitude}}, {{vehicle.position.longitude}} </td>
         <td></td>
