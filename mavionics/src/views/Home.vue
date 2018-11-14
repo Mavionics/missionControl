@@ -13,11 +13,7 @@
 </template>
 
 <style>
-section.hero.is-info {
-  background: linear-gradient(rgb(32, 105, 148, 0.9), rgba(32, 105, 148, 0.4)),
-    url(../assets/clouds.jpg) no-repeat center center;
-  background-size: cover;
-}
+
 </style>
 
 
