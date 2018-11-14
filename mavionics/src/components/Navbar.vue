@@ -3,7 +3,7 @@
         <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <router-link class="navbar-item" v-if="showBrand" to="/">
-              <img id="navbar-brand-img" src="../assets/logo.svg" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28" />
+              <img id="navbar-brand-img" src="../assets/logo.svg" alt="Mavionics" width="112" height="28" />
             </router-link>
 
             <a role="button" class="navbar-burger" @click="showHamburger" :class="{'is-active':navIsActive}" data-target="navMenu" aria-label="menu" aria-expanded="false">
@@ -29,8 +29,6 @@
 </template>
 
 <script>
-  import { mapGetters, mapActions } from "vuex";
-
   export default {
     name: "Navbar",
 
@@ -39,9 +37,11 @@
         navIsActive: false
       };
     },
-    computed: 
-      mapGetters(['currentUser', 'isAuthenticated'])
-    ,
+    computed: {
+      isAuthenticated() {
+       return this.currentUser != null
+      }
+    },
     methods: {
       showHamburger: function() {
         this.navIsActive = !this.navIsActive;
@@ -51,7 +51,9 @@
       showBrand: {
         type: Boolean,
         default: true
-      }
+      },
+      currentUser: Object,
+
     }
   };
 </script>

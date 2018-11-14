@@ -1,20 +1,23 @@
 <template>
-  <div class="logout">
-      <Navbar/>
-    <h1>You have been logged out!</h1>
+  <div class="logout">   
+     <Layout>
+      <div class="container">
+        <h1>You have been logged out!</h1>
+      </div>
+    </Layout>
   </div>
 </template>
 
 <script>
-import Navbar from "@/components/Navbar.vue";
+import Layout from "@/components/Layout.vue";
 
 export default {
   name: "logout",
   components: {
-    Navbar
-  }, 
+    Layout
+  },
   mounted() {
-    this.$store.dispatch("logout")
+    this.$store.dispatch("logout");
   }
 };
 </script>
