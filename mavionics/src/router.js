@@ -31,7 +31,7 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "controlroom" */ './views/ControlRoom.vue'),
       meta: {
-          requiresAuth: true
+        requiresAuth: true
       }
     },
     {
@@ -43,6 +43,16 @@ const router = new Router({
       path: '/logout',
       name: 'logout',
       component: () => import(/* webpackChunkName: "logout" */ './views/Logout.vue')
+    },
+    {
+      path: '/autologin/email/:email/password/:password',
+      redirect: to => {
+        store.dispatch("loginE", { email: to.params.email, password: to.params.password})
+        return "/home"
+      },
+      meta: {
+        requiresAuth: false
+      }
     }
   ]
 })
@@ -52,14 +62,14 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
   const isAuth = store.getters.isAuthenticated
-  
+
   if (requiresAuth && !isAuth) {
-      log.warn("Not logged in! Redirecting!")
-      next('/')
+    log.warn("Not logged in! Redirecting!")
+    next('/')
   } else if (requiresAuth && isAuth) {
-      next()
+    next()
   } else {
-      next()
+    next()
   }
 })
 
