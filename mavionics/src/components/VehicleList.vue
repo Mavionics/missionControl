@@ -2,34 +2,31 @@
   <table class="table is-hoverable is-fullwidth">
     <thead>
       <tr>
-        <th>Name</th>
         <th>Status</th>
-        <th>Location</th>
-        <th>Connect</th>
+        <th>Name</th>
+        <th class="is-hidden-touch">Location</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="vehicle in vehicles" 
-          v-bind:key="vehicle.id">
-        <td data-testid="vehicleStatus">Live</td>
-        <th data-testid="vehicleName">{{vehicle.name}}</th>
-
-        <td v-if="vehicle.position">{{vehicle.position.latitude}}, {{vehicle.position.longitude}} </td>
-        <td></td>
-      </tr>
+      <VehicleListItem v-for="vehicle in vehicles" 
+          :key="vehicle.id" :vehicle="vehicle" />
     </tbody>
   </table>
 </template>
 
 <script>
+import VehicleListItem from "@/components/VehicleListItem";
 export default {
-  name:'VehicleList',
-  props:{
+  name: "VehicleList",
+  components: {
+    VehicleListItem
+  },
+  props: {
     vehicles: Array
   }
-}
+};
 </script>
 
 <style>
-
 </style>
