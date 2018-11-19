@@ -5,24 +5,32 @@
 
         <td v-if="vehicle.position" class="is-hidden-touch">{{vehicle.position.latitude}}, {{vehicle.position.longitude}} </td>
         <td>
-          <router-link name="Connect" class="button is-success" :disabled="!isLive" to="/logout">Connect</router-link>
+          <div name="Connect" class="button is-success" :disabled="!isLive" @click="connectToVehicle(vehicle.id)">Connect</div>
         </td>
       </tr>
 </template>
 
 <script>
+  import * as log from 'loglevel';
+
 export default {
   name: "VehicleListItem",
   props: {
     vehicle: Object
   },
-
   computed: {
     isLive() {
-      return Date.now()/1000 - this.vehicle.timestamp.seconds < 10;
+      return (Date.now()/1000 - this.vehicle.timestamp.seconds) < 10;
     },
     status() {
       return this.isLive ? "Live" : "Offline";
+    }
+  },
+  methods: {
+    connectToVehicle(avId){
+      log.info("Connecting to " + avId);
+
+      this.$router.push({ name: 'cockpit', params: { avId: avId }})
     }
   }
 };

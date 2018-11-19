@@ -16,7 +16,8 @@ export default new Vuex.Store({
     currentUser: null,
     cesiumKey: "",
     userProfile: {},
-    vehicles: []
+    vehicles: [],
+    currentVehicle: null
   },
   mutations: {
     setCurrentUser(state, val) {
@@ -27,6 +28,9 @@ export default new Vuex.Store({
     },
     setCesiumKey(state, val) {
       state.cesiumKey = val
+    },
+    setActiveVehicle(state, val) {
+      state.currentVehicle =  val
     }
   },
   getters: {
@@ -44,39 +48,23 @@ export default new Vuex.Store({
         dispatch('login')})
     },
     login({ commit, state }) {
-      // create user obj
-      usersCollection
-      .doc(state.currentUser.uid)
-      .set({
-        name: state.currentUser.displayName,
-        photo: "" //authResult.user.photourl || ""
-      })
-      .then(() => {
-        usersCollection.doc(state.currentUser.uid).get().then(res => {
-          commit('setUserProfile', res.data())
-        }).catch(err => {
-          log.error(err)
-        });
-  
-        vehiclesCollection.where("owner", "==", state.currentUser.uid).onSnapshot(querySnapshot => {
-          state.vehicles = []
-          querySnapshot.forEach(doc => {
-            // doc.data() is never undefined for query doc snapshots
-            log.info(doc.id, " => ", doc.data());
-            state.vehicles.push(doc.data());
-          })
-        }, err => {
-          log.error(err)
-        });
-  
-        mapsCollection.doc("cesium").get().then(
-          res => {
-            commit('setCesiumKey', res.data().default)
-          }, err => {
-            log.error(err)
+      // Try getting userdata
+      usersCollection.doc(state.currentUser.uid).get().then(res => {
+        if (res.exists) {
+          commit('setUserProfile', res.data());
+        }
+        else {
+          // Create user if not existing
+          let userData = {
+            name: state.currentUser.displayName,
+            photo: "" //authResult.user.photourl || ""
+          };
+          usersCollection
+          .doc(state.currentUser.uid)
+          .set(userData).then(()=>{
+            commit('setUserProfile', res.data());
           });
-
-        router.push("/controlroom");
+        }
       })
       .catch(err => {
         // eslint-disable-next-line
@@ -84,12 +72,42 @@ export default new Vuex.Store({
         // router.push("/home");
         return false;
       });
+  
+      vehiclesCollection.where("owner", "==", state.currentUser.uid).onSnapshot(querySnapshot => {
+        state.vehicles = []
+        querySnapshot.forEach(doc => {
+          // doc.data() is never undefined for query doc snapshots
+          log.info(doc.id, " => ", doc.data());
+          let avInfo = doc.data();
+          avInfo.id = doc.id;
+          state.vehicles.push(avInfo);
+        })
+      }, err => {
+        log.error(err)
+      });
+  
+      mapsCollection.doc("cesium").get().then(
+        res => {
+          commit('setCesiumKey', res.data().default)
+        }, err => {
+          log.error(err)
+        })
+        .then(()=>router.push("/controlroom"));
     },
     logout({ commit }) {
       auth.signOut().then(() => {
         commit('setUserProfile', null)
         commit('setCurrentUser', null)
       })
+    },
+    connectToVehicle({commit}, {avId}){
+      vehiclesCollection.doc(avId).get().then(
+        res => {
+          commit('setActiveVehicle', res.data());
+        }
+      , err => {
+        log.error(err)
+      });
     }
   }
 })
