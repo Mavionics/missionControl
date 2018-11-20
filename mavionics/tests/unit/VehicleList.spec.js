@@ -2,69 +2,15 @@ import VehicleList from "@/components/VehicleList"
 import VehicleListItem from "@/components/VehicleListItem"
 import { mount, RouterLinkStub } from "@vue/test-utils"
 import { expect } from 'chai'
-// import sinon from 'sinon'
-
-const originalDateNow = Date.now;
-
-function fakeDate(offset) {
-  Date.now = () => { return Date.parse('01 Jan 2019 00:00:00 GMT') + (offset | 0)}
-}
-
-function unfakeDate() {
-  Date.now = originalDateNow
-}
 
 describe('VehicleList.vue', () => {
-  // let clock;
-
-  const vehicleData = [{ "name": "Fly-thing", "owner": "c6pGDLQ7GNbNjBh5HGPYRq7X8B53", "position": { "_lat": 58, "_long": 15.2 }, "timestamp": { "seconds": 1542049200, "nanoseconds": 0 } }];
-
-  beforeEach(() => {
-    fakeDate();
-    //     const wrapper = shallowMount(VehicleList, {sync: false})
-    //     console.log(Date)
-    //     clock = sinon.useFakeTimers(1542049200);
-    //     vehicleData.timestamp = clock.now;
-    //     console.log(vehicleData.timestamp)
-  });
-
-  afterEach(function () {
-    unfakeDate();
-    //   clock.restore();
-  });
+  const timestamp = 1542049200;
+  const vehicleData = [{ "name": "Fly-thing", "owner": "c6pGDLQ7GNbNjBh5HGPYRq7X8B53", "position": { "_lat": 58, "_long": 15.2 }, "timestamp": { "seconds": timestamp, "nanoseconds": 0 } }];
 
   it("Loads", () => {
     const wrapper = mount(VehicleList)
     expect(wrapper.find("table").isVisible()).to.be.true;
-  }),
-
-    it("Has correct vehicle name", () => {
-      const wrapper = mount(VehicleList,
-        {
-          propsData: {
-            vehicles: vehicleData
-          },
-          components: {
-            'router-link': RouterLinkStub
-          }
-        })
-      expect(wrapper.find('[data-testid=vehicleName]').text()).to.equal("Fly-thing");
-    }),
-
-    it("Has status live if timestamp is less than 10 seconds old", () => {
-      vehicleData[0].timestamp.seconds = Date.now()-2000;
-      const wrapper = mount(VehicleList,
-        {
-          propsData: {
-            vehicles: vehicleData
-          },
-          components: {
-            'router-link': RouterLinkStub
-          }
-        });
-      // expect(wrapper.vm.isLive).to.be.true
-      expect(wrapper.find('[data-testid=vehicleStatus]').text()).to.equal("Live");
-    })
+  })
 })
 
 describe('VehicleListItem.vue', () => {
@@ -72,10 +18,10 @@ describe('VehicleListItem.vue', () => {
 
   let vehicleData;
   let wrapper;
+  const timestamp = 3000
 
   beforeEach(() => {
-    fakeDate();
-    vehicleData = { "name": "Fly-thing", "owner": "c6pGDLQ7GNbNjBh5HGPYRq7X8B53", "position": { "_lat": 58, "_long": 15.2 }, "timestamp": { "seconds": Date.now() / 1000, "nanoseconds": 0 } };
+    vehicleData = { "name": "Fly-thing", "owner": "c6pGDLQ7GNbNjBh5HGPYRq7X8B53", "position": { "_lat": 58, "_long": 15.2 }, "timestamp": { "seconds": timestamp, "nanoseconds": 0 } };
     wrapper = mount(VehicleListItem,
       {
         propsData: {
@@ -83,36 +29,31 @@ describe('VehicleListItem.vue', () => {
         },
         components: {
           'router-link': RouterLinkStub
+        },
+        methods: {
+          updateTime() {
+            this.currentTime = timestamp;
+          }
         }
       });
-  });
-
-  afterEach(function () {
-    unfakeDate();
   });
 
   it("Loads", () => {
     expect(wrapper.find("tr").isVisible()).to.be.true;
   }),
-  it("Is live if timestamp is less than 10 seconds old", () => {
-    vehicleData.timestamp.seconds -= 9;
-    expect(VehicleListItem.computed.isLive.call({vehicle:vehicleData}))
-      .to.be.true;
-  }),
-  it("Is not live if timestamp is more than 10 seconds old", () => {
-    vehicleData.timestamp.seconds -= 11;
-    expect(VehicleListItem.computed.isLive.call({vehicle:vehicleData}))
-      .to.be.false;
-  }),
-  
-  it("Has status live if timestamp is less than 10 seconds old", () => {
-    vehicleData.timestamp.seconds -= 9;
-    expect(VehicleListItem.computed.status.call({isLive: true}))
-      .to.eq("Live");
-  }),
-  it("Has status offline if timestamp is more than 10 seconds old", () => {
-    vehicleData.timestamp.seconds -= 11;
-    expect(VehicleListItem.computed.status.call({isLive: false}))
-      .to.eq("Offline");
+  it("Has correct name of vehicle", ()=>{
+    expect(wrapper.find('[data-testid=vehicleName]').text()).to.equal("Fly-thing");
   })
+    it("Is live if timestamp is less than 10 seconds old", () => {
+      wrapper.setData({ currentTime: 3000 + 9 })
+      expect(wrapper.vm.isLive).to.be.true;
+      expect(wrapper.vm.status).to.eq("Live");
+      expect(wrapper.find('[data-testid=vehicleStatus]').text()).to.equal("Live");
+    }),
+    it("Is not live if timestamp is more than 10 seconds old", () => {
+      wrapper.setData({ currentTime: 3000 + 11 });
+      expect(wrapper.vm.isLive).to.be.false;
+      expect(wrapper.vm.status).to.eq("Offline");
+      expect(wrapper.find('[data-testid=vehicleStatus]').text()).to.equal("Offline");
+    })
 });

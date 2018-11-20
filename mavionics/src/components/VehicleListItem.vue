@@ -11,16 +11,22 @@
 </template>
 
 <script>
-  import * as log from 'loglevel';
+  // import * as log from 'loglevel';
 
 export default {
   name: "VehicleListItem",
   props: {
     vehicle: Object
   },
+  mounted() {
+    this.updateTime();
+  },
+  data: ()=>{return {
+    currentTime:Number
+  }},
   computed: {
     isLive() {
-      return (Date.now()/1000 - this.vehicle.timestamp.seconds) < 10;
+      return (this.currentTime - this.vehicle.timestamp.seconds) < 10;
     },
     status() {
       return this.isLive ? "Live" : "Offline";
@@ -28,9 +34,10 @@ export default {
   },
   methods: {
     connectToVehicle(avId){
-      log.info("Connecting to " + avId);
-
       this.$router.push({ name: 'cockpit', params: { avId: avId }})
+    },
+    updateTime(){
+      this.currentTime = Date.now()/1000;
     }
   }
 };

@@ -2,7 +2,8 @@
   <div class="cockpit">   
      <Layout>
       <div class="container">
-        <h1>This is where you'll fly! VehicleId {{avId}} {{vehicle ? vehicle.name: ""}}</h1>
+        <h1>This is where you'll fly! VehicleId {{avId}} {{vehicle ? vehicle.name: ''}}</h1>
+        <div>All data: {{vehicle}}</div>
       </div>
     </Layout>
   </div>
