@@ -11,7 +11,6 @@ import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 import {auth} from "../firebaseConfig.js";
 import store from "../store.js";
-import * as log from 'loglevel';
 
 // Initialize the FirebaseUI Widget using Firebase.
 var ui = new firebaseui.auth.AuthUI(auth);

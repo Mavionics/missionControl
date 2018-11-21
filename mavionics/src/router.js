@@ -35,6 +35,15 @@ const router = new Router({
       }
     },
     {
+      path: '/cockpit',
+      name: 'cockpit',
+      component: () => import(/* webpackChunkName: "cockpit" */ './views/Cockpit.vue'),
+      props: true,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/about',
       name: 'about',
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')

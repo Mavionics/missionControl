@@ -4,6 +4,7 @@
     <Layout>
         <div class="box is-glass container is-fluid">
           <OverviewMap :vehicles="vehicles"/>
+          <VehicleList :vehicles="vehicles"/>
         </div>
     </Layout>
   </div>
@@ -16,12 +17,14 @@
 <script>
 import Layout from "@/components/Layout.vue"
 import OverviewMap from "@/components/OverviewMap.vue"
+import VehicleList from "@/components/VehicleList.vue"
 
 export default {
   name: "ControlRoom",
   components: {
     Layout,
     OverviewMap,
+    VehicleList
   },
   computed: {
     displayName() {
