@@ -7,15 +7,31 @@ describe('VehicleList.vue', () => {
   const timestamp = 1542049200;
   const vehicleData = [{ "name": "Fly-thing", "owner": "c6pGDLQ7GNbNjBh5HGPYRq7X8B53", "position": { "_lat": 58, "_long": 15.2 }, "timestamp": { "seconds": timestamp, "nanoseconds": 0 } }];
 
+  let wrapper;
+
+  beforeEach(() => {
+    wrapper = mount(VehicleList,
+      {
+        propsData: {
+          vehicles: vehicleData
+        },
+        components: {
+          'router-link': RouterLinkStub
+        },
+        methods: {
+          updateTime() {
+            this.currentTime = timestamp;
+          }
+        }
+      });
+  });
+
   it("Loads", () => {
-    const wrapper = mount(VehicleList)
     expect(wrapper.find("table").isVisible()).to.be.true;
   })
 })
 
 describe('VehicleListItem.vue', () => {
-  // let clock;
-
   let vehicleData;
   let wrapper;
   const timestamp = 3000
