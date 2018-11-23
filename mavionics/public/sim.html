@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mavionics Simulator</title>
+  <!-- development version, includes helpful console warnings -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
+  <script src="https://cdn.firebase.com/libs/firebaseui/3.4.1/firebaseui.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.4.1/firebaseui.css" />
+  <script src="sim.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyA1nNQbTLc2HxdDaweVqVqQTA0L4BHeaNE",
+      authDomain: "mavionics-dev.firebaseapp.com",
+      databaseURL: "https://mavionics-dev.firebaseio.com",
+      projectId: "mavionics-dev",
+      storageBucket: "mavionics-dev.appspot.com",
+      messagingSenderId: "900532418206"
+    };
+    firebase.initializeApp(config);
+
+    const db = firebase.firestore()
+
+    // date issue fix according to firebase
+    db.settings({ timestampsInSnapshots: true })
+
+    // firebase collections
+    const usersCollection = db.collection('users')
+    const vehiclesCollection = db.collection('vehicles')
+    let sim = new Sim(Date.now());
+    setInterval(()=>{
+      sim.step(1000);
+      console.log(sim.getState());
+      app.vehicles.forEach(av => {
+        av.timestamp.seconds = (sim.getState().timestamp/1000).toFixed(0);
+        vehiclesCollection.doc(av.id).update({"timestamp":av.timestamp})
+          .then(function() { console.log("Document successfully updated!"); })
+          .catch(err => {
+              // eslint-disable-next-line
+              log.error(err);
+            });
+      });
+    }, 1000);
+
+    // FirebaseUI config.
+    var uiConfig = {
+      signInSuccessUrl: 'sim.html',
+      credentialHelper: firebaseui.auth.CredentialHelper.NONE,
+      signInOptions: [
+        // Leave the lines as is for the providers you want to offer your users.
+        // firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+        // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+        // firebase.auth.GithubAuthProvider.PROVIDER_ID,
+        firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        // firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+        // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+      ],
+      callbacks: {
+        signInSuccessWithAuthResult: (authResult) => {
+          let uid = authResult.user.uid;
+          console.info(authResult.user);
+          usersCollection.doc(uid).get().then(res => {
+            if (res.exists) {
+              console.info()
+              app.username = res.data().name;
+              // commit('setUserProfile', res.data());
+              vehiclesCollection.where("owner", "==", uid).onSnapshot(querySnapshot => {
+                app.vehicles = []
+                // state.vehicles = []
+                querySnapshot.forEach(doc => {
+                  // doc.data() is never undefined for query doc snapshots
+                  // log.info(doc.id, " => ", doc.data());
+                  let avInfo = doc.data();
+                  avInfo.id = doc.id;
+                  app.vehicles.push(avInfo);
+                })
+              }, err => {
+                log.error(err)
+              });
+
+            }
+            else {
+              // Create user if not existing
+              // let userData = {
+              //   name: authResult.user.displayName,
+              //   photo: "" //authResult.user.photourl || ""
+              // };
+              // usersCollection
+              // .doc(authResult.user.uid)
+              // .set(userData).then(()=>{
+              //   commit('setUserProfile', res.data());
+              // });
+            }
+          })
+            .catch(err => {
+              // eslint-disable-next-line
+              log.error(err);
+              // router.push("/home");
+              return false;
+            });
+          return false;
+        }
+      }
+    };
+
+    // Initialize the FirebaseUI Widget using Firebase.
+    var ui = new firebaseui.auth.AuthUI(firebase.auth());
+    // The start method will wait until the DOM is loaded.
+    ui.start('#firebaseui-auth-container', uiConfig);
+  </script>
+  <style>
+  </style>
+</head>
+
+<body>
+  <h1>Simulation</h1>
+  <div id="firebaseui-auth-container"></div>
+  <div id="app">
+    Hello {{ username }}
+    <div v-for="vehicle in vehicles">{{vehicle.name}} {{vehicle.timestamp}}</div>
+  </div>
+  <script>    
+  var app = new Vue({
+    el: '#app',
+    data: {
+      username: '',
+      vehicles: []
+    }
+  })
+</script>
+</body>
+
+</html>
