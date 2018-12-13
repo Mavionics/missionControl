@@ -37,7 +37,7 @@ describe('VehicleListItem.vue', () => {
   const timestamp = 3000
 
   beforeEach(() => {
-    vehicleData = { "name": "Fly-thing", "owner": "c6pGDLQ7GNbNjBh5HGPYRq7X8B53", "position": { "_lat": 58, "_long": 15.2 }, "timestamp": { "seconds": timestamp, "nanoseconds": 0 } };
+    vehicleData = { "name": "Fly-thing", "owner": "c6pGDLQ7GNbNjBh5HGPYRq7X8B53", "position": { "_lat": 58, "_long": 15.2 }, "timestamp": { "seconds": timestamp, "nanoseconds": 0 }, "status":"online" };
     wrapper = mount(VehicleListItem,
       {
         propsData: {
@@ -63,8 +63,8 @@ describe('VehicleListItem.vue', () => {
     it("Is live if timestamp is less than 10 seconds old", () => {
       wrapper.setData({ currentTime: 3000 + 9 })
       expect(wrapper.vm.isLive).to.be.true;
-      expect(wrapper.vm.status).to.eq("Live");
-      expect(wrapper.find('[data-testid=vehicleStatus]').text()).to.equal("Live");
+      expect(wrapper.vm.status).to.eq("online");
+      expect(wrapper.find('[data-testid=vehicleStatus]').text()).to.equal("online");
     }),
     it("Is not live if timestamp is more than 10 seconds old", () => {
       wrapper.setData({ currentTime: 3000 + 11 });
