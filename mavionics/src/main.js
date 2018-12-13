@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store'
-import { auth } from './firebaseConfig.js';
+import {store, auth} from './store'
 import {  } from "./assets/customs.css";
 
 Vue.config.productionTip = false

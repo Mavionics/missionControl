@@ -2,16 +2,41 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import router from './router'
 import * as log from 'loglevel';
-import {
-  auth,
-  usersCollection,
-  vehiclesCollection,
-  mapsCollection
-} from './firebaseConfig.js';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
+
+// Initialize Firebase
+var config = {
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID
+}
+
+firebase.initializeApp(config);
+
+// firebase utils
+const db = firebase.firestore()
+const auth = firebase.auth()
+
+// date issue fix according to firebase
+const settings = {
+  timestampsInSnapshots: true
+}
+db.settings(settings)
+
+// firebase collections
+const usersCollection = db.collection('users')
+const vehiclesCollection = db.collection('vehicles')
+const mapsCollection = db.collection('maps')
+const callsCollection = db.collection('calls')
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     currentUser: null,
     cesiumKey: "",
@@ -30,7 +55,7 @@ export default new Vuex.Store({
       state.cesiumKey = val
     },
     setActiveVehicle(state, val) {
-      state.currentVehicle =  val
+      state.currentVehicle = val
     }
   },
   getters: {
@@ -42,10 +67,11 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    loginE({ commit, dispatch }, {email, password}){
+    loginE({ commit, dispatch }, { email, password }) {
       auth.signInWithEmailAndPassword(email, password).then((authResult) => {
         commit("setCurrentUser", authResult.user)
-        dispatch('login')})
+        dispatch('login')
+      })
     },
     login({ commit, state }) {
       // Try getting userdata
@@ -60,19 +86,19 @@ export default new Vuex.Store({
             photo: "" //authResult.user.photourl || ""
           };
           usersCollection
-          .doc(state.currentUser.uid)
-          .set(userData).then(()=>{
-            commit('setUserProfile', res.data());
-          });
+            .doc(state.currentUser.uid)
+            .set(userData).then(() => {
+              commit('setUserProfile', res.data());
+            });
         }
       })
-      .catch(err => {
-        // eslint-disable-next-line
-        log.error(err);
-        // router.push("/home");
-        return false;
-      });
-  
+        .catch(err => {
+          // eslint-disable-next-line
+          log.error(err);
+          // router.push("/home");
+          return false;
+        });
+
       vehiclesCollection.where("owner", "==", state.currentUser.uid).onSnapshot(querySnapshot => {
         state.vehicles = []
         querySnapshot.forEach(doc => {
@@ -85,14 +111,14 @@ export default new Vuex.Store({
       }, err => {
         log.error(err)
       });
-  
+
       mapsCollection.doc("cesium").get().then(
         res => {
           commit('setCesiumKey', res.data().default)
         }, err => {
           log.error(err)
         })
-        .then(()=>router.push("/controlroom"));
+        .then(() => router.push("/controlroom"));
     },
     logout({ commit }) {
       auth.signOut().then(() => {
@@ -100,14 +126,23 @@ export default new Vuex.Store({
         commit('setCurrentUser', null)
       })
     },
-    connectToVehicle({commit}, {avId}){
+    connectToVehicle({ commit, state }, { avId }) {
+      callsCollection.add({
+        "vehicleId": avId,
+        "userId": state.currentUser.uid,
+        "timestamp": 45, //firebase.firestore.timestamp.now,
+        "status": "Hello",
+        "gdSDP": "a lot of data here"
+      });
       vehiclesCollection.doc(avId).get().then(
         res => {
           commit('setActiveVehicle', res.data());
         }
-      , err => {
-        log.error(err)
-      });
+        , err => {
+          log.error(err)
+        });
     }
   }
 })
+
+export {store,auth}

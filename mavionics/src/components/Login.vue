@@ -6,11 +6,11 @@
 </template>
 
 <script>
-import firebase from "firebase";
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
-import {auth} from "../firebaseConfig.js";
-import store from "../store.js";
+import {auth, store} from "../store.js";
 
 // Initialize the FirebaseUI Widget using Firebase.
 var ui = new firebaseui.auth.AuthUI(auth);
