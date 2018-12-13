@@ -1,6 +1,6 @@
 <template>
   <tr v-bind:key="vehicle.id">
-    <td data-testid="vehicleStatus">{{status}}</td>
+    <td data-testid="vehicleStatus" class="capitalize">{{status}}</td>
     <th data-testid="vehicleName" :class="{isDisabled : isLive}">{{vehicle.name}}</th>
 
     <td
@@ -58,4 +58,7 @@ export default {
 </script>
 
 <style>
+.capitalize:first-letter {
+    text-transform:capitalize;
+}
 </style>

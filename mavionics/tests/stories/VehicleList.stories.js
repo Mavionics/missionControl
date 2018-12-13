@@ -10,7 +10,7 @@ storiesOf('VehicleList', module)
       return {
         vehicles:[
           {id:1, name:'Flyer Offline', position:{latitude:58, longitude:14.2}, timestamp: {seconds: Date.now()+3000}},
-          {id:2, name:'Flyer Online', position:{latitude:56.8, longitude:14.6}, timestamp: {seconds: Date.now()}},
+          {id:2, name:'Flyer Online', position:{latitude:56.8, longitude:14.6}, timestamp: {seconds: Date.now()}, status:"online"},
         ]}
     }
     
