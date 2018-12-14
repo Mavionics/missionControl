@@ -1,4 +1,3 @@
-import Vuex from "vuex"
 import { shallowMount, createLocalVue, RouterLinkStub } from "@vue/test-utils"
 import { expect } from 'chai'
 import Navbar from '@/components/Navbar.vue'
@@ -6,7 +5,6 @@ import Navbar from '@/components/Navbar.vue'
 import Router from 'vue-router'
 
 const localVue = createLocalVue()
-localVue.use(Vuex)
 localVue.use(Router)
 
 const stubs = 
@@ -14,58 +12,46 @@ const stubs =
   RouterLink: RouterLinkStub
 }
 
-function createStore(name)
+function createMount()
 {
-  return new Vuex.Store({
-    getters:{
-      currentUser: ()=>name,
-      isAuthenticated: ()=>name != null
-    }
-  })
-}
-
-function createMount(store, props)
-{
-  return shallowMount(Navbar, { 
-    store, 
+  return shallowMount(Navbar, {
     localVue,
-    stubs, 
-    propsData: props
+    stubs
   })
 }
-
-let store = createStore("Ana");
 
 describe('Navbar.vue', () => {
   it("Hide logout if not logged in", () => {
-    let store = createStore();
-    const wrapper = createMount(store);
+    const wrapper = createMount();
     expect(wrapper.find("router-link-stub[name='Logout']").isVisible()).to.be.false
   }),
   
   it("show logout if logged in", () => {
-    const wrapper = createMount(store);
+    const wrapper = createMount();
+    wrapper.setProps({currentUser:'Username'})
     expect(wrapper.find("router-link-stub[name='Logout']").isVisible()).to.be.true
   }),
 
   it("Hide controlroom if not logged in", () => {
-    let store = createStore();
-    const wrapper = createMount(store);
+    const wrapper = createMount();
     expect(wrapper.find("router-link-stub[name='ControlRoom']").isVisible()).to.be.false
   }),
   
   it("show controlroom if logged in", () => {
-    const wrapper = createMount(store);
+    const wrapper = createMount();
+    wrapper.setProps({currentUser:'Username'})
     expect(wrapper.find("router-link-stub[name='ControlRoom']").isVisible()).to.be.true
   }),
 
   it('hide logo based on prop', () => {
-    const wrapper = createMount(store, { showBrand : false });
+    const wrapper = createMount();
+    wrapper.setProps({ showBrand : false })
     expect(wrapper.contains('#navbar-brand-img')).to.equal(false)
   }),
 
   it('show logo based on prop', () => {
-    const wrapper = createMount(store, { showBrand : true });
+    const wrapper = createMount();
+    wrapper.setProps({ showBrand : true })
     expect(wrapper.contains('#navbar-brand-img')).to.equal(true)
   })
 })

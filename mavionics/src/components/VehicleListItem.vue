@@ -1,0 +1,64 @@
+<template>
+  <tr v-bind:key="vehicle.id">
+    <td data-testid="vehicleStatus" class="capitalize">{{status}}</td>
+    <th data-testid="vehicleName" :class="{isDisabled : isLive}">{{vehicle.name}}</th>
+
+    <td
+      v-if="vehicle.position"
+      class="is-hidden-touch"
+    >{{vehicle.position.latitude}}, {{vehicle.position.longitude}}</td>
+    <td>
+      <div
+        name="Connect"
+        class="button is-success"
+        :disabled="!isLive"
+        @click="connectToVehicle(vehicle.id)"
+      >Connect</div>
+    </td>
+  </tr>
+</template>
+
+<script>
+// import * as log from 'loglevel';
+
+export default {
+  name: "VehicleListItem",
+  props: {
+    vehicle: Object
+  },
+  mounted() {
+    this.updateTime();
+  },
+  data: () => {
+    return {
+      currentTime: Number
+    };
+  },
+  computed: {
+    isLive() {
+      return (this.vehicle.status == "online") && (this.currentTime - this.vehicle.timestamp.seconds < 10);
+    },
+    status() {
+      if (this.isLive) {
+        return this.vehicle.status;
+      } else {
+        return "Offline";
+      }
+    }
+  },
+  methods: {
+    connectToVehicle(avId) {
+      this.$router.push({ name: "cockpit", params: { avId: avId } });
+    },
+    updateTime() {
+      this.currentTime = Date.now() / 1000;
+    }
+  }
+};
+</script>
+
+<style>
+.capitalize:first-letter {
+    text-transform:capitalize;
+}
+</style>

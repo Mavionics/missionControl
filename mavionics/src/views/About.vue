@@ -1,27 +1,22 @@
 <template>
   <div class="about">
-    <section class="hero is-info is-fullheight">
-      <div class="hero-head">
-        <Navbar/>
-      </div>
-      <div class="hero-body has-text-centered">
+    <Layout>
         <div class="container">
           <h1>This is an about page</h1>
           <div>This was build with configuration: {{appConfig}}</div>
         </div>
-      </div>
-    </section>
+    </Layout>
   </div>
 </template>
 
 
 <script>
-import Navbar from "@/components/Navbar.vue";
+import Layout from "@/components/Layout.vue"
 
 export default {
   name: "about",
   components: {
-    Navbar
+    Layout
   },
   computed:{
     appConfig() { 

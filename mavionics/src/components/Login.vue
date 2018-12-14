@@ -6,13 +6,11 @@
 </template>
 
 <script>
-import firebase from "firebase";
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
-import {auth, usersCollection} from "../firebaseConfig.js";
-import store from "../store.js";
-import router from "../router.js";
-import * as log from 'loglevel';
+import {auth, store} from "../store.js";
 
 // Initialize the FirebaseUI Widget using Firebase.
 var ui = new firebaseui.auth.AuthUI(auth);
@@ -44,24 +42,8 @@ export default {
           // second parameter available for redirectUrl
           
           store.commit("setCurrentUser", authResult.user);
-
-          // create user obj
-          usersCollection
-            .doc(authResult.user.uid)
-            .set({
-              name: authResult.user.displayName,
-              photo: "" //authResult.user.photourl || ""
-            })
-            .then(() => {
-              store.dispatch("fetchUserProfile");
-              router.push("/controlroom");
-            })
-            .catch(err => {
-              // eslint-disable-next-line
-              log.error(err);
-              // router.push("/home");
-              return false;
-            });
+          store.dispatch("login")
+          
 
           return false;
         },
