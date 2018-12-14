@@ -36,7 +36,6 @@ export default {
     });
 
     navigator.geolocation.getCurrentPosition(pos => {
-      log.warn(pos);
       this.myPosition = pos.coords;
     });
   },
@@ -56,19 +55,31 @@ export default {
         id: "user",
         position: Cesium.Cartesian3.fromDegrees(
           userPos.longitude,
-          userPos.latitude
+          userPos.latitude,
+          0
         ),
-        point : {
-          pixelSize: 10,
-          color: Cesium.Color.RED, 
-          outlineColor: Cesium.Color.WHITE, 
-          outlineWidth:1
-        }
-        // billboard: {
-        //   verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-        //   heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
-        //   disableDepthTestDistance: Number.POSITIVE_INFINITY
+        // ellipsoid:{
+        //   radii: new Cesium.Cartesian3(100,100,100),
+        //   material: Cesium.Color.RED.withAlpha(0.5),
+        //   outline: true, 
+        //   outlineColor: Cesium.Color.WHITE,
+        //   heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
         // }
+        // point : {
+        //   pixelSize: 10,
+        //   color: Cesium.Color.RED, 
+        //   outlineColor: Cesium.Color.WHITE, 
+        //   outlineWidth:1,
+        //   heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
+        // }
+        billboard: {
+          image: pinBuilder
+                  .fromText("You", Cesium.Color.BLACK, 70)
+                  .toDataURL(),
+          verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+          heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+          disableDepthTestDistance: Number.POSITIVE_INFINITY
+        }
       });
     },
     vehicles(val) {
