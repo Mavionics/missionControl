@@ -3,6 +3,12 @@ logs
 *.log
 npm-debug.log*
 
+# Travis
+buildFiles.tar
+keystore.jks
+keystore.properties
+google-services.json
+
 # Runtime data
 pids
 *.pid

@@ -39,7 +39,7 @@ matrix:
       cache:
         yarn: true
         directories:
-        - vueNautics/node_modules
+        - app/node_modules
         - "$HOME/.gradle/caches/"
         - "$HOME/.gradle/wrapper/"
       before_install:
@@ -52,7 +52,7 @@ matrix:
       - openssl aes-256-cbc -K $encrypted_ac356ff71e5e_key -iv $encrypted_ac356ff71e5e_iv -in buildFiles.tar.enc -out buildFiles.tar -d
       - ./scripts/extract.sh
       install:
-      - cd vueNautics/android
+      - cd app/android
       - npm install
       #- echo y | sdkmanager "ndk-bundle"
       #- echo y | sdkmanager "cmake;3.6.4111459"
@@ -66,7 +66,7 @@ matrix:
         #- android-wait-for-emulator
         #- adb shell input keyevent 82 &
       script:
-      - "./gradlew clean build
+      - "./gradlew clean build assembleRelease
         -PdisablePreDex --continue --stacktrace --profile"
       - pandoc `ls -1rt build/reports/profile/profile-*.html | tail -n1` -t plain
       deploy:
