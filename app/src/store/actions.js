@@ -1,5 +1,10 @@
 import { fetchPosts } from './fetch';
 import { AsyncStorage } from 'react-native';
+import firebase from 'react-native-firebase';
+
+// firebase utils
+const db = firebase.firestore()
+const auth = firebase.auth()
 
 // ensure data for rendering given list type
 export function FETCH_LIST_DATA ({ commit, dispatch }, { type }) {
@@ -12,7 +17,8 @@ export function FETCH_LIST_DATA ({ commit, dispatch }, { type }) {
 
 export function LOGIN ({ commit, state}, {userObj, navigate}) {
   commit('LOGGING_IN', true)
-  return new Promise((resolve, reject) => {
+  return auth.signInWithEmailAndPassword(userObj.email, userObj.password)
+  .then((authResult) => {
     setTimeout(() => {
       commit('LOGIN_SUCCESFULL', {userObj})
       AsyncStorage.setItem('email', userObj.email)

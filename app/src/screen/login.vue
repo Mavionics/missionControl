@@ -76,8 +76,9 @@ export default {
   methods: {
     login() {
       if (this.emailValue && this.password && !this.$v.emailValue.$invalid) {
+
         store.dispatch('LOGIN', {
-          userObj: {email: this.emailValue},
+          userObj: {email: this.emailValue, password: this.password},
           navigate: this.navigation.navigate
         });
       } else {
