@@ -3,7 +3,7 @@ import { AsyncStorage } from 'react-native';
 import firebase from 'react-native-firebase';
 
 // firebase utils
-const db = firebase.firestore()
+//const db = firebase.firestore()
 const auth = firebase.auth()
 
 // ensure data for rendering given list type

@@ -88,11 +88,6 @@ apply from: "../../node_modules/react-native/react.gradle"
  */
 def enableSeparateBuildPerCPUArchitecture = false
 
-/**
- * Run Proguard to shrink the Java bytecode in release builds.
- */
-def enableProguardInReleaseBuilds = false
-
 // Create a variable called keystorePropertiesFile, and initialize it to your
 // keystore.properties file, in the rootProject folder.
 def keystorePropertiesFile = rootProject.file('app/keystore.properties')
@@ -135,7 +130,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled enableProguardInReleaseBuilds
+            minifyEnabled true
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.config
         }
@@ -163,7 +158,10 @@ dependencies {
 
     // Firebase dependencies
     implementation "com.google.android.gms:play-services-base:16.0.1"
-    implementation "com.google.firebase:firebase-core:16.0.6"
+    implementation "com.google.firebase:firebase-core:16.0.4"
+
+    implementation "com.google.firebase:firebase-auth:16.0.5"
+    //implementation "com.google.firebase:firebase-firestore:17.1.2"
 }
 
 // Run this once to be able to run the application with BUCK
