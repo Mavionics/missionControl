@@ -116,6 +116,7 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "0.1.0"
+        multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -161,7 +162,10 @@ dependencies {
     implementation "com.google.firebase:firebase-core:16.0.4"
 
     implementation "com.google.firebase:firebase-auth:16.0.5"
-    //implementation "com.google.firebase:firebase-firestore:17.1.2"
+    implementation "com.google.firebase:firebase-firestore:17.1.2"
+
+    // Multidex support drop this if target sdk version becomes =< 21
+    implementation 'com.android.support:multidex:1.0.3'
 }
 
 // Run this once to be able to run the application with BUCK
