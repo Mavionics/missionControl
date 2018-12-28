@@ -15,10 +15,11 @@ const store = new Vuex.Store({
   mutations,
 
   state: {
+    user: null,
     activeType: 'posts',
     posts: [],
+    vehicles: [],
     logging_in: false,
-    userObj: {},
     loadingPosts: false
   }
 });

@@ -37,7 +37,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 export default {
   computed: {
     items () {
-      return store.state.posts;
+      return store.state.vehicles;
     },
     loading () {
         return store.state.loadingPosts;
@@ -48,12 +48,16 @@ export default {
   },
   created () {
     this.fetchList(store.state.activeType);
+    this.fetchVehicles();
   },
   methods: {
     fetchList (type) {
       return store.dispatch('FETCH_LIST_DATA', {
         type: type
       });
+    },
+    fetchVehicles(){
+        return store.dispatch('FETCH_VEHICLES', store.state.user);
     }
   },
   components: {

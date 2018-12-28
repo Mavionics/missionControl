@@ -59,11 +59,11 @@ export default {
     return {
       emailValue: '',
       password: '',
-      loaded: false
+      loaded: true
     };
   },
   created() {
-    AsyncStorage.getItem('email').then((val) => {
+    /*AsyncStorage.getItem('email').then((val) => {
       if (val) {
         this.loaded = true
         this.navigation.navigate('Home')
@@ -71,7 +71,7 @@ export default {
       } else {
         this.loaded = true
       }
-    })
+    })*/
   },
   methods: {
     login() {

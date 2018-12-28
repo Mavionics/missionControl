@@ -3,7 +3,7 @@
     <nb-content :style="stylesObj.drawerContent" :bounces="false">
       <nb-list>
         <nb-list-item>
-          <nb-text>{{userData.email}}</nb-text>
+          <nb-text>{{user.email}}</nb-text>
         </nb-list-item>
         <nb-list-item>
           <nb-text :on-press="logout">Logout</nb-text>
@@ -39,8 +39,8 @@ export default {
         }
   },
   computed: {
-    userData () {
-      return store.state.userObj;
+    user () {
+      return store.state.user;
     }
   },
   data: {
