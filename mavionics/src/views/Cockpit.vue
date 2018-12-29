@@ -1,11 +1,7 @@
 <template>
   <div class="cockpit">
     <div id="top" class="top-panel parent">
-      <router-link
-        name="ControlRoom"
-        class="navbar-item"
-        to="/controlroom"
-      >Home</font-awesome-icon></router-link>
+      <router-link name="ControlRoom" class="navbar-item" to="/controlroom">Home</router-link>
     </div>
     <div id="video" class="fullscreen-panel parent">
       <div class="middle">Video</div>
@@ -70,7 +66,7 @@
   margin: 8px;
   bottom: 0;
   height: 35vh;
-  background: rgba(0, 0, 0, 0.50);
+  background: rgba(0, 0, 0, 0.5);
   right: 35vh;
 }
 

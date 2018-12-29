@@ -1,85 +1,92 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from './views/Home.vue'
-import {store} from "./store.js";
+import Vue from "vue";
+import Router from "vue-router";
+import Home from "./views/Home.vue";
+import { store } from "./store/store.js";
 
-import * as log from 'loglevel';
+import * as log from "loglevel";
 
-Vue.use(Router)
+Vue.use(Router);
 
 const router = new Router({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '*',
-      redirect: '/'
+      path: "*",
+      redirect: "/"
     },
     {
-      path: '/',
-      name: 'home',
+      path: "/",
+      name: "home",
       component: Home,
       meta: {
         requiresAuth: false
       }
     },
     {
-      path: '/controlroom',
-      name: 'controlroom',
+      path: "/controlroom",
+      name: "controlroom",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "controlroom" */ './views/ControlRoom.vue'),
+      component: () =>
+        import(/* webpackChunkName: "controlroom" */ "./views/ControlRoom.vue"),
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/cockpit',
-      name: 'cockpit',
-      component: () => import(/* webpackChunkName: "cockpit" */ './views/Cockpit.vue'),
+      path: "/cockpit",
+      name: "cockpit",
+      component: () =>
+        import(/* webpackChunkName: "cockpit" */ "./views/Cockpit.vue"),
       props: true,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/about',
-      name: 'about',
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      path: "/about",
+      name: "about",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./views/About.vue")
     },
     {
-      path: '/logout',
-      name: 'logout',
-      component: () => import(/* webpackChunkName: "logout" */ './views/Logout.vue')
+      path: "/logout",
+      name: "logout",
+      component: () =>
+        import(/* webpackChunkName: "logout" */ "./views/Logout.vue")
     },
     {
-      path: '/autologin/email/:email/password/:password',
+      path: "/autologin/email/:email/password/:password",
       redirect: to => {
-        store.dispatch("loginE", { email: to.params.email, password: to.params.password})
-        return "/home"
+        store.dispatch("loginE", {
+          email: to.params.email,
+          password: to.params.password
+        });
+        return "/home";
       },
       meta: {
         requiresAuth: false
       }
     }
   ]
-})
+});
 
 // Handle access verification
 
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
-  const isAuth = store.getters.isAuthenticated
+  const requiresAuth = to.matched.some(x => x.meta.requiresAuth);
+  const isAuth = store.getters.isAuthenticated;
 
   if (requiresAuth && !isAuth) {
-    log.warn("Not logged in! Redirecting!")
-    next('/')
+    log.warn("Not logged in! Redirecting!");
+    next("/");
   } else if (requiresAuth && isAuth) {
-    next()
+    next();
   } else {
-    next()
+    next();
   }
-})
+});
 
-export default router
+export default router;
