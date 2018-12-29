@@ -78,7 +78,7 @@
 
 <script>
 import Layout from "@/components/Layout.vue";
-
+import store from "@/store/store.js";
 
 export default {
   name: "cockpit",
@@ -86,16 +86,43 @@ export default {
     Layout
   },
   mounted() {
-const yourVideo = document.getElementById("yourVideo");
-const friendsVideo = document.getElementById("friendsVideo");
+    const yourVideo = document.getElementById("yourVideo");
+    const friendsVideo = document.getElementById("friendsVideo");
+    const servers = {
+      iceServers: [
+        { urls: "stun:stun.services.mozilla.com" },
+        { urls: "stun:stun.l.google.com:19302" },
+        {
+          urls: "turn:numb.viagenie.ca",
+          credential: "testtest",
+          username: "alex.o.poole@gmail.com"
+        }
+      ]
+    };
+    let pc = new RTCPeerConnection(servers);
 
-    navigator.mediaDevices
-      .getUserMedia({ audio: true, video: true })
-      // .then(stream => alert(stream))
-      .then(stream => (yourVideo.srcObject = stream));
-    
+    pc.createOffer()
+      .then(offer => pc.setLocalDescription(offer))
+      .then(() =>
+        this.$store.dispatch("connectToVehicle", {
+          avId: this.avId,
+          sdp: pc.localDescription
+        })
+      );
+
+    // .then(() => sendMessage(yourId, JSON.stringify({ 'sdp': pc.localDescription })));
+
+    // this.$store.dispatch("connect", { av: this.avId });
+    // navigator.mediaDevices
+    //   .getUserMedia({ audio: true, video: true })
+    //   // .then(stream => alert(stream))
+    //   .then(stream => (yourVideo.srcObject = stream));
+
     // Get data from db
-    this.$store.dispatch("connectToVehicle", { avId: this.avId });
+    // this.$store.dispatch("connectToVehicle", {
+    //   avId: this.avId,
+    //   sdp: pc.localDescription
+    // });
   },
   computed: {
     vehicle() {

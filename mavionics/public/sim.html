@@ -1,137 +1,228 @@
-<!DOCTYPE html>
 <html>
+  <meta charset="UTF-8" />
 
-<head>
-  <meta charset="UTF-8">
-  <title>Mavionics Simulator</title>
-  <!-- development version, includes helpful console warnings -->
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
-  <script src="https://cdn.firebase.com/libs/firebaseui/3.4.1/firebaseui.js"></script>
-  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.4.1/firebaseui.css" />
-  <script src="sim.js"></script>
-  <script>
-    // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyA1nNQbTLc2HxdDaweVqVqQTA0L4BHeaNE",
-      authDomain: "mavionics-dev.firebaseapp.com",
-      databaseURL: "https://mavionics-dev.firebaseio.com",
-      projectId: "mavionics-dev",
-      storageBucket: "mavionics-dev.appspot.com",
-      messagingSenderId: "900532418206"
-    };
-    firebase.initializeApp(config);
+  <html>
+    <head>
+      <meta charset="UTF-8" />
+      <title>Mavionics Simulator</title>
+      <!-- development version, includes helpful console warnings -->
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
+      <script src="https://cdn.firebase.com/libs/firebaseui/3.4.1/firebaseui.js"></script>
+      <link
+        type="text/css"
+        rel="stylesheet"
+        href="https://cdn.firebase.com/libs/firebaseui/3.4.1/firebaseui.css"
+      />
+      <script src="sim.js"></script>
+      <script>
+        // Initialize Firebase
+        var config = {
+          apiKey: "AIzaSyA1nNQbTLc2HxdDaweVqVqQTA0L4BHeaNE",
+          authDomain: "mavionics-dev.firebaseapp.com",
+          databaseURL: "https://mavionics-dev.firebaseio.com",
+          projectId: "mavionics-dev",
+          storageBucket: "mavionics-dev.appspot.com",
+          messagingSenderId: "900532418206"
+        };
+        firebase.initializeApp(config);
 
-    const db = firebase.firestore()
+        const db = firebase.firestore();
 
-    // date issue fix according to firebase
-    db.settings({ timestampsInSnapshots: true })
+        // date issue fix according to firebase
+        db.settings({ timestampsInSnapshots: true });
 
-    // firebase collections
-    const usersCollection = db.collection('users')
-    const vehiclesCollection = db.collection('vehicles')
-    let sim = new Sim(Date.now());
-    setInterval(()=>{
-      sim.step(1000);
-      console.log(sim.getState());
-      app.vehicles.forEach(av => {
-        av.timestamp.seconds = (sim.getState().timestamp/1000).toFixed(0);
-        vehiclesCollection.doc(av.id).update({"timestamp":av.timestamp})
-          .then(function() { console.log("Document successfully updated!"); })
-          .catch(err => {
-              // eslint-disable-next-line
-              log.error(err);
-            });
-      });
-    }, 1000);
+        // firebase collections
+        const usersCollection = db.collection("users");
+        const vehiclesCollection = db.collection("vehicles");
+        const callsCollection = db.collection("calls");
 
-    // FirebaseUI config.
-    var uiConfig = {
-      signInSuccessUrl: 'sim.html',
-      credentialHelper: firebaseui.auth.CredentialHelper.NONE,
-      signInOptions: [
-        // Leave the lines as is for the providers you want to offer your users.
-        // firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-        // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-        // firebase.auth.GithubAuthProvider.PROVIDER_ID,
-        firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        // firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-        // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
-      ],
-      callbacks: {
-        signInSuccessWithAuthResult: (authResult) => {
-          let uid = authResult.user.uid;
-          console.info(authResult.user);
-          usersCollection.doc(uid).get().then(res => {
-            if (res.exists) {
-              console.info()
-              app.username = res.data().name;
-              // commit('setUserProfile', res.data());
-              vehiclesCollection.where("owner", "==", uid).onSnapshot(querySnapshot => {
-                app.vehicles = []
-                // state.vehicles = []
-                querySnapshot.forEach(doc => {
-                  // doc.data() is never undefined for query doc snapshots
-                  // log.info(doc.id, " => ", doc.data());
-                  let avInfo = doc.data();
-                  avInfo.id = doc.id;
-                  app.vehicles.push(avInfo);
-                })
-              }, err => {
-                log.error(err)
+        const servers = {
+          iceServers: [
+            { urls: "stun:stun.services.mozilla.com" },
+            { urls: "stun:stun.l.google.com:19302" },
+            {
+              urls: "turn:numb.viagenie.ca",
+              credential: "testtest",
+              username: "alex.o.poole@gmail.com"
+            }
+          ]
+        };
+        const pc = new RTCPeerConnection(servers);
+
+        let sim = new Sim(Date.now());
+        setInterval(() => {
+          sim.step(1000);
+          console.log(sim.getState());
+
+          const canvas = document.getElementById("simCanvas");
+          var ctx = canvas.getContext("2d");
+          ctx.font = "30px Arial";
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillText((sim.getState().timestamp / 1000).toFixed(0), 10, 50);
+
+          app.vehicles.forEach(av => {
+            av.timestamp.seconds = (sim.getState().timestamp / 1000).toFixed(0);
+            vehiclesCollection
+              .doc(av.id)
+              .update({ timestamp: av.timestamp, status: "online" })
+              .then(function() {
+                console.log("Document successfully updated!");
+              })
+              .catch(err => {
+                // eslint-disable-next-line
+                log.error(err);
               });
+          });
+        }, 1000);
 
-            }
-            else {
-              // Create user if not existing
-              // let userData = {
-              //   name: authResult.user.displayName,
-              //   photo: "" //authResult.user.photourl || ""
-              // };
-              // usersCollection
-              // .doc(authResult.user.uid)
-              // .set(userData).then(()=>{
-              //   commit('setUserProfile', res.data());
-              // });
-            }
-          })
-            .catch(err => {
-              // eslint-disable-next-line
-              log.error(err);
-              // router.push("/home");
+        // FirebaseUI config.
+        var uiConfig = {
+          signInSuccessUrl: "sim.html",
+          credentialHelper: firebaseui.auth.CredentialHelper.NONE,
+          signInOptions: [
+            // Leave the lines as is for the providers you want to offer your users.
+            // firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+            // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+            // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+            // firebase.auth.GithubAuthProvider.PROVIDER_ID,
+            firebase.auth.EmailAuthProvider.PROVIDER_ID
+            // firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+            // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+          ],
+          callbacks: {
+            signInSuccessWithAuthResult: authResult => {
+              let uid = authResult.user.uid;
+              console.info(authResult.user);
+
+              callsCollection
+                .where("userId", "==", uid)
+                .onSnapshot(function(querySnapshot) {
+                  querySnapshot.forEach(function(doc) {
+                    readMessage(doc.data());
+                    console.log(
+                      "Call form",
+                      doc.data().userId,
+                      " to ",
+                      doc.data().vehicleId
+                    );
+                  });
+                });
+
+              usersCollection
+                .doc(uid)
+                .get()
+                .then(res => {
+                  if (res.exists) {
+                    console.info();
+                    app.username = res.data().name;
+                    // commit('setUserProfile', res.data());
+                    vehiclesCollection.where("owner", "==", uid).onSnapshot(
+                      querySnapshot => {
+                        app.vehicles = [];
+                        // state.vehicles = []
+                        querySnapshot.forEach(doc => {
+                          // doc.data() is never undefined for query doc snapshots
+                          // log.info(doc.id, " => ", doc.data());
+                          let avInfo = doc.data();
+                          avInfo.id = doc.id;
+                          app.vehicles.push(avInfo);
+                        });
+                      },
+                      err => {
+                        log.error(err);
+                      }
+                    );
+                  } else {
+                    // Create user if not existing
+                    // let userData = {
+                    //   name: authResult.user.displayName,
+                    //   photo: "" //authResult.user.photourl || ""
+                    // };
+                    // usersCollection
+                    // .doc(authResult.user.uid)
+                    // .set(userData).then(()=>{
+                    //   commit('setUserProfile', res.data());
+                    // });
+                  }
+                })
+                .catch(err => {
+                  // eslint-disable-next-line
+                  log.error(err);
+                  // router.push("/home");
+                  return false;
+                });
               return false;
-            });
-          return false;
+            }
+          }
+        };
+
+        // Initialize the FirebaseUI Widget using Firebase.
+        var ui = new firebaseui.auth.AuthUI(firebase.auth());
+        // The start method will wait until the DOM is loaded.
+        ui.start("#firebaseui-auth-container", uiConfig);
+
+        function readMessage(data) {
+          var sdp = JSON.parse(data.gdSDP);
+          var sender = data.vehicleId;
+          // if (sender != yourId) {
+          if (data.ice != undefined)
+            pc.addIceCandidate(new RTCIceCandidate(data.ice));
+          else if (sdp.type == "offer")
+            pc.setRemoteDescription(new RTCSessionDescription(sdp))
+              .then(() => pc.createAnswer())
+              .then(answer => pc.setLocalDescription(answer))
+              .then(() =>
+                sendMessage(
+                  yourId,
+                  JSON.stringify({ sdp: pc.localDescription })
+                )
+              );
+          else if (sdp.type == "answer")
+            pc.setRemoteDescription(new RTCSessionDescription(sdp));
+          // }
         }
-      }
-    };
 
-    // Initialize the FirebaseUI Widget using Firebase.
-    var ui = new firebaseui.auth.AuthUI(firebase.auth());
-    // The start method will wait until the DOM is loaded.
-    ui.start('#firebaseui-auth-container', uiConfig);
-  </script>
-  <style>
-  </style>
-</head>
+        function showMyFace() {
+          const canvas = document.getElementById("simCanvas");
+          const myVideo = document.getElementById("myVideo");
+          // Optional frames per second argument.
+          const stream = canvas.captureStream(25);
+          // Set the source of the <video> element to be the stream from the <canvas>.
+          myVideo.srcObject = stream;
+          pc.addStream(stream);
+          pc.createOffer().then(offer => pc.setLocalDescription(offer));
+          // .then(() => sendMessage(yourId, JSON.stringify({ 'sdp': pc.localDescription })));
+        }
+      </script>
+      <style></style>
+    </head>
 
-<body>
-  <h1>Simulation</h1>
-  <div id="firebaseui-auth-container"></div>
-  <div id="app">
-    Hello {{ username }}
-    <div v-for="vehicle in vehicles">{{vehicle.name}} {{vehicle.timestamp}}</div>
-  </div>
-  <script>    
-  var app = new Vue({
-    el: '#app',
-    data: {
-      username: '',
-      vehicles: []
-    }
-  })
-</script>
-</body>
+    <body onload="showMyFace()">
+      <h1>Simulation</h1>
+      <div id="firebaseui-auth-container"></div>
+      <div id="app">
+        Hello {{ username }}
+        <div v-for="vehicle in vehicles">
+          {{ vehicle.name }} {{ vehicle.timestamp }}
+        </div>
+      </div>
+      <video id="myVideo" autoplay muted playsinline></video>
+      <canvas id="simCanvas"></canvas>
+      <script>
+        var app = new Vue({
+          el: "#app",
+          data: {
+            username: "",
+            vehicles: []
+          }
+        });
 
+        // navigator.mediaDevices
+        //   .getUserMedia({ audio: true, video: true })
+        //   .then(stream => (myVideo.srcObject = stream));
+        // .then(stream => pc.addStream(stream));
+      </script>
+    </body>
+  </html>
 </html>
