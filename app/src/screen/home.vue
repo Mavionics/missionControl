@@ -40,22 +40,16 @@ export default {
       return store.state.vehicles;
     },
     loading () {
-        return store.state.loadingPosts;
+        return false;
     }
   },
   props: {
       navigation: Object
   },
   created () {
-    this.fetchList(store.state.activeType);
     this.fetchVehicles();
   },
   methods: {
-    fetchList (type) {
-      return store.dispatch('FETCH_LIST_DATA', {
-        type: type
-      });
-    },
     fetchVehicles(){
         return store.dispatch('FETCH_VEHICLES', store.state.user);
     }
