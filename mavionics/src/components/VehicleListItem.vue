@@ -10,7 +10,7 @@
     <td>
       <div
         name="Connect"
-        class="button is-success"
+        class="button is-success is-pulled-right"
         :disabled="!isLive"
         @click="connectToVehicle(vehicle.id)"
       >Connect</div>
@@ -36,7 +36,10 @@ export default {
   },
   computed: {
     isLive() {
-      return (this.vehicle.status == "online") && (this.currentTime - this.vehicle.timestamp.seconds < 10);
+      return (
+        this.vehicle.status == "online" &&
+        this.currentTime - this.vehicle.timestamp.seconds < 10
+      );
     },
     status() {
       if (this.isLive) {
@@ -59,6 +62,6 @@ export default {
 
 <style>
 .capitalize:first-letter {
-    text-transform:capitalize;
+  text-transform: capitalize;
 }
 </style>
