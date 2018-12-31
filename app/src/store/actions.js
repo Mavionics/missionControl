@@ -43,6 +43,13 @@ export function LOGIN ({ commit, state}, {userObj, navigate}) {
   })
 }
 
+export function AUTOLOGIN ({ commit, state}, {navigate}) {
+if(auth.currentUser != null){
+      commit('LOGIN_SUCCESFULL', auth.currentUser);
+      navigate('Home');
+    }
+}
+
 export function LOGOUT ({ commit, state}, callback) {
   return new Promise((resolve, reject) => {
       AsyncStorage.removeItem('email').then(() => {

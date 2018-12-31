@@ -63,15 +63,9 @@ export default {
     };
   },
   created() {
-    /*AsyncStorage.getItem('email').then((val) => {
-      if (val) {
-        this.loaded = true
-        this.navigation.navigate('Home')
-        store.dispatch('SET_USER', {userObj: {email: val}})
-      } else {
-        this.loaded = true
-      }
-    })*/
+            store.dispatch('AUTOLOGIN', {
+          navigate: this.navigation.navigate
+        });
   },
   methods: {
     login() {
