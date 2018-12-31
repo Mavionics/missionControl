@@ -5,7 +5,7 @@
         <text class="title">{{data.name}}</text>
       </view>
     <button
-        :on-press="onPressLearnMore"
+        :on-press="connectToVehicle"
         title="Fly!"
         color="#841584"
         accessibility-label="Vehicle ready for flight"
