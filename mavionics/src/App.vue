@@ -6,7 +6,7 @@
 
 <style lang="scss">
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -25,11 +25,5 @@
 </style>
 
 <script>
-import Vue from 'vue'
-import Buefy from 'buefy'
-import 'buefy/dist/buefy.css'
-
-Vue.use(Buefy)
-export default {
-}
+export default {};
 </script>

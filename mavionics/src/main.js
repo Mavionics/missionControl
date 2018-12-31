@@ -4,6 +4,11 @@ import router from "./router";
 import { store, auth } from "./store/store";
 import {} from "./assets/customs.css";
 
+import Buefy from "buefy";
+import "buefy/dist/buefy.css";
+
+Vue.use(Buefy);
+
 Vue.config.productionTip = false;
 
 // handle page reloads. Needs to know auth state before creating router
