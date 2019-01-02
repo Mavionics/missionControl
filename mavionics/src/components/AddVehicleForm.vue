@@ -6,11 +6,15 @@
       </header>
       <section class="modal-card-body">
         <b-field label="User">
-          <p>{{currentUser}}</p>
+          <p>{{currentUser.displayName}}</p>
         </b-field>
 
-        <b-field label="Vehicle Name" type="is-success" message="This name is available">
-          <b-input value="Simulator" maxlength="30"></b-input>
+        <b-field
+          label="Vehicle Name"
+          :type="{'is-success':isAvailable}"
+          message="This name is available"
+        >
+          <b-input v-model="vehicleName" maxlength="30"></b-input>
         </b-field>
 
         <b-field>
@@ -21,7 +25,7 @@
       </section>
       <footer class="modal-card-foot">
         <button class="button" type="button" @click="$parent.close()">Close</button>
-        <button class="button is-primary">Add</button>
+        <button class="button is-primary" type="button" @click="addVehicle">Add</button>
       </footer>
     </div>
   </form>
@@ -34,14 +38,28 @@ export default {
   components: {},
   props: ["user"],
   computed: {
+    isAvailable() {
+      return this.vehicleName.length;
+    },
+
     // mix the getters into computed with object spread operator
     ...mapGetters(["currentUser"])
   },
   data: () => {
     return {
+      vehicleName: "",
       // user: "Test Testarsson",
       isSim: true
     };
+  },
+  methods: {
+    addVehicle() {
+      this.$store.dispatch("addVehicle", {
+        name: this.vehicleName,
+        isSim: this.isSim
+      });
+      this.$parent.close();
+    }
   }
 };
 </script>

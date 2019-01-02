@@ -160,6 +160,10 @@ const store = new Vuex.Store({
             log.error(err);
           }
         );
+    },
+    addVehicle({ commit, state }, { name, isSim }) {
+      log.error("Add Vehicle " + name);
+      vehiclesCollection.add({ name: name, owner: state.currentUser.uid });
     }
   }
 });
