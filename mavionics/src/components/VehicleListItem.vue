@@ -4,9 +4,7 @@
     <th data-testid="vehicleName" :class="{isDisabled : isLive}">{{vehicle.name}}</th>
 
     <td class="is-hidden-touch">
-      <span
-        v-if="vehicle.position"
-      >{{vehicle.position.latitude.toFixed(2)}}, {{vehicle.position.longitude.toFixed(2)}}</span>
+      <span v-if="vehicle.position">{{position}}</span>
     </td>
     <td>
       <div
@@ -47,6 +45,20 @@ export default {
         return this.vehicle.status;
       } else {
         return "Offline";
+      }
+    },
+    position() {
+      if (
+        typeof this.vehicle !== "undefined" &&
+        typeof this.vehicle.position !== "undefined" &&
+        typeof this.vehicle.position.latitude === "number" &&
+        typeof this.vehicle.position.longitude === "number"
+      ) {
+        return (
+          this.vehicle.position.latitude.toFixed(2) +
+          ", " +
+          this.vehicle.position.longitude.toFixed(2)
+        );
       }
     }
   },

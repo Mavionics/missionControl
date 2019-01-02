@@ -9,7 +9,7 @@ describe("VehicleList.vue", () => {
     {
       name: "Fly-thing",
       owner: "c6pGDLQ7GNbNjBh5HGPYRq7X8B53",
-      position: { _lat: 58, _long: 15.2 },
+      position: { latitude: 58, longitude: 15.2 },
       timestamp: { seconds: timestamp, nanoseconds: 0 }
     }
   ];
@@ -47,7 +47,7 @@ describe("VehicleListItem.vue", () => {
     vehicleData = {
       name: "Fly-thing",
       owner: "c6pGDLQ7GNbNjBh5HGPYRq7X8B53",
-      position: { _lat: 58, _long: 15.2 },
+      position: { latitude: 58, longitude: 15.2 },
       timestamp: { seconds: timestamp, nanoseconds: 0 },
       status: "online"
     };
