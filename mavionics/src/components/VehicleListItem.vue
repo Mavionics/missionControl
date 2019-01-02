@@ -3,10 +3,11 @@
     <td data-testid="vehicleStatus" class="capitalize">{{status}}</td>
     <th data-testid="vehicleName" :class="{isDisabled : isLive}">{{vehicle.name}}</th>
 
-    <td
-      v-if="vehicle.position"
-      class="is-hidden-touch"
-    >{{vehicle.position.latitude}}, {{vehicle.position.longitude}}</td>
+    <td class="is-hidden-touch">
+      <span
+        v-if="vehicle.position"
+      >{{vehicle.position.latitude.toFixed(2)}}, {{vehicle.position.longitude.toFixed(2)}}</span>
+    </td>
     <td>
       <div
         name="Connect"

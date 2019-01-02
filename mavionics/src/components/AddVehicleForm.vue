@@ -48,7 +48,7 @@ export default {
   data: () => {
     return {
       vehicleName: "",
-      // user: "Test Testarsson",
+      description: "",
       isSim: true
     };
   },
@@ -56,6 +56,7 @@ export default {
     addVehicle() {
       this.$store.dispatch("addVehicle", {
         name: this.vehicleName,
+        description: this.description,
         isSim: this.isSim
       });
       this.$parent.close();
