@@ -168,6 +168,14 @@ const store = new Vuex.Store({
         isSim: isSim,
         owner: state.currentUser.uid
       });
+    },
+    startSimulation({ commit, state }, { avId }) {
+      // eslint-disable-next-line no-console
+      console.log("Starting simulation of " + avId);
+    },
+    stopSimulation({ commit, state }, { avId }) {
+      // eslint-disable-next-line no-console
+      console.log("Stoping simulation of " + avId);
     }
   }
 });

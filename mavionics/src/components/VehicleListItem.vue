@@ -7,6 +7,11 @@
       <span v-if="vehicle.position">{{position}}</span>
     </td>
     <td>
+      <div class="field" v-if="vehicle.isSim">
+        <b-switch v-model="vehicle.runSim" @input="toggleSimulation">Run Simulation</b-switch>
+      </div>
+    </td>
+    <td>
       <div
         name="Connect"
         class="button is-success is-pulled-right"
@@ -30,7 +35,8 @@ export default {
   },
   data: () => {
     return {
-      currentTime: Number
+      currentTime: Number,
+      runSim: false
     };
   },
   computed: {
@@ -68,6 +74,13 @@ export default {
     },
     updateTime() {
       this.currentTime = Date.now() / 1000;
+    },
+    toggleSimulation(start) {
+      if (start) {
+        this.$store.dispatch("startSimulation", { avId: this.vehicle.id });
+      } else {
+        this.$store.dispatch("stopSimulation", { avId: this.vehicle.id });
+      }
     }
   }
 };

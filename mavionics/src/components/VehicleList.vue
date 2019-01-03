@@ -22,7 +22,7 @@
         <p class="level-item">
           <button class="button is-primary" @click="showAddVehicle = true">
             <span class="icon is-small">
-              <i class="fas fa-add"></i>
+              <i class="fas fa-plus"></i>
             </span>
             <span>Add</span>
           </button>
