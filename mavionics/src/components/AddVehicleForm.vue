@@ -1,5 +1,5 @@
 <template>
-  <form action>
+  <form action @submit.prevent="validateBeforeSubmit">
     <div class="modal-card" style="width: auto">
       <header class="modal-card-head">
         <p class="modal-card-title">Add Vehicle</p>
@@ -10,22 +10,27 @@
         </b-field>
 
         <b-field
-          label="Vehicle Name"
-          :type="{'is-success':isAvailable}"
-          message="This name is available"
+          :type="{'is-danger': errors.has('vehicleName')}"
+          :message="errors.first('vehicleName')"
         >
-          <b-input v-model="vehicleName" maxlength="30"></b-input>
+          <b-input
+            v-model="vehicleName"
+            name="vehicleName"
+            maxlength="30"
+            v-validate="'required'"
+            placeholder="Vehicle Name"
+          ></b-input>
         </b-field>
 
         <b-field>
-          <b-input type="textarea" minlength="10" maxlength="100" placeholder="Description"></b-input>
+          <b-input type="textarea" maxlength="100" placeholder="Description" name="Description"></b-input>
         </b-field>
 
         <b-checkbox disabled v-model="isSim">Simulator</b-checkbox>
       </section>
       <footer class="modal-card-foot">
         <button class="button" type="button" @click="$parent.close()">Close</button>
-        <button class="button is-primary" type="button" @click="addVehicle">Add</button>
+        <button class="button is-primary" type="submit" @click="addVehicle">Add</button>
       </footer>
     </div>
   </form>
@@ -53,14 +58,26 @@ export default {
     };
   },
   methods: {
-    addVehicle() {
-      this.$store.dispatch("addVehicle", {
-        name: this.vehicleName,
-        description: this.description,
-        isSim: this.isSim
+    validateBeforeSubmit() {
+      this.$validator.validateAll().then(result => {
+        if (result) {
+          this.$store
+            .dispatch("addVehicle", {
+              name: this.vehicleName,
+              description: this.description,
+              isSim: this.isSim
+            })
+            .then(() => this.$parent.close());
+          return;
+        }
+        this.$toast.open({
+          message: "Form is not valid! Please check the fields.",
+          type: "is-danger",
+          position: "is-bottom"
+        });
       });
-      this.$parent.close();
-    }
+    },
+    addVehicle() {}
   }
 };
 </script>

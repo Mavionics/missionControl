@@ -9,6 +9,10 @@ import "buefy/dist/buefy.css";
 
 Vue.use(Buefy);
 
+import VeeValidate from "vee-validate";
+
+Vue.use(VeeValidate);
+
 Vue.config.productionTip = false;
 
 // handle page reloads. Needs to know auth state before creating router
