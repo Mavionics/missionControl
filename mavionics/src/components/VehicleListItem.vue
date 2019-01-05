@@ -32,6 +32,10 @@ export default {
   },
   mounted() {
     this.updateTime();
+    this.$options.interval = setInterval(this.updateTime, 1000);
+  },
+  beforeDestroy() {
+    clearInterval(this.$options.interval);
   },
   data: () => {
     return {
