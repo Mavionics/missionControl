@@ -111,13 +111,22 @@ const store = new Vuex.Store({
 
       vehiclesCollection.where("owner", "==", state.currentUser.uid).onSnapshot(
         querySnapshot => {
-          state.vehicles = [];
-          querySnapshot.forEach(doc => {
-            // doc.data() is never undefined for query doc snapshots
-            log.info(doc.id, " => ", doc.data());
-            let avInfo = doc.data();
-            avInfo.id = doc.id;
-            state.vehicles.push(avInfo);
+          querySnapshot.docChanges().forEach(change => {
+            if (change.type === "added") {
+              let avInfo = change.doc.data();
+              avInfo.id = change.doc.id;
+              state.vehicles.push(avInfo);
+            } else if (change.type === "removed") {
+              state.vehicles = state.vehicles.filter(
+                item => (item.id = change.doc.id)
+              );
+            } else if (change.type === "modified") {
+              let dbItem = change.doc.data();
+              let lcItem = state.vehicles.find(i => (i.id = change.doc.id));
+              for (var prop in dbItem) {
+                lcItem[prop] = dbItem[prop];
+              }
+            }
           });
         },
         err => {
