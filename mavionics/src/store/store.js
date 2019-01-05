@@ -6,6 +6,7 @@ import * as log from "loglevel";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import SimController from "@/sim/simController";
 
 // Initialize Firebase
 var config = {
@@ -34,6 +35,8 @@ const usersCollection = db.collection("users");
 const vehiclesCollection = db.collection("vehicles");
 const mapsCollection = db.collection("maps");
 const callsCollection = db.collection("calls");
+
+let sim;
 
 Vue.use(Vuex);
 
@@ -172,10 +175,13 @@ const store = new Vuex.Store({
     startSimulation({ commit, state }, { avId }) {
       // eslint-disable-next-line no-console
       console.log("Starting simulation of " + avId);
+      sim = new SimController(vehiclesCollection.doc(avId));
+      sim.start();
     },
     stopSimulation({ commit, state }, { avId }) {
       // eslint-disable-next-line no-console
       console.log("Stoping simulation of " + avId);
+      sim.stop();
     }
   }
 });

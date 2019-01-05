@@ -1,4 +1,4 @@
-class Sim {
+class PhySim {
   constructor(timeBase) {
     this.timestamp = timeBase;
   }
@@ -6,6 +6,8 @@ class Sim {
     this.timestamp += ms;
   }
   getState() {
-    return { timestamp: this.timestamp }
+    return { timestamp: this.timestamp };
   }
 }
+
+export default PhySim;
