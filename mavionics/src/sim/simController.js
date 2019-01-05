@@ -11,12 +11,16 @@ class SimController {
   start() {
     console.log("Started");
     this.timer = setInterval(() => {
-      this.physics.step(1000);
+      this.physics.step(1);
       console.log(this.physics.getState());
       let simState = this.physics.getState();
       this.doc
         .update({
-          timestamp: firestore.Timestamp.fromMillis(simState.timestamp),
+          timestamp: firestore.Timestamp.fromMillis(this.physics.getTime()),
+          position: new firestore.GeoPoint(
+            simState.latitude,
+            simState.longitude
+          ),
           status: "online"
         })
         .then(function() {
