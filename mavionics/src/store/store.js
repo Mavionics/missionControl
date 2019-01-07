@@ -153,15 +153,8 @@ const store = new Vuex.Store({
         commit("setCurrentUser", null);
       });
     },
-    connectToVehicle({ commit, state }, { avId, sdp }) {
-      callsCollection.add({
-        vehicleId: avId,
-        userId: state.currentUser.uid,
-        timestamp: 45, //firebase.firestore.timestamp.now,
-        status: "Init",
-        gdSDP: JSON.stringify(sdp)
-      });
-      vehiclesCollection
+    connectToVehicle({ commit, state }, { avId }) {
+      return vehiclesCollection
         .doc(avId)
         .get()
         .then(
@@ -172,6 +165,9 @@ const store = new Vuex.Store({
             log.error(err);
           }
         );
+    },
+    setAnswer({ commit, state }, { avId, answer }) {
+      vehiclesCollection.doc(avId).update({ answer: answer, status: "answer" });
     },
     addVehicle({ commit, state }, { name, description, isSim }) {
       vehiclesCollection.add({

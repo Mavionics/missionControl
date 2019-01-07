@@ -15,7 +15,7 @@
       <div
         name="Connect"
         class="button is-success is-pulled-right"
-        :disabled="!isLive"
+        :disabled="!isReadyForConnect"
         @click="connectToVehicle(vehicle.id)"
       >Connect</div>
     </td>
@@ -45,10 +45,7 @@ export default {
   },
   computed: {
     isLive() {
-      return (
-        this.vehicle.status == "online" &&
-        this.currentTime - this.vehicle.timestamp.seconds < 10
-      );
+      return this.currentTime - this.vehicle.timestamp.seconds < 10;
     },
     status() {
       if (this.isLive) {
@@ -56,6 +53,9 @@ export default {
       } else {
         return "Offline";
       }
+    },
+    isReadyForConnect() {
+      return this.isLive && this.vehicle.status === "offer";
     },
     position() {
       if (

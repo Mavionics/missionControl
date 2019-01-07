@@ -100,15 +100,40 @@ export default {
       ]
     };
     let pc = new RTCPeerConnection(servers);
+    pc.onicecandidate = event =>
+      event.candidate
+        ? console.log(JSON.stringify({ ice: event.candidate }))
+        : console.log("Sent All Ice");
 
-    pc.createOffer()
-      .then(offer => pc.setLocalDescription(offer))
-      .then(() =>
-        this.$store.dispatch("connectToVehicle", {
-          avId: this.avId,
-          sdp: pc.localDescription
-        })
-      );
+    this.$store
+      .dispatch("connectToVehicle", {
+        avId: this.avId
+      })
+      .then(() => {
+        const sdp = JSON.parse(this.vehicle.offer);
+        console.log(sdp.sdp);
+        pc.setRemoteDescription(new RTCSessionDescription(sdp.sdp))
+          .then(() => pc.createAnswer())
+          .then(answer => pc.setLocalDescription(answer))
+          .then(() => {
+            console.log(
+              "Send answer",
+              JSON.stringify({ sdp: pc.localDescription })
+            );
+            this.$store.dispatch("setAnswer", {
+              avId: this.avId,
+              answer: JSON.stringify({ sdp: pc.localDescription })
+            });
+          });
+      });
+    // pc.createOffer()
+    //   .then(offer => pc.setLocalDescription(offer))
+    //   .then(() =>
+    //     this.$store.dispatch("connectToVehicle", {
+    //       avId: this.avId,
+    //       sdp: pc.localDescription
+    //     })
+    //   );
 
     // .then(() => sendMessage(yourId, JSON.stringify({ 'sdp': pc.localDescription })));
 
