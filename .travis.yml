@@ -107,6 +107,6 @@ matrix:
       - npm ci
       - npm install -g firebase-tools
       script:
-      #- npm run test:unit
+      - npm run test:unit
       #- $(npm bin)/cypress run
       - ./../scripts/build.sh
