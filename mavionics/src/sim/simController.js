@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
 import PhySim from "@/sim/simPhysics";
 import { firestore } from "firebase";
+import RtcModule from "@/modules/RtcModule";
 
 class SimController {
   constructor(firebaseDocument) {
@@ -21,45 +23,18 @@ class SimController {
     this.canvas = canvas;
 
     this.stream = this.canvas.captureStream(25);
-    const servers = {
-      iceServers: [
-        { urls: "stun:stun.services.mozilla.com" },
-        { urls: "stun:stun.l.google.com:19302" },
-        {
-          urls: "turn:numb.viagenie.ca",
-          credential: "testtest",
-          username: "alex.o.poole@gmail.com"
-        }
-      ]
-    };
-
-    this.pc = new RTCPeerConnection(servers);
-    this.pc.addStream(this.stream);
   }
 
   start() {
-    console.log("Started");
-    this.pc.onicecandidate = event =>
-      event.candidate
-        ? console.log(JSON.stringify({ ice: event.candidate }))
-        : console.log("Sent All Ice");
+    let rtc = new RtcModule(this.doc, true);
+    rtc.addStream(this.stream);
 
-    this.pc
-      .createOffer()
-      .then(offer => this.pc.setLocalDescription(offer))
-      .then(() => {
-        this.doc.update({
-          status: "offer",
-          offer: JSON.stringify({ sdp: this.pc.localDescription })
-        });
-        this.doc.onSnapshot(doc => {
-          if (doc.data().status === "answer") {
-            let ans = JSON.parse(doc.data().answer);
-            this.pc.setRemoteDescription(new RTCSessionDescription(ans.sdp));
-            this.doc.update({ status: "ICE" });
-          }
-        });
-      });
+    // rtc.onMessage = msg => {
+    //   console.log(msg);
+    // };
+    // rtc.inAwhile("Hello");
+
+    rtc.sendOffer().then(() => {});
 
     this.timer = setInterval(() => {
       this.physics.step(1);
@@ -84,8 +59,7 @@ class SimController {
         console.log("Document successfully updated!");
       })
       .catch(err => {
-        // eslint-disable-next-line
-        log.error(err);
+        console.error(err);
       });
   }
 

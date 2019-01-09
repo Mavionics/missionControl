@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import router from "../router";
-import moduleRTC from "@/store/modules/webrtc";
 import * as log from "loglevel";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -41,10 +40,8 @@ let sim;
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-  modules: {
-    rtc: moduleRTC
-  },
   state: {
+    avRef: null,
     currentUser: null,
     cesiumKey: "",
     userProfile: {},
@@ -61,8 +58,9 @@ const store = new Vuex.Store({
     setCesiumKey(state, val) {
       state.cesiumKey = val;
     },
-    setActiveVehicle(state, val) {
+    setActiveVehicle(state, { val, ref }) {
       state.currentVehicle = val;
+      state.avRef = ref;
     }
   },
   getters: {
@@ -90,10 +88,7 @@ const store = new Vuex.Store({
             commit("setUserProfile", res.data());
           } else {
             // Create user if not existing
-            let userData = {
-              name: state.currentUser.displayName,
-              photo: "" //authResult.user.photourl || ""
-            };
+            let userData = { name: state.currentUser.displayName, photo: "" }; //authResult.user.photourl || ""
             usersCollection
               .doc(state.currentUser.uid)
               .set(userData)
@@ -159,15 +154,15 @@ const store = new Vuex.Store({
         .get()
         .then(
           res => {
-            commit("setActiveVehicle", res.data());
+            commit("setActiveVehicle", {
+              val: res.data(),
+              ref: vehiclesCollection.doc(avId)
+            });
           },
           err => {
             log.error(err);
           }
         );
-    },
-    setAnswer({ commit, state }, { avId, answer }) {
-      vehiclesCollection.doc(avId).update({ answer: answer, status: "answer" });
     },
     addVehicle({ commit, state }, { name, description, isSim }) {
       vehiclesCollection.add({
