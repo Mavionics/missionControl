@@ -3,15 +3,19 @@
     <td data-testid="vehicleStatus" class="capitalize">{{status}}</td>
     <th data-testid="vehicleName" :class="{isDisabled : isLive}">{{vehicle.name}}</th>
 
-    <td
-      v-if="vehicle.position"
-      class="is-hidden-touch"
-    >{{vehicle.position.latitude}}, {{vehicle.position.longitude}}</td>
+    <td class="is-hidden-touch">
+      <span v-if="vehicle.position">{{position}}</span>
+    </td>
+    <td>
+      <div class="field" v-if="vehicle.isSim">
+        <b-switch v-model="vehicle.runSim" @input="toggleSimulation">Run Simulation</b-switch>
+      </div>
+    </td>
     <td>
       <div
         name="Connect"
-        class="button is-success"
-        :disabled="!isLive"
+        class="button is-success is-pulled-right"
+        :disabled="!isReadyForConnect"
         @click="connectToVehicle(vehicle.id)"
       >Connect</div>
     </td>
@@ -28,21 +32,43 @@ export default {
   },
   mounted() {
     this.updateTime();
+    this.$options.interval = setInterval(this.updateTime, 1000);
+  },
+  beforeDestroy() {
+    clearInterval(this.$options.interval);
   },
   data: () => {
     return {
-      currentTime: Number
+      currentTime: Number,
+      runSim: false
     };
   },
   computed: {
     isLive() {
-      return (this.vehicle.status == "online") && (this.currentTime - this.vehicle.timestamp.seconds < 10);
+      return this.currentTime - this.vehicle.timestamp.seconds < 10;
     },
     status() {
       if (this.isLive) {
         return this.vehicle.status;
       } else {
         return "Offline";
+      }
+    },
+    isReadyForConnect() {
+      return this.isLive && this.vehicle.status === "offer";
+    },
+    position() {
+      if (
+        typeof this.vehicle !== "undefined" &&
+        typeof this.vehicle.position !== "undefined" &&
+        typeof this.vehicle.position.latitude === "number" &&
+        typeof this.vehicle.position.longitude === "number"
+      ) {
+        return (
+          this.vehicle.position.latitude.toFixed(2) +
+          ", " +
+          this.vehicle.position.longitude.toFixed(2)
+        );
       }
     }
   },
@@ -52,6 +78,13 @@ export default {
     },
     updateTime() {
       this.currentTime = Date.now() / 1000;
+    },
+    toggleSimulation(start) {
+      if (start) {
+        this.$store.dispatch("startSimulation", { avId: this.vehicle.id });
+      } else {
+        this.$store.dispatch("stopSimulation", { avId: this.vehicle.id });
+      }
     }
   }
 };
@@ -59,6 +92,6 @@ export default {
 
 <style>
 .capitalize:first-letter {
-    text-transform:capitalize;
+  text-transform: capitalize;
 }
 </style>

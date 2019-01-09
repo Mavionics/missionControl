@@ -1,16 +1,16 @@
 <template>
-    <div class="">
-        <div id="firebaseui-auth-container"></div>
-        <div id="loader">Loading...</div>
-    </div>
+  <div class>
+    <div id="firebaseui-auth-container"></div>
+    <div id="loader">Loading...</div>
+  </div>
 </template>
 
 <script>
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import firebase from "firebase/app";
+import "firebase/auth";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
-import {auth, store} from "../store.js";
+import { auth, store } from "@/store/store.js";
 
 // Initialize the FirebaseUI Widget using Firebase.
 var ui = new firebaseui.auth.AuthUI(auth);
@@ -35,15 +35,14 @@ export default {
         }
       ],
       callbacks: {
-        signInSuccessWithAuthResult: (authResult) => {
+        signInSuccessWithAuthResult: authResult => {
           // User successfully signed in.
           // Return type determines whether we continue the redirect automatically
           // or whether we leave that to developer to handle.
           // second parameter available for redirectUrl
-          
+
           store.commit("setCurrentUser", authResult.user);
-          store.dispatch("login")
-          
+          store.dispatch("login");
 
           return false;
         },
