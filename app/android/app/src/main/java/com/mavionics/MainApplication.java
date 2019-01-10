@@ -12,6 +12,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 
+import com.oney.WebRTCModule.WebRTCModulePackage;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,7 +31,8 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
               new MainReactPackage(),
               new RNFirebasePackage(),
               new RNFirebaseAuthPackage(),
-              new RNFirebaseFirestorePackage()
+              new RNFirebaseFirestorePackage(),
+              new WebRTCModulePackage()
       );
     }
 

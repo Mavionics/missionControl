@@ -73,9 +73,7 @@ matrix:
         #- android-wait-for-emulator
         #- adb shell input keyevent 82 &
       script:
-      - "./gradlew clean build assembleRelease
-        -PdisablePreDex --continue --stacktrace --profile"
-      - pandoc `ls -1rt build/reports/profile/profile-*.html | tail -n1` -t plain
+      - "./gradlew assembleRelease"
       deploy:
         # Deploy app
         #provider: releases
