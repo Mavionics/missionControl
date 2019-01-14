@@ -23,6 +23,8 @@ firebase.initializeApp(config);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
 // date issue fix according to firebase
 const settings = {
   timestampsInSnapshots: true
@@ -33,7 +35,6 @@ db.settings(settings);
 const usersCollection = db.collection("users");
 const vehiclesCollection = db.collection("vehicles");
 const mapsCollection = db.collection("maps");
-const callsCollection = db.collection("calls");
 
 let sim;
 
@@ -64,6 +65,9 @@ const store = new Vuex.Store({
     }
   },
   getters: {
+    getUserName(state) {
+      return state.currentUser ? state.currentUser.displayName : "";
+    },
     currentUser(state) {
       return state.currentUser;
     },
@@ -104,6 +108,7 @@ const store = new Vuex.Store({
           return false;
         });
 
+      state.vehicles = [];
       vehiclesCollection.where("owner", "==", state.currentUser.uid).onSnapshot(
         querySnapshot => {
           querySnapshot.docChanges().forEach(change => {
@@ -148,7 +153,7 @@ const store = new Vuex.Store({
         commit("setCurrentUser", null);
       });
     },
-    connectToVehicle({ commit, state }, { avId }) {
+    connectToVehicle({ commit }, { avId }) {
       return vehiclesCollection
         .doc(avId)
         .get()

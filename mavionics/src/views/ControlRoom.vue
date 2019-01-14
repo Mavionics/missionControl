@@ -1,11 +1,10 @@
 <template>
   <div class="controlRoom">
-    
     <Layout>
-        <div class="box is-glass container is-fluid">
-          <OverviewMap :vehicles="vehicles"/>
-          <VehicleList :vehicles="vehicles"/>
-        </div>
+      <div class="box is-glass container is-fluid">
+        <OverviewMap :vehicles="vehicles"/>
+        <VehicleList :vehicles="vehicles"/>
+      </div>
     </Layout>
   </div>
 </template>
@@ -15,9 +14,9 @@
 
 
 <script>
-import Layout from "@/components/Layout.vue"
-import OverviewMap from "@/components/OverviewMap.vue"
-import VehicleList from "@/components/VehicleList.vue"
+import Layout from "@/components/Layout.vue";
+import OverviewMap from "@/components/OverviewMap.vue";
+import VehicleList from "@/components/VehicleList.vue";
 
 export default {
   name: "ControlRoom",
@@ -27,11 +26,6 @@ export default {
     VehicleList
   },
   computed: {
-    displayName() {
-      return this.$store.state.currentUser
-        ? this.$store.state.currentUser.displayName
-        : "";
-    },
     vehicles() {
       return this.$store.state.vehicles;
     }
