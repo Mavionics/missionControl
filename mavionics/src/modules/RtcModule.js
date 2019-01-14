@@ -1,119 +1,88 @@
 /* eslint-disable no-console */
+import Peer from "simple-peer";
 
 class RtcModule {
-  constructor(dbRef, isTX) {
-    console.log("Loaded RtcModule");
-    this.isTX = isTX;
+  constructor(dbRef, initiator, stream) {
+    this.initiator = initiator;
     this.dbRef = dbRef;
+    this.stream = stream;
     this.onMessage = () => {};
     this.onStream = () => {};
-    if (this.isTX) {
-      this.outMsgs = this.dbRef.collection("toRX");
-      this.inMsgs = this.dbRef.collection("toTX");
-    } else {
-      this.outMsgs = this.dbRef.collection("toTX");
-      this.inMsgs = this.dbRef.collection("toRX");
-    }
 
-    this.outMsgs.get().then(querySnapshot => {
+    if (initiator) {
+      this.inMessages = this.dbRef.collection("sig_offerer");
+      this.outMessages = this.dbRef.collection("sig_responder");
+    } else {
+      this.inMessages = this.dbRef.collection("sig_responder");
+      this.outMessages = this.dbRef.collection("sig_offerer");
+    }
+  }
+
+  async clearCollection(collectionRef) {
+    return collectionRef.get().then(querySnapshot => {
       querySnapshot.forEach(doc => {
         doc.ref.delete();
       });
     });
+  }
 
-    // this.inMsgs.get().then(querySnapshot => {
-    //   querySnapshot.forEach(doc => {
-    //     doc.ref.delete();
-    //   });
-    // });
+  async connect() {
+    if (this.initiator) {
+      await Promise.all([
+        this.clearCollection(this.inMessages),
+        this.clearCollection(this.outMessages)
+      ]);
 
-    this.pc = new RTCPeerConnection({
-      iceServers: [
-        { urls: "stun:stun.services.mozilla.com" },
-        { urls: "stun:stun.l.google.com:19302" },
-        {
-          urls: "turn:numb.viagenie.ca",
-          credential: "testtest",
-          username: "alex.o.poole@gmail.com"
-        }
-      ]
+      await this.dbRef.update({ status: "offer" });
+    }
+
+    this.p = new Peer({
+      initiator: this.initiator,
+      trickle: false,
+      objectMode: true,
+      config: {
+        iceServers: [
+          { urls: "stun:stun.services.mozilla.com" },
+          { urls: "stun:stun.l.google.com:19302" },
+          {
+            urls: "turn:numb.viagenie.ca",
+            credential: "testtest",
+            username: "alex.o.poole@gmail.com"
+          }
+        ]
+      },
+      stream: this.stream
     });
 
-    this.pc.onicecandidate = event =>
-      event.candidate
-        ? this._sendICE({ ice: JSON.stringify(event.candidate) })
-        : console.log("Sent All Ice");
-
-    this.pc.onaddstream = event => this.onStream(event);
-
-    this.dbRef.onSnapshot(doc => {
-      if (!this.isTX && doc.data().status === "offer") {
-        let off = JSON.parse(doc.data().offer);
-        this.pc
-          .setRemoteDescription(new RTCSessionDescription(off.sdp))
-          .then(() => this.pc.createAnswer())
-          .then(answer => this.pc.setLocalDescription(answer))
-          .then(() => {
-            this.dbRef.update({
-              answer: JSON.stringify({ sdp: this.pc.localDescription }),
-              status: "answer"
-            });
-          });
-      } else if (this.isTX && doc.data().status === "answer") {
-        let ans = JSON.parse(doc.data().answer);
-        this.pc
-          .setRemoteDescription(new RTCSessionDescription(ans.sdp))
-          .then(() => {
-            this.dbRef.update({ status: "ICE" });
-          });
-      } else if (doc.data().status == "ICE") {
-        this.inMsgs.onSnapshot(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            let d = doc.data();
-            if (d.message === undefined) return;
-            let msg = d.message;
-            console.log(msg);
-
-            this.pc.addIceCandidate(new RTCIceCandidate(JSON.parse(msg.ice)));
-            doc.ref.delete();
-          });
-        });
-      }
-    });
-  }
-
-  addStream(stream) {
-    this.pc.addStream(stream);
-  }
-
-  sendMessage() {}
-
-  sendAnswer() {
-    return this.pc.createOffer();
-  }
-
-  sendOffer() {
-    return this.pc
-      .createOffer()
-      .then(offer => this.pc.setLocalDescription(offer))
-      .then(() => {
-        // this.dbRef.collection("iceOffer").delete();
-        this.dbRef.update({
-          status: "offer",
-          offer: JSON.stringify({ sdp: this.pc.localDescription }),
-          answer: null
-        });
+    this.inMessages.onSnapshot(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        this.p.signal(doc.data());
       });
+    });
+
+    this.p.on("signal", data => this.outMessages.add(data));
+    this.p.on("stream", this.onStream);
+    this.p.on("data", this.onMessage);
+
+    return new Promise((resolve, reject) => {
+      this.p.on("error", function(err) {
+        console.log("error", err);
+        reject(err);
+      });
+
+      this.p.on("connect", () => {
+        this.dbRef.update({ status: "connected" });
+        resolve();
+      });
+    });
   }
 
-  inAwhile(msg) {
-    window.setTimeout(() => {
-      this.onMessage(msg);
-    }, 5000);
+  sendMessage(data) {
+    if (this.p !== null) this.p.send(data);
   }
 
-  _sendICE(data) {
-    this.outMsgs.add({ message: data });
+  disconnect() {
+    this.p.disconnect();
   }
 }
 

@@ -12,7 +12,8 @@
     </div>
     <div class="lower-panel parent" id="debug">
       <div class="middle">Debug</div>
-      <video id="yourVideo" autoplay muted playsinline></video>
+      <!-- <video id="yourVideo" autoplay muted playsinline></video> -->
+      <div>{{lastData}}</div>
     </div>
   </div>
 </template>
@@ -74,11 +75,14 @@
   max-width: 100%;
   max-height: 100%;
 }
+
+#debug {
+  color: beige;
+}
 </style>
 
 <script>
 import Layout from "@/components/Layout.vue";
-import store from "@/store/store.js";
 import RtcModule from "@/modules/RtcModule";
 
 export default {
@@ -86,8 +90,13 @@ export default {
   components: {
     Layout
   },
+  data() {
+    return {
+      lastData: ""
+    };
+  },
   mounted() {
-    const yourVideo = document.getElementById("yourVideo");
+    // const yourVideo = document.getElementById("yourVideo");
     const friendsVideo = document.getElementById("friendsVideo");
 
     this.$store
@@ -96,11 +105,9 @@ export default {
       })
       .then(() => {
         let rtc = new RtcModule(this.$store.state.avRef, false);
-        rtc.onStream = event => (friendsVideo.srcObject = event.stream);
-        // rtc.sendAnswer();
-
-        const sdp = JSON.parse(this.vehicle.offer);
-        console.log(sdp.sdp);
+        rtc.onStream = stream => (friendsVideo.srcObject = stream);
+        rtc.onMessage = data => (this.lastData = data);
+        rtc.connect();
       });
   },
   computed: {

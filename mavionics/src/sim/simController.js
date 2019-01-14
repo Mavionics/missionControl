@@ -26,20 +26,20 @@ class SimController {
   }
 
   start() {
-    let rtc = new RtcModule(this.doc, true);
-    rtc.addStream(this.stream);
+    this.rtc = new RtcModule(this.doc, true, this.stream);
 
-    // rtc.onMessage = msg => {
-    //   console.log(msg);
-    // };
-    // rtc.inAwhile("Hello");
+    this.rtc.onMessage = msg => {
+      console.log("Sim got: ", msg);
+    };
 
-    rtc.sendOffer().then(() => {});
+    this.rtc.connect().then(() => {
+      this.rtc.sendMessage("Sim will start sending");
+    });
 
     this.timer = setInterval(() => {
       this.physics.step(1);
       let simState = this.physics.getState();
-      console.log(simState);
+      // console.log(simState);
       this.updateVideo(simState);
     }, 1000);
 
@@ -77,6 +77,8 @@ class SimController {
 
   stop() {
     console.log("Stoped at " + this.physics.getState().timestamp);
+    this.rtc.disconnect();
+    this.rtc = null;
     clearInterval(this.timer);
   }
 }
