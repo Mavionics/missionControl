@@ -67,6 +67,9 @@ const store = new Vuex.Store({
     }
   },
   getters: {
+    getUserName(state) {
+      return state.currentUser ? state.currentUser.displayName : "";
+    },
     currentUser(state) {
       return state.currentUser;
     },

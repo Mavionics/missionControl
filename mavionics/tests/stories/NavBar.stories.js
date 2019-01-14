@@ -1,19 +1,21 @@
-import { storiesOf } from '@storybook/vue';
-import Navbar from '../../src/components/Navbar.vue';
+import { storiesOf } from "@storybook/vue";
+import StoryRouter from "storybook-vue-router";
+import Navbar from "../../src/components/Navbar.vue";
 
-storiesOf('Navbar', module)
-  .add('Normal not logged in', () => ({
+storiesOf("Navbar", module)
+  .addDecorator(StoryRouter())
+  .add("Normal not logged in", () => ({
     components: { Navbar },
-    template: '<Navbar :show-brand=true />'
+    template: "<Navbar :show-brand=true />"
   }))
-  .add('No brand not logged in', () => ({
+  .add("No brand not logged in", () => ({
     components: { Navbar },
-    template: '<Navbar :show-brand=false />'
+    template: "<Navbar :show-brand=false />"
   }))
-  .add('Normal logged in', () => ({
+  .add("Normal logged in", () => ({
     components: { Navbar },
     template: '<Navbar :currentUser="currentUser" />',
     data() {
-      return {currentUser: {name:'Henrik'}}
+      return { currentUser: { name: "Henrik" } };
     }
   }));

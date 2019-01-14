@@ -47,8 +47,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 export default {
   name: "Navbar",
 
@@ -58,7 +56,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["isAuthenticated"])
+    isAuthenticated: function() {
+      return this.currentUser != null;
+    }
   },
   methods: {
     showHamburger: function() {
