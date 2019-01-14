@@ -17,11 +17,6 @@ var ui = new firebaseui.auth.AuthUI(auth);
 
 export default {
   name: "Login",
-  data() {
-    return {
-      name: "John Silver"
-    };
-  },
   mounted: () => {
     var config = {
       // signInSuccessUrl: "controlroom",
@@ -41,8 +36,7 @@ export default {
           // or whether we leave that to developer to handle.
           // second parameter available for redirectUrl
 
-          store.commit("setCurrentUser", authResult.user);
-          store.dispatch("login");
+          // Actual login handled by aut.onAuthStateChanged
 
           return false;
         },
