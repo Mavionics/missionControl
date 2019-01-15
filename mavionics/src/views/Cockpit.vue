@@ -12,7 +12,8 @@
     </div>
     <div class="lower-panel parent" id="debug">
       <div class="middle">Debug</div>
-      <video id="yourVideo" autoplay muted playsinline></video>
+      <!-- <video id="yourVideo" autoplay muted playsinline></video> -->
+      <div>{{lastData}}</div>
     </div>
   </div>
 </template>
@@ -74,80 +75,40 @@
   max-width: 100%;
   max-height: 100%;
 }
+
+#debug {
+  color: beige;
+}
 </style>
 
 <script>
 import Layout from "@/components/Layout.vue";
-import store from "@/store/store.js";
+import RtcModule from "@/modules/RtcModule";
 
 export default {
   name: "cockpit",
   components: {
     Layout
   },
-  mounted() {
-    const yourVideo = document.getElementById("yourVideo");
-    const friendsVideo = document.getElementById("friendsVideo");
-    const servers = {
-      iceServers: [
-        { urls: "stun:stun.services.mozilla.com" },
-        { urls: "stun:stun.l.google.com:19302" },
-        {
-          urls: "turn:numb.viagenie.ca",
-          credential: "testtest",
-          username: "alex.o.poole@gmail.com"
-        }
-      ]
+  data() {
+    return {
+      lastData: ""
     };
-    let pc = new RTCPeerConnection(servers);
-    pc.onicecandidate = event =>
-      event.candidate
-        ? console.log(JSON.stringify({ ice: event.candidate }))
-        : console.log("Sent All Ice");
+  },
+  mounted() {
+    // const yourVideo = document.getElementById("yourVideo");
+    const friendsVideo = document.getElementById("friendsVideo");
 
     this.$store
       .dispatch("connectToVehicle", {
         avId: this.avId
       })
       .then(() => {
-        const sdp = JSON.parse(this.vehicle.offer);
-        console.log(sdp.sdp);
-        pc.setRemoteDescription(new RTCSessionDescription(sdp.sdp))
-          .then(() => pc.createAnswer())
-          .then(answer => pc.setLocalDescription(answer))
-          .then(() => {
-            console.log(
-              "Send answer",
-              JSON.stringify({ sdp: pc.localDescription })
-            );
-            this.$store.dispatch("setAnswer", {
-              avId: this.avId,
-              answer: JSON.stringify({ sdp: pc.localDescription })
-            });
-          });
+        let rtc = new RtcModule(this.$store.state.avRef, false);
+        rtc.onStream = stream => (friendsVideo.srcObject = stream);
+        rtc.onMessage = data => (this.lastData = data);
+        rtc.connect();
       });
-    // pc.createOffer()
-    //   .then(offer => pc.setLocalDescription(offer))
-    //   .then(() =>
-    //     this.$store.dispatch("connectToVehicle", {
-    //       avId: this.avId,
-    //       sdp: pc.localDescription
-    //     })
-    //   );
-
-    // .then(() => sendMessage(yourId, JSON.stringify({ 'sdp': pc.localDescription })));
-
-    // this.$store.dispatch("connect", { av: this.avId });
-    // navigator.mediaDevices
-    //   .getUserMedia({ audio: true, video: true })
-    //   // .then(stream => alert(stream))
-    //   .then(stream => (yourVideo.srcObject = stream));
-
-    // Get data from db
-    // this.$store.dispatch("connectToVehicle", {
-    //   avId: this.avId,
-    //   sdp: pc.localDescription
-    // });
   },
   computed: {
     vehicle() {
