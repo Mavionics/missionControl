@@ -82,7 +82,7 @@ class RtcModule {
   }
 
   disconnect() {
-    this.p.disconnect();
+    this.p.destroy();
   }
 }
 

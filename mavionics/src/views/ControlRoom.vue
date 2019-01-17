@@ -2,7 +2,13 @@
   <div class="controlRoom">
     <Layout>
       <div class="box is-glass container is-fluid">
-        <OverviewMap :vehicles="vehicles"/>
+        <!-- Wait for Cesium Key before loading OverviewMap -->
+        <OverviewMap
+          :vehicles="vehicles"
+          :cesiumKey="cesiumKey"
+          :userPosition="myPosition"
+          v-if="!loading"
+        />
         <VehicleList :vehicles="vehicles"/>
       </div>
     </Layout>
@@ -25,14 +31,34 @@ export default {
     OverviewMap,
     VehicleList
   },
+  created() {
+    this.$store.dispatch("getMapKeys").then(() => (this.loading = false));
+  },
+  mounted() {
+    this.loadingComponent = this.$loading.open();
+    navigator.geolocation.getCurrentPosition(pos => {
+      this.myPosition = pos.coords;
+    });
+  },
   computed: {
     vehicles() {
       return this.$store.state.vehicles;
+    },
+    cesiumKey() {
+      return this.$store.state.cesiumKey;
+    }
+  },
+  watch: {
+    loading(isTrue) {
+      if (!isTrue) {
+        this.loadingComponent.close();
+      }
     }
   },
   data() {
     return {
-      name: ""
+      loading: true,
+      myPosition: ""
     };
   }
 };

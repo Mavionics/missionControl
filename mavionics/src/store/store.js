@@ -36,6 +36,8 @@ const usersCollection = db.collection("users");
 const vehiclesCollection = db.collection("vehicles");
 const mapsCollection = db.collection("maps");
 
+let fetchingKeys = false;
+
 let sim;
 
 Vue.use(Vuex);
@@ -44,7 +46,7 @@ const store = new Vuex.Store({
   state: {
     avRef: null,
     currentUser: null,
-    cesiumKey: "",
+    cesiumKey: null,
     userProfile: {},
     vehicles: [],
     currentVehicle: null
@@ -76,13 +78,15 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    loginE({ commit, dispatch }, { email, password }) {
-      auth.signInWithEmailAndPassword(email, password).then(authResult => {
-        commit("setCurrentUser", authResult.user);
-        dispatch("login");
-      });
+    loginE({ commit, state, dispatch }, { email, password }) {
+      if (state.currentUser == null) {
+        auth.signInWithEmailAndPassword(email, password).then(authResult => {
+          commit("setCurrentUser", authResult.user);
+          dispatch("login");
+        });
+      }
     },
-    login({ commit, state }) {
+    login({ commit, state, dispatch }) {
       // Try getting userdata
       usersCollection
         .doc(state.currentUser.uid)
@@ -101,6 +105,7 @@ const store = new Vuex.Store({
               });
           }
         })
+        .then(() => router.push("/controlroom"))
         .catch(err => {
           // eslint-disable-next-line
           log.error(err);
@@ -133,25 +138,29 @@ const store = new Vuex.Store({
           log.error(err);
         }
       );
-
-      mapsCollection
-        .doc("cesium")
-        .get()
-        .then(
-          res => {
-            commit("setCesiumKey", res.data().default);
-          },
-          err => {
-            log.error(err);
-          }
-        )
-        .then(() => router.push("/controlroom"));
     },
     logout({ commit }) {
       auth.signOut().then(() => {
         commit("setUserProfile", null);
         commit("setCurrentUser", null);
       });
+    },
+    getMapKeys({ commit, state }) {
+      if (state.cesiumKey != null) return;
+      if (fetchingKeys) return;
+      fetchingKeys = true;
+      return mapsCollection
+        .doc("cesium")
+        .get()
+        .then(
+          res => {
+            commit("setCesiumKey", res.data().default);
+            fetchingKeys = false;
+          },
+          err => {
+            log.error(err);
+          }
+        );
     },
     connectToVehicle({ commit }, { avId }) {
       return vehiclesCollection
