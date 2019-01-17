@@ -70,7 +70,8 @@ export default {
   props: {
     userPosition: Object,
     vehicles: Array,
-    cesiumKey: String
+    cesiumKey: String,
+    selectedItem: Object
   },
   data() {
     return {};
@@ -86,16 +87,17 @@ export default {
     },
     updateVehicle(vehicle) {
       if (vehicle.position) {
-        console.log(
-          vehicle.position.longitude + " " + vehicle.position.latitude
-        );
-
         var v = this.viewer.entities.getById(vehicle.name);
         if (!v) {
           log.info("New vehicle");
 
           v = this.viewer.entities.add({
             id: vehicle.name,
+            // model: {
+            //   uri:
+            //     "https://cesiumjs.org/Cesium/Apps/SampleData/models/CesiumAir/Cesium_Air.gltf",
+            //   minimumPixelSize: 64
+            // },
             billboard: {
               image: this.pinBuilder
                 .fromText(vehicle.name, Cesium.Color.BLACK, 70)
@@ -107,10 +109,23 @@ export default {
           });
         }
         this.updatePosition(v, vehicle.position);
+        if (this.viewer.trackedEntity == null) {
+          this.viewer.flyTo(this.viewer.entities, {
+            offset: new Cesium.HeadingPitchRange(0, -1, 0)
+          });
+        }
       }
     }
   },
   watch: {
+    selectedItem(item) {
+      var v = this.viewer.entities.getById(item.name);
+      if (v) {
+        this.viewer.flyTo(v, {
+          offset: new Cesium.HeadingPitchRange(0, -1, 10000)
+        });
+      }
+    },
     userPosition(userPos) {
       this.updatePosition(this.userpin, userPos);
     },

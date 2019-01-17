@@ -7,9 +7,10 @@
           :vehicles="vehicles"
           :cesiumKey="cesiumKey"
           :userPosition="myPosition"
+          :selectedItem="selectedItem"
           v-if="!loading"
         />
-        <VehicleList :vehicles="vehicles"/>
+        <VehicleList :vehicles="vehicles" :selectedItem="selectedItem" @itemSelect="itemSelect"/>
       </div>
     </Layout>
   </div>
@@ -58,8 +59,14 @@ export default {
   data() {
     return {
       loading: true,
-      myPosition: ""
+      myPosition: "",
+      selectedItem: null
     };
+  },
+  methods: {
+    itemSelect(item) {
+      this.selectedItem = item;
+    }
   }
 };
 </script>

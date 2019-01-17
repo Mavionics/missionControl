@@ -42,7 +42,12 @@
       </tr>
       </thead>-->
       <tbody>
-        <VehicleListItem v-for="vehicle in vehicles" :key="vehicle.id" :vehicle="vehicle"/>
+        <VehicleListItem
+          v-for="vehicle in vehicles"
+          :key="vehicle.id"
+          :vehicle="vehicle"
+          @click.native="selectItem(vehicle)"
+        />
       </tbody>
     </table>
     <div class="modal">
@@ -75,7 +80,8 @@ export default {
     AddVehicleForm
   },
   props: {
-    vehicles: Array
+    vehicles: Array,
+    selectedItem: Object
   },
   data: () => {
     return {
@@ -84,6 +90,11 @@ export default {
         name: "Kalle"
       }
     };
+  },
+  methods: {
+    selectItem(item) {
+      this.$emit("itemSelect", item);
+    }
   }
 };
 </script>
