@@ -20,7 +20,6 @@
                     v-if="!loading"
                     v-for="(itemType, types) in items"
                     :data="itemType" />
-                <nb-spinner v-if="loading"></nb-spinner>
             </nb-list>
         </nb-content>
     </nb-container>
@@ -38,9 +37,6 @@ export default {
   computed: {
     items () {
       return store.state.vehicles;
-    },
-    loading () {
-        return false;
     }
   },
   props: {

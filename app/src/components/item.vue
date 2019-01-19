@@ -20,24 +20,10 @@ export default {
     data: Object
   },
     computed: {
-    isLive() {
-      return true;
-    },
-    status() {
-      if (this.isLive) {
-        return this.data.status;
-      } else {
-        return "Offline";
-      }
-    }
   },
     methods: {
     connectToVehicle(avId) {
       this.data.navigate('Flight');
-      alert('Fly!')
-    },
-    updateTime() {
-      this.currentTime = Date.now() / 1000;
     }
   }
 };

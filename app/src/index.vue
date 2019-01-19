@@ -29,6 +29,7 @@ const Drawer = DrawerNavigator(
 const AppNavigation = StackNavigator(
   {
     Login: { screen: LoginScreen },
+    Flight:{ screen: FlightScreen},
     Drawer: { screen: Drawer }
   },
   {
