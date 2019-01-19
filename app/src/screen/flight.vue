@@ -10,20 +10,10 @@
                 </nb-button>
             </nb-left>
             <nb-body>
-                <nb-title>Posts</nb-title>
+                <nb-title>Flight</nb-title>
             </nb-body>
             <nb-right />
         </nb-header>
-        <nb-content>
-            <nb-list>
-                <item
-                    v-if="!loading"
-                    v-for="(itemType, types) in items"
-                    :data="itemType" />
-                <nb-spinner v-if="loading"></nb-spinner>
-            </nb-list>
-        </nb-content>
-    </nb-container>
 </template>
 
 <script>
@@ -51,9 +41,7 @@ export default {
   },
   methods: {
     fetchVehicles(){
-        return store.dispatch('FETCH_VEHICLES',
-        {user: store.state.user,
-        navigate: this.navigation.navigate});
+        return store.dispatch('FETCH_VEHICLES', store.state.user);
     }
   },
   components: {

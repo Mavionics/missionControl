@@ -18,13 +18,16 @@ export function FETCH_LIST_DATA ({ commit, dispatch }, { type }) {
     });
 }
 
-export function FETCH_VEHICLES ({ commit, dispatch }, user) {
+export function FETCH_VEHICLES (
+  { commit, dispatch }, 
+  {user, navigate}) {
     vehiclesCollection.where("owner", "==", user.uid).onSnapshot(querySnapshot => {
       commit('CLEAR_VEHICLES')
       querySnapshot.forEach(doc => {
         //log.info(doc.id, " => ", doc.data());
         let vehicle = doc.data();
         vehicle.id = doc.id;
+        vehicle.navigate = navigate
         commit('SET_VEHICLE', vehicle)
       })
     }, err => {

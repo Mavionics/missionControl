@@ -33,6 +33,7 @@ export default {
   },
     methods: {
     connectToVehicle(avId) {
+      this.data.navigate('Flight');
       alert('Fly!')
     },
     updateTime() {
