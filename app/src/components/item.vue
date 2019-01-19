@@ -15,6 +15,8 @@
 </template>
 <script>
 
+import store from '../store';
+
 export default {
   props: {
     data: Object
@@ -23,6 +25,7 @@ export default {
   },
     methods: {
     connectToVehicle(avId) {
+      store.dispatch('SET_ACTIVE_VEHICLE', this.data);
       this.data.navigate('Flight');
     }
   }

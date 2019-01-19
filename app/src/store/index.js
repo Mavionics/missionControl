@@ -19,6 +19,7 @@ const store = new Vuex.Store({
     activeType: 'posts',
     posts: [],
     vehicles: [],
+    activeVehicle: null,
     logging_in: false,
     loadingPosts: false
   }

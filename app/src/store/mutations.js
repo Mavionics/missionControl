@@ -7,6 +7,10 @@ export function SET_VEHICLE (state, vehicle) {
   state.vehicles.push(vehicle);
 }
 
+export function SET_ACTIVE_VEHICLE (state, vehicle) {
+  state.activeVehicle = vehicle;
+}
+
 export function CLEAR_VEHICLES (state, vehicle) {
   state.vehicles = []
 }

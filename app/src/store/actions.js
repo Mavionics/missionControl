@@ -24,7 +24,6 @@ export function FETCH_VEHICLES (
     vehiclesCollection.where("owner", "==", user.uid).onSnapshot(querySnapshot => {
       commit('CLEAR_VEHICLES')
       querySnapshot.forEach(doc => {
-        //log.info(doc.id, " => ", doc.data());
         let vehicle = doc.data();
         vehicle.id = doc.id;
         vehicle.navigate = navigate
@@ -33,6 +32,12 @@ export function FETCH_VEHICLES (
     }, err => {
       //log.error(err)
     });
+}
+
+export function SET_ACTIVE_VEHICLE (
+  { commit, dispatch },
+  vehicle) {
+    commit('SET_ACTIVE_VEHICLE', vehicle)
 }
 
 export function LOGIN ({ commit, state}, {userObj, navigate}) {
