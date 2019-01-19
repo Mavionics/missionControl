@@ -10,7 +10,7 @@
                 </nb-button>
             </nb-left>
             <nb-body>
-                <nb-title>Posts</nb-title>
+                <nb-title>Vehicles</nb-title>
             </nb-body>
             <nb-right />
         </nb-header>

@@ -1,5 +1,3 @@
-import { fetchPosts } from './fetch';
-import { AsyncStorage } from 'react-native';
 import firebase from 'react-native-firebase';
 
 // firebase utils
@@ -56,13 +54,4 @@ if(auth.currentUser != null){
       commit('LOGIN_SUCCESFULL', auth.currentUser);
       navigate('Home');
     }
-}
-
-export function LOGOUT ({ commit, state}, callback) {
-  return new Promise((resolve, reject) => {
-      AsyncStorage.removeItem('email').then(() => {
-        callback();
-        resolve();
-      })
-  })
 }
