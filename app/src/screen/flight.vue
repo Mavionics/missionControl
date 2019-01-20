@@ -28,11 +28,25 @@ export default {
     }
   },
   props: {
-      navigation: Object
+      navigation: Object,
+      watchId: Object,
   },
   created () {
+    this.watchPosition();
   },
   methods: {
+    watchPosition(){
+      console.log("flight.vue, getPositionContinous")
+      this.watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        store.dispatch('SET_POSITION', position);
+      },
+      (error) => console.log("flight.vue, getPositionContinous error: " + error),
+      {
+        enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
+      },
+    );
+    }
   },
   components: {
   }

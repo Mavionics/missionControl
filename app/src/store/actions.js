@@ -39,6 +39,13 @@ export function SET_ACTIVE_VEHICLE (
     commit('SET_ACTIVE_VEHICLE', vehicle)
 }
 
+export function SET_POSITION (
+  { commit, dispatch },
+  position) {
+    console.log("action.js, SET_POSITION, latitude: " + position.coords.latitude + " longitude: " + position.coords.longitude)
+    commit('SET_POSITION', position)
+}
+
 function REQUEST_PERMISSION(
   commit, promise) {
     promise.then(function(value){

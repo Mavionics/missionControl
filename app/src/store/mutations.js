@@ -19,6 +19,10 @@ export function LOGIN_SUCCESFULL (state, user) {
   state.logging_in = false;
 }
 
+export function SET_POSITION (state, position) {
+  state.position = position;
+}
+
 export function SET_PERMISSION_STATUS (state, permissionStatus) {
   state.permissionStatus = permissionStatus;
 }

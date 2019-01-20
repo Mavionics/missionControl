@@ -20,6 +20,7 @@ const store = new Vuex.Store({
     activeVehicle: null,
     logging_in: false,
     permissionStatus: false,
+    position: null,
   }
 });
 
