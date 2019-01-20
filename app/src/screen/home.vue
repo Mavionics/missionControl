@@ -29,7 +29,6 @@
 import React from 'react';
 import Item from '../components/item';
 import { Dimensions } from 'react-native';
-import {PermissionNotification} from '../components/permissions'
 import store from '../store';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -54,7 +53,7 @@ export default {
         navigate: this.navigation.navigate});
     },
     requestPermissions(){
-        PermissionNotification.requestAllPermissions();
+        return store.dispatch('REQUEST_ALL_PERMISSIONS');
     }
   },
   components: {

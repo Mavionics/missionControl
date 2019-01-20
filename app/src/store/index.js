@@ -18,7 +18,8 @@ const store = new Vuex.Store({
     user: null,
     vehicles: [],
     activeVehicle: null,
-    logging_in: false
+    logging_in: false,
+    permissionStatus: false,
   }
 });
 
