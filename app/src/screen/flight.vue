@@ -6,9 +6,12 @@
             </nb-body>
             <nb-right />
         </nb-header>
-        <view class="text-container">
-        <text>{{activeVehicle.name}}</text>
-    </view>
+        <view class="container">
+            <text class="title">{{activeVehicle.name}}</text>
+            <text class="title">latitude: {{activeVehicle.position.latitude}}</text>
+            <text class="title">longitude: {{activeVehicle.position.longitude}}</text>
+            <text class="title">{{activeVehicle.timestamp}}</text>
+        </view>
 </template>
 
 <script>
@@ -35,3 +38,16 @@ export default {
   }
 };
 </script>
+
+<style>
+  .container {
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+  }
+  .title {
+    color: #333;
+    font-size: 14;
+  }
+</style>
