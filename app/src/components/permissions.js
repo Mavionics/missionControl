@@ -2,6 +2,15 @@ import { PermissionsAndroid } from 'react-native';
 
 
 export class PermissionNotification {
+
+static async requestAllPermissions(){
+  await this.requestCameraPermission();
+  await this.requestFineLocationPermission();
+  await this.requestCoarseLocationPermission();
+  await this.requestRecordAudioPermission();
+  await this.requestStoragePermission();
+}
+
   static async  requestCameraPermission() {
     await this.requestPermission(
       PermissionsAndroid.PERMISSIONS.CAMERA,
@@ -35,6 +44,15 @@ export class PermissionNotification {
       {
         'title': 'Mavionics App Microphone Permission',
         'message': 'Microphone is required to talk to the pilote.'
+      })
+  }
+
+  static async requestStoragePermission() {
+    await this.requestPermission(
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      {
+        'title': 'Mavionics App Storage Permission',
+        'message': 'Storage permission is required.'
       })
   }
 

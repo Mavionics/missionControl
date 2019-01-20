@@ -54,10 +54,7 @@ export default {
         navigate: this.navigation.navigate});
     },
     requestPermissions(){
-        PermissionNotification.requestCameraPermission();
-        PermissionNotification.requestFineLocationPermission();
-        PermissionNotification.requestCoarseLocationPermission();
-        PermissionNotification.requestRecordAudioPermission();
+        PermissionNotification.requestAllPermissions();
     }
   },
   components: {
