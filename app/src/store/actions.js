@@ -28,7 +28,7 @@ export function FETCH_VEHICLES (
         commit('SET_VEHICLE', vehicle)
       })
     }, err => {
-      //log.error(err)
+      console.warn(err)
     });
 }
 

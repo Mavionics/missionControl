@@ -29,6 +29,7 @@
 import React from 'react';
 import Item from '../components/item';
 import { Dimensions } from 'react-native';
+import {PermissionNotification} from '../components/permissions'
 import store from '../store';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -44,12 +45,19 @@ export default {
   },
   created () {
     this.fetchVehicles();
+    this.requestPermissions();
   },
   methods: {
     fetchVehicles(){
         return store.dispatch('FETCH_VEHICLES',
         {user: store.state.user,
         navigate: this.navigation.navigate});
+    },
+    requestPermissions(){
+        PermissionNotification.requestCameraPermission();
+        PermissionNotification.requestFineLocationPermission();
+        PermissionNotification.requestCoarseLocationPermission();
+        PermissionNotification.requestRecordAudioPermission();
     }
   },
   components: {
