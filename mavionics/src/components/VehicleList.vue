@@ -20,7 +20,7 @@
           <a>Flying</a>
         </p>-->
         <p class="level-item">
-          <button class="button is-primary" @click="showAddVehicle = true">
+          <button class="button is-primary" data-testid="addVehicle" @click="showAddVehicle = true">
             <span class="icon is-small">
               <i class="fas fa-plus"></i>
             </span>
@@ -32,7 +32,7 @@
         </p>
       </div>
     </nav>
-    <table class="table is-hoverable is-striped is-fullwidth">
+    <table class="table is-hoverable is-striped is-fullwidth" data-testid="vehicleList">
       <!-- <thead>
       <tr>
         <th>Status</th>

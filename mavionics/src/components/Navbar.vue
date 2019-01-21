@@ -36,11 +36,18 @@
           v-show="isAuthenticated"
         >ControlRoom</router-link>
         <router-link name="About" class="navbar-item" to="/about">About</router-link>
-        <div class="navbar-item" v-show="isAuthenticated">
-          <div class="buttons">
-            <router-link name="Logout" class="button is-light" to="/logout">Logout</router-link>
-          </div>
-        </div>
+        <router-link
+          name="Profile"
+          class="navbar-item"
+          to="/profile"
+          v-show="isAuthenticated"
+        >Profile</router-link>
+        <router-link
+          name="Logout"
+          class="navbar-item is-light"
+          to="/logout"
+          v-show="isAuthenticated"
+        >Logout</router-link>
       </div>
     </nav>
   </div>

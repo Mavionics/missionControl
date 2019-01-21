@@ -24,7 +24,7 @@ describe("VehicleList.vue", () => {
       components: {
         "router-link": RouterLinkStub
       },
-      stubs: ["AddVehicleForm"],
+      stubs: ["AddVehicleForm", "b-modal"],
       methods: {
         updateTime() {
           this.currentTime = timestamp;
