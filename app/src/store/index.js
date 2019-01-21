@@ -16,11 +16,11 @@ const store = new Vuex.Store({
 
   state: {
     user: null,
-    activeType: 'posts',
-    posts: [],
     vehicles: [],
+    activeVehicle: null,
     logging_in: false,
-    loadingPosts: false
+    permissionStatus: false,
+    position: null,
   }
 });
 

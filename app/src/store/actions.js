@@ -1,6 +1,5 @@
-import { fetchPosts } from './fetch';
-import { AsyncStorage } from 'react-native';
 import firebase from 'react-native-firebase';
+import {PermissionNotifier} from '../components/permissions'
 
 // firebase utils
 const db = firebase.firestore()
@@ -18,18 +17,51 @@ export function FETCH_LIST_DATA ({ commit, dispatch }, { type }) {
     });
 }
 
-export function FETCH_VEHICLES ({ commit, dispatch }, user) {
+export function FETCH_VEHICLES (
+  { commit, dispatch }, 
+  {user, navigate}) {
     vehiclesCollection.where("owner", "==", user.uid).onSnapshot(querySnapshot => {
       commit('CLEAR_VEHICLES')
       querySnapshot.forEach(doc => {
-        //log.info(doc.id, " => ", doc.data());
         let vehicle = doc.data();
         vehicle.id = doc.id;
+        vehicle.navigate = navigate
         commit('SET_VEHICLE', vehicle)
       })
     }, err => {
-      //log.error(err)
+      console.warn(err)
     });
+}
+
+export function SET_ACTIVE_VEHICLE (
+  { commit, dispatch },
+  vehicle) {
+    commit('SET_ACTIVE_VEHICLE', vehicle)
+}
+
+export function SET_POSITION (
+  { commit, dispatch },
+  position) {
+    console.log("action.js, SET_POSITION, latitude: " + position.coords.latitude + " longitude: " + position.coords.longitude)
+    commit('SET_POSITION', position)
+}
+
+function REQUEST_PERMISSION(
+  commit, promise) {
+    promise.then(function(value){
+      console.log("action.js, REQUEST_PERMISSION then: " + value)
+      commit('AND_PERMISSION_STATUS', value);
+    })
+  }
+
+export function REQUEST_ALL_PERMISSIONS (
+  { commit, dispatch }) {
+    commit('SET_PERMISSION_STATUS', true);
+    REQUEST_PERMISSION(commit, PermissionNotifier.requestCameraPermission())
+    REQUEST_PERMISSION(commit, PermissionNotifier.requestCoarseLocationPermission())
+    REQUEST_PERMISSION(commit, PermissionNotifier.requestFineLocationPermission())
+    REQUEST_PERMISSION(commit, PermissionNotifier.requestRecordAudioPermission())
+    REQUEST_PERMISSION(commit, PermissionNotifier.requestStoragePermission())
 }
 
 export function LOGIN ({ commit, state}, {userObj, navigate}) {
@@ -48,13 +80,4 @@ if(auth.currentUser != null){
       commit('LOGIN_SUCCESFULL', auth.currentUser);
       navigate('Home');
     }
-}
-
-export function LOGOUT ({ commit, state}, callback) {
-  return new Promise((resolve, reject) => {
-      AsyncStorage.removeItem('email').then(() => {
-        callback();
-        resolve();
-      })
-  })
 }
