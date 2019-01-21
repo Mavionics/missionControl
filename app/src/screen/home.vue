@@ -10,7 +10,7 @@
                 </nb-button>
             </nb-left>
             <nb-body>
-                <nb-title>Posts</nb-title>
+                <nb-title>Vehicles</nb-title>
             </nb-body>
             <nb-right />
         </nb-header>
@@ -20,7 +20,6 @@
                     v-if="!loading"
                     v-for="(itemType, types) in items"
                     :data="itemType" />
-                <nb-spinner v-if="loading"></nb-spinner>
             </nb-list>
         </nb-content>
     </nb-container>
@@ -38,9 +37,6 @@ export default {
   computed: {
     items () {
       return store.state.vehicles;
-    },
-    loading () {
-        return false;
     }
   },
   props: {
@@ -48,10 +44,16 @@ export default {
   },
   created () {
     this.fetchVehicles();
+    this.requestPermissions();
   },
   methods: {
     fetchVehicles(){
-        return store.dispatch('FETCH_VEHICLES', store.state.user);
+        return store.dispatch('FETCH_VEHICLES',
+        {user: store.state.user,
+        navigate: this.navigation.navigate});
+    },
+    requestPermissions(){
+        return store.dispatch('REQUEST_ALL_PERMISSIONS');
     }
   },
   components: {

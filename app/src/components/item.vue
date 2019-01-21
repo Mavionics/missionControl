@@ -15,28 +15,22 @@
 </template>
 <script>
 
+import store from '../store';
+
 export default {
   props: {
     data: Object
   },
     computed: {
-    isLive() {
-      return true;
-    },
-    status() {
-      if (this.isLive) {
-        return this.data.status;
-      } else {
-        return "Offline";
-      }
-    }
   },
     methods: {
     connectToVehicle(avId) {
-      alert('Fly!')
-    },
-    updateTime() {
-      this.currentTime = Date.now() / 1000;
+      if(store.state.permissionStatus){
+        store.dispatch('SET_ACTIVE_VEHICLE', this.data);
+        this.data.navigate('Flight');
+      }else{
+        alert("Required permissions are not given, please go to settings and give us permissions.")
+      }
     }
   }
 };
