@@ -8,7 +8,11 @@
     </td>
     <td>
       <div class="field" v-if="vehicle.isSim">
-        <b-switch v-model="vehicle.runSim" @input="toggleSimulation">Run Simulation</b-switch>
+        <b-switch
+          data-testid="runSimulation"
+          v-model="vehicle.runSim"
+          @input="toggleSimulation"
+        >Run Simulation</b-switch>
       </div>
     </td>
     <td>
@@ -45,7 +49,10 @@ export default {
   },
   computed: {
     isLive() {
-      return this.currentTime - this.vehicle.timestamp.seconds < 10;
+      return (
+        this.vehicle.timestamp !== undefined &&
+        this.currentTime - this.vehicle.timestamp.seconds < 10
+      );
     },
     status() {
       if (this.isLive) {

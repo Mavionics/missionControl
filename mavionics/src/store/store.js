@@ -86,6 +86,24 @@ const store = new Vuex.Store({
         });
       }
     },
+    async deleteUser({ commit, state, dispatch }) {
+      console.warn("Deleting current logged in user.");
+      await vehiclesCollection
+        .where("owner", "==", state.currentUser.uid)
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            doc.ref.delete();
+          });
+        });
+      console.warn("User's Vehicles deleted.");
+
+      await usersCollection.doc(state.currentUser.uid).delete();
+      console.warn("User deleted.");
+
+      await auth.currentUser.delete();
+      console.warn("User account deleted.");
+    },
     login({ commit, state, dispatch }) {
       // Try getting userdata
       usersCollection

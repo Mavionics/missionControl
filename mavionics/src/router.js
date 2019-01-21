@@ -46,6 +46,16 @@ const router = new Router({
       }
     },
     {
+      path: "/profile",
+      name: "profile",
+      component: () =>
+        import(/* webpackChunkName: "cockpit" */ "./views/Profile.vue"),
+      props: true,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: "/about",
       name: "about",
       component: () =>
@@ -55,7 +65,10 @@ const router = new Router({
       path: "/logout",
       name: "logout",
       component: () =>
-        import(/* webpackChunkName: "logout" */ "./views/Logout.vue")
+        import(/* webpackChunkName: "logout" */ "./views/Logout.vue"),
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: "/autologin/email/:email/password/:password",
