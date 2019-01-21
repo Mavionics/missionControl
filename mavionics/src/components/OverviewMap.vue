@@ -68,7 +68,14 @@ export default {
     //   };
   },
   props: {
-    userPosition: Object,
+    userPosition: {
+      validator: function(value) {
+        return (
+          value == null ||
+          (value.longitude !== undefined && value.latitude !== undefined)
+        );
+      }
+    },
     vehicles: Array,
     cesiumKey: String,
     selectedItem: Object
@@ -78,7 +85,12 @@ export default {
   },
   methods: {
     updatePosition(entity, position) {
-      if (entity !== undefined && position !== undefined) {
+      if (
+        entity !== undefined &&
+        position !== undefined &&
+        position.longitude !== undefined &&
+        position.latitude !== undefined
+      ) {
         entity.position = Cesium.Cartesian3.fromDegrees(
           position.longitude,
           position.latitude
