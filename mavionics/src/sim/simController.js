@@ -33,7 +33,7 @@ class SimController {
     };
 
     this.rtc.connect().then(() => {
-      this.rtc.sendMessage("Sim will start sending");
+      //this.rtc.sendMessage("Sim will start sending");
     });
 
     this.timer = setInterval(() => {
@@ -47,6 +47,11 @@ class SimController {
       let simState = this.physics.getState();
       this.updateDb(simState);
     }, 5000);
+
+    this.timerDc = setInterval(() => {
+      let simState = this.physics.getState();
+      if (this.rtc.isConnected()) this.rtc.sendMessage(simState);
+    }, 1000);
   }
 
   updateDb(simState) {

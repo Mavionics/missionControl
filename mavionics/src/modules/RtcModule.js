@@ -62,7 +62,10 @@ class RtcModule {
 
     this.p.on("signal", data => this.outMessages.add(data));
     this.p.on("stream", this.onStream);
-    this.p.on("data", this.onMessage);
+    this.p.on("data", data => {
+      console.warn(data);
+      this.onMessage(JSON.parse(data));
+    });
 
     return new Promise((resolve, reject) => {
       this.p.on("error", function(err) {
@@ -78,11 +81,15 @@ class RtcModule {
   }
 
   sendMessage(data) {
-    if (this.p !== null) this.p.send(data);
+    if (this.p !== null) this.p.send(JSON.stringify(data));
   }
 
   disconnect() {
     this.p.destroy();
+  }
+
+  isConnected() {
+    return this.p && this.p.connected;
   }
 }
 
