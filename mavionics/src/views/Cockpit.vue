@@ -3,10 +3,7 @@
     <div id="top" class="top-panel parent">
       <router-link name="ControlRoom" class="navbar-item" to="/controlroom">Home</router-link>
     </div>
-    <div id="video" class="fullscreen-panel parent">
-      <div class="middle">Video</div>
-      <video id="friendsVideo" autoplay playsinline></video>
-    </div>
+    <video id="video" class="fullscreen-panel parent" autoplay playsinline></video>
     <div id="map" class="secondary-panel parent">
       <div class="middle">Map</div>
     </div>
@@ -14,6 +11,11 @@
       <div class="middle">Debug</div>
       <!-- <video id="yourVideo" autoplay muted playsinline></video> -->
       <div>{{lastData}}</div>
+      <div class="columns">
+        <div class="column is-one-third" :class="{'invalid':speed==null}">{{speed}} m/s</div>
+        <div class="column is-one-third" :class="{'invalid':heading==null}">{{heading}} &deg;</div>
+        <div class="column is-one-third" :class="{'invalid':altitude==null}">{{altitude}} m</div>
+      </div>
     </div>
   </div>
 </template>
@@ -43,6 +45,9 @@
 }
 
 .fullscreen-panel {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
   top: 0px;
   left: 0px;
   right: 0px;
@@ -71,42 +76,59 @@
   right: 35vh;
 }
 
-.parent > video {
-  max-width: 100%;
-  max-height: 100%;
-}
-
 #debug {
   color: beige;
+  z-index: 1;
+}
+
+.invalid {
+  color: grey;
+  opacity: 0.4;
 }
 </style>
 
 <script>
-import Layout from "@/components/Layout.vue";
 import RtcModule from "@/modules/RtcModule";
 
 export default {
   name: "cockpit",
-  components: {
-    Layout
-  },
   data() {
     return {
+      altitude: null,
+      verticalSpeed: null,
+      speed: null,
+      acceleration: null,
+      heading: null,
+      turnRate: null,
+      longitude: null,
+      latitude: null,
       lastData: ""
     };
   },
   mounted() {
     // const yourVideo = document.getElementById("yourVideo");
-    const friendsVideo = document.getElementById("friendsVideo");
+    const friendsVideo = document.getElementById("video");
 
     this.$store
       .dispatch("connectToVehicle", {
         avId: this.avId
       })
       .then(() => {
+        if (this.$store.state.avRef == null) return;
         let rtc = new RtcModule(this.$store.state.avRef, false);
         rtc.onStream = stream => (friendsVideo.srcObject = stream);
-        rtc.onMessage = data => (this.lastData = data);
+        rtc.onMessage = data => {
+          this.lastData = data;
+          this.altitude = data.altitude;
+          this.verticalSpeed = data.verticalSpeed;
+          this.speed = data.speed;
+          this.acceleration = data.acceleration;
+          this.heading = data.heading;
+          this.turnRate = data.turnRate;
+          this.longitude = data.longitude;
+          this.latitude = data.latitude;
+          this.speed = data.speed;
+        };
         rtc.connect();
       });
   },
