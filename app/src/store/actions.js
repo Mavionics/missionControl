@@ -46,22 +46,26 @@ export function SET_POSITION (
     commit('SET_POSITION', position)
 }
 
-function REQUEST_PERMISSION(
-  commit, promise) {
-    promise.then(function(value){
-      console.log("action.js, REQUEST_PERMISSION then: " + value)
-      commit('AND_PERMISSION_STATUS', value);
-    })
-  }
-
 export function REQUEST_ALL_PERMISSIONS (
   { commit, dispatch }) {
     commit('SET_PERMISSION_STATUS', true);
-    REQUEST_PERMISSION(commit, PermissionNotifier.requestCameraPermission())
-    REQUEST_PERMISSION(commit, PermissionNotifier.requestCoarseLocationPermission())
-    REQUEST_PERMISSION(commit, PermissionNotifier.requestFineLocationPermission())
-    REQUEST_PERMISSION(commit, PermissionNotifier.requestRecordAudioPermission())
-    REQUEST_PERMISSION(commit, PermissionNotifier.requestStoragePermission())
+    PermissionNotifier.requestCameraPermission()
+    .then((status)=>{
+      commit('AND_PERMISSION_STATUS', status)
+      PermissionNotifier.requestCoarseLocationPermission()
+      .then((status)=>{
+        commit('AND_PERMISSION_STATUS', status)
+        PermissionNotifier.requestFineLocationPermission()
+        .then((status)=>{
+          commit('AND_PERMISSION_STATUS', status)
+          PermissionNotifier.requestRecordAudioPermission()
+          .then((status)=>{
+            commit('AND_PERMISSION_STATUS', status)
+            PermissionNotifier.requestStoragePermission()
+          })
+        })
+      })
+    })
 }
 
 export function LOGIN ({ commit, state}, {userObj, navigate}) {
@@ -80,4 +84,22 @@ if(auth.currentUser != null){
       commit('LOGIN_SUCCESFULL', auth.currentUser);
       navigate('Home');
     }
+}
+
+export function UPDATE_ACTIVE_VEHICLE({ commit, state}, 
+  {vehicleId,
+  position,
+  timestamp}) {
+  console.log("action.js, UPDATE_ACTIVE_VEHICLE, position:"
+  + JSON.stringify(position) + " ,timestamp: " + JSON.stringify(timestamp))
+
+  commit('UPDATE_VEHICLE_POSITION', position)
+  commit('UPDATE_VEHICLE_TIMESTAMP', timestamp)
+
+  vehiclesCollection.doc(vehicleId).update({
+    timestamp: timestamp,
+    position: position
+  }).catch(err => {
+    console.log("action.js, UPDATE_ACTIVE_VEHICLE, " + err);
+  })
 }

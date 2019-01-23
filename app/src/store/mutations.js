@@ -30,3 +30,11 @@ export function SET_PERMISSION_STATUS (state, permissionStatus) {
 export function AND_PERMISSION_STATUS (state, permissionStatus) {
   state.permissionStatus = state.permissionStatus && permissionStatus;
 }
+
+export function UPDATE_VEHICLE_POSITION(state, position){
+  state.activeVehicle.position = position;
+}
+
+export function UPDATE_VEHICLE_TIMESTAMP(state, timestamp){
+  state.activeVehicle.timestamp = timestamp;
+}

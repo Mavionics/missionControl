@@ -88,12 +88,13 @@ export default {
       if (
         entity !== undefined &&
         position !== undefined &&
-        position.longitude !== undefined &&
-        position.latitude !== undefined
+        position.coords !== undefined &&
+        position.coords.longitude !== undefined &&
+        position.coords.latitude !== undefined
       ) {
         entity.position = Cesium.Cartesian3.fromDegrees(
-          position.longitude,
-          position.latitude
+          position.coords.longitude,
+          position.coords.latitude
         );
       }
     },
