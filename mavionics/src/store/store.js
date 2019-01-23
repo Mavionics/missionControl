@@ -141,11 +141,11 @@ const store = new Vuex.Store({
               state.vehicles.push(avInfo);
             } else if (change.type === "removed") {
               state.vehicles = state.vehicles.filter(
-                item => (item.id = change.doc.id)
+                item => (item.id == change.doc.id)
               );
             } else if (change.type === "modified") {
               let dbItem = change.doc.data();
-              let lcItem = state.vehicles.find(i => (i.id = change.doc.id));
+              let lcItem = state.vehicles.find(i => (i.id == change.doc.id));
               for (var prop in dbItem) {
                 lcItem[prop] = dbItem[prop];
               }

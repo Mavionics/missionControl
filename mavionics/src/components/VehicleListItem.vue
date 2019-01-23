@@ -68,13 +68,14 @@ export default {
       if (
         typeof this.vehicle !== "undefined" &&
         typeof this.vehicle.position !== "undefined" &&
-        typeof this.vehicle.position.latitude === "number" &&
-        typeof this.vehicle.position.longitude === "number"
+        typeof this.vehicle.position.coords !== "undefined" &&
+        typeof this.vehicle.position.coords.latitude === "number" &&
+        typeof this.vehicle.position.coords.longitude === "number"
       ) {
         return (
-          this.vehicle.position.latitude.toFixed(2) +
+          this.vehicle.position.coords.latitude.toFixed(2) +
           ", " +
-          this.vehicle.position.longitude.toFixed(2)
+          this.vehicle.position.coords.longitude.toFixed(2)
         );
       }
     }

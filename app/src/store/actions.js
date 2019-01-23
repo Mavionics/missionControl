@@ -85,3 +85,21 @@ if(auth.currentUser != null){
       navigate('Home');
     }
 }
+
+export function UPDATE_ACTIVE_VEHICLE({ commit, state}, 
+  {vehicleId,
+  position,
+  timestamp}) {
+  console.log("action.js, UPDATE_ACTIVE_VEHICLE, position:"
+  + JSON.stringify(position) + " ,timestamp: " + JSON.stringify(timestamp))
+
+  commit('UPDATE_VEHICLE_POSITION', position)
+  commit('UPDATE_VEHICLE_TIMESTAMP', timestamp)
+
+  vehiclesCollection.doc(vehicleId).update({
+    timestamp: timestamp,
+    position: position
+  }).catch(err => {
+    console.log("action.js, UPDATE_ACTIVE_VEHICLE, " + err);
+  })
+}
