@@ -18,10 +18,9 @@
 <script>
 import React from 'react';
 import { Dimensions } from 'react-native';
-import firebase from "firebase/app";
-import "firebase/firestore";
 import store from '../store';
 import RtcModule from '../modules/RtcModule'
+import {createTimestamp} from '../modules/Timestamp'
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -59,12 +58,12 @@ export default {
       store.dispatch('UPDATE_ACTIVE_VEHICLE',
         {vehicleId: store.state.activeVehicle.id,
          position: store.state.position,
-         timestamp: new firebase.firestore.Timestamp.now()});
+         timestamp: createTimestamp()});
         this.updateActiveVehicle();
     }, 3000)
     },
     initWebRTC(){
-      var rtcModule = new RtcModule(null,null,null)
+      //var rtcModule = new RtcModule(null,null,null)
     }
   },
   components: {
