@@ -12,6 +12,7 @@
             <text class="title">longitude: {{activeVehicle.position.coords.longitude}}</text>
             <text class="title">{{activeVehicle.timestamp}}</text>
         </view>
+    </nb-container>
 </template>
 
 <script>
@@ -20,6 +21,7 @@ import { Dimensions } from 'react-native';
 import firebase from "firebase/app";
 import "firebase/firestore";
 import store from '../store';
+import RtcModule from '../modules/RtcModule'
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -36,6 +38,7 @@ export default {
   created () {
     this.watchPosition();
     this.updateActiveVehicle();
+    this.initWebRTC()
   },
   methods: {
     watchPosition(){
@@ -59,6 +62,9 @@ export default {
          timestamp: new firebase.firestore.Timestamp.now()});
         this.updateActiveVehicle();
     }, 3000)
+    },
+    initWebRTC(){
+      var rtcModule = new RtcModule(null,null,null)
     }
   },
   components: {
