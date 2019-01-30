@@ -10,7 +10,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
-import { auth, store } from "@/store/store.js";
+import { auth } from "@/store/store.js";
 
 // Initialize the FirebaseUI Widget using Firebase.
 var ui = new firebaseui.auth.AuthUI(auth);
@@ -19,7 +19,7 @@ export default {
   name: "Login",
   mounted: () => {
     var config = {
-      // signInSuccessUrl: "controlroom",
+      signInSuccessUrl: "/controlroom",
       credentialHelper: firebaseui.auth.CredentialHelper.NONE,
       signInOptions: [
         //   firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -37,8 +37,7 @@ export default {
           // second parameter available for redirectUrl
 
           // Actual login handled by aut.onAuthStateChanged
-
-          return false;
+          return true;
         },
         uiShown: function() {
           // The widget is rendered.

@@ -11,6 +11,7 @@
       <div class="middle">Debug</div>
       <!-- <video id="yourVideo" autoplay muted playsinline></video> -->
       <div>{{lastData}}</div>
+      <div>{{vehicle}}</div>
       <div class="columns">
         <div class="column is-one-third" :class="{'invalid':speed==null}">{{speed}} m/s</div>
         <div class="column is-one-third" :class="{'invalid':heading==null}">{{heading}} &deg;</div>
@@ -105,7 +106,7 @@ export default {
       lastData: ""
     };
   },
-  mounted() {
+  created() {
     // const yourVideo = document.getElementById("yourVideo");
     const friendsVideo = document.getElementById("video");
 
@@ -134,7 +135,7 @@ export default {
   },
   computed: {
     vehicle() {
-      return this.$store.state.currentVehicle;
+      return this.$store.state.vehicleModule.data;
     }
   },
   props: {

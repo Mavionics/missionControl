@@ -50,7 +50,7 @@ class SimController {
 
     this.timerDc = setInterval(() => {
       let simState = this.physics.getState();
-      if (this.rtc.isConnected()) this.rtc.sendMessage(simState);
+      if (this.rtc && this.rtc.isConnected()) this.rtc.sendMessage(simState);
     }, 1000);
   }
 
