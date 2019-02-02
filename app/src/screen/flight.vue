@@ -11,8 +11,8 @@
         </View-->
         <view class="container">
             <text class="title">{{activeVehicle.name}}</text>
-            <text class="title">latitude: {{activeVehicle.position.coords.latitude}}</text>
-            <text class="title">longitude: {{activeVehicle.position.coords.longitude}}</text>
+            <text class="title">latitude: {{latitude}}</text>
+            <text class="title">longitude: {{longitude}}</text>
             <text class="title">{{activeVehicle.timestamp}}</text>
         </view>
     </nb-container>
@@ -44,7 +44,30 @@ export default {
     },
     activeVehicleRef(){
       return store.state.activeVehicleRef
-    }
+    },
+    coords(){
+      if(store.state.activeVehicle != null && 
+          store.state.activeVehicle.position !=null && 
+          store.state.activeVehicle.position.coords != null){
+          return store.state.activeVehicle.position.coords;
+        }
+     },
+    latitude(){
+      if(store.state.activeVehicle != null && 
+          store.state.activeVehicle.position !=null && 
+          store.state.activeVehicle.position.coords != null &&
+          store.state.activeVehicle.position.coords.latitude !=null){
+        return store.state.activeVehicle.position.coords.latitude;
+      }
+    },
+    longitude(){
+      if(store.state.activeVehicle != null && 
+          store.state.activeVehicle.position !=null &&
+          store.state.activeVehicle.position.coords != null &&
+          store.state.activeVehicle.position.coords.longitude !=null){
+        return store.state.activeVehicle.position.coords.longitude;
+      }
+    },
   },
   props: {
       navigation: Object,

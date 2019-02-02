@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
-    "postinstall": "./node_modules/.bin/rn-nodeify --install buffer,events,crypto,stream,util,process,vm --hack",
+    "postinstall": "./node_modules/.bin/rn-nodeify --install buffer,events,crypto,stream,util,process,vm --hack --overwrite",
     "test": "jest"
   },
   "dependencies": {
@@ -21,7 +21,6 @@
     "react-native-randombytes": "^3.5.2",
     "react-native-webrtc": "^1.67.1",
     "readable-stream": "^1.0.33",
-    "rn-nodeify": "^10.0.1",
     "simple-peer": "^9.2.1",
     "stream-browserify": "^1.0.0",
     "util": "^0.10.4",
@@ -37,6 +36,7 @@
     "babel-preset-react-native": "4.0.1",
     "jest": "23.6.0",
     "react-test-renderer": "16.3.1",
+    "rn-nodeify": "github:tradle/rn-nodeify",
     "vue-native-scripts": "0.0.14"
   },
   "jest": {

@@ -170,8 +170,10 @@ android {
 }
 
 dependencies {
+
+    implementation project(':react-native-randombytes')
+    implementation project(':react-native-webrtc')
     implementation project(':react-native-firebase')
-    implementation project(':WebRTCModule')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:27.1.1"
     implementation "com.facebook.react:react-native:+"  // From node_modules
