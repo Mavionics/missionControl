@@ -6,6 +6,9 @@
             </nb-body>
             <nb-right />
         </nb-header>
+        <!--View>
+          <RTCView streamURL={this.videoURL}/>
+        </View-->
         <view class="container">
             <text class="title">{{activeVehicle.name}}</text>
             <text class="title">latitude: {{activeVehicle.position.coords.latitude}}</text>
@@ -21,6 +24,16 @@ import { Dimensions } from 'react-native';
 import store from '../store';
 import RtcModule from '../modules/RtcModule'
 import {createTimestamp} from '../modules/Timestamp'
+var WebRTC = require('react-native-webrtc');
+var {
+  RTCPeerConnection,
+  RTCIceCandidate,
+  RTCSessionDescription,
+  RTCView,
+  MediaStream,
+  MediaStreamTrack,
+  getUserMedia,
+} = WebRTC;
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -28,16 +41,22 @@ export default {
   computed: {
     activeVehicle () {
       return store.state.activeVehicle;
+    },
+    activeVehicleRef(){
+      return store.state.activeVehicleRef
     }
   },
   props: {
       navigation: Object,
       watchId: Object,
+      rtc: Object,
+      videoURL: null,
+      streams: []
   },
   created () {
     this.watchPosition();
     this.updateActiveVehicle();
-    this.initWebRTC()
+    this.getLocalStream(true, this.initWebRTC)
   },
   methods: {
     watchPosition(){
@@ -62,8 +81,45 @@ export default {
         this.updateActiveVehicle();
     }, 3000)
     },
-    initWebRTC(){
-      //var rtcModule = new RtcModule(null,null,null)
+    initWebRTC(stream){
+      this.rtc = new RtcModule(this.activeVehicleRef,
+        true,stream)
+
+      this.rtc.onMessage = msg => {
+        console.log("flight.vue:  rtc.onMessage, ", msg);
+      };
+
+      this.rtc.connect().then(() => {
+       console.log("flight.vue: Sim will start sending");
+    });
+    },
+    getLocalStream(isFront, callback){
+      MediaStreamTrack.getSources(sourceInfos => {
+        console.log('flight.vue, MediaStreamTrack.getSources: ' + sourceInfos);
+        let videoSourceId;
+        for (let i = 0; i < sourceInfos.length; i++) {
+          const sourceInfo = sourceInfos[i];
+          if(sourceInfo.kind == "video" && sourceInfo.facing == (isFront ? "front" : "back")) {
+            videoSourceId = sourceInfo.id;
+          }
+        }
+        getUserMedia({
+          audio: true,
+          video: {
+            mandatory: {
+              minWidth: 500, // Provide your own width, height and frame rate here
+              minHeight: 300,
+              minFrameRate: 30
+            },
+            facingMode: (isFront ? "user" : "environment"),
+            optional: (videoSourceId ? [{sourceId: videoSourceId}] : [])
+          }
+        }, function (stream) {
+          console.log('flight.vue, function (stream): ', stream);
+          callback(stream)
+        }, 
+        (error) => console.log("flight.vue, getUserMedia error: " + error));
+      });
     }
   },
   components: {
