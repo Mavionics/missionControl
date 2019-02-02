@@ -8,8 +8,8 @@
         </nb-header>
         <view class="container">
             <text class="title">{{activeVehicle.name}}</text>
-            <text class="title">latitude: {{activeVehicle.position.latitude}}</text>
-            <text class="title">longitude: {{activeVehicle.position.longitude}}</text>
+            <text class="title">latitude: {{activeVehicle.position.coords.latitude}}</text>
+            <text class="title">longitude: {{activeVehicle.position.coords.longitude}}</text>
             <text class="title">{{activeVehicle.timestamp}}</text>
         </view>
 </template>
@@ -17,6 +17,8 @@
 <script>
 import React from 'react';
 import { Dimensions } from 'react-native';
+import firebase from "firebase/app";
+import "firebase/firestore";
 import store from '../store';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -33,6 +35,7 @@ export default {
   },
   created () {
     this.watchPosition();
+    this.updateActiveVehicle();
   },
   methods: {
     watchPosition(){
@@ -46,6 +49,16 @@ export default {
         enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
       },
     );
+    },
+    updateActiveVehicle(){
+      console.log("flight.vue, updateActiveVehicle")
+          setTimeout(() => {
+      store.dispatch('UPDATE_ACTIVE_VEHICLE',
+        {vehicleId: store.state.activeVehicle.id,
+         position: store.state.position,
+         timestamp: new firebase.firestore.Timestamp.now()});
+        this.updateActiveVehicle();
+    }, 3000)
     }
   },
   components: {

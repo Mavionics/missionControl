@@ -29,7 +29,7 @@ export default {
         store.dispatch('SET_ACTIVE_VEHICLE', this.data);
         this.data.navigate('Flight');
       }else{
-        alert("Required permissions are not given, please go to settings and give us permissions.")
+        store.dispatch('REQUEST_ALL_PERMISSIONS');
       }
     }
   }
