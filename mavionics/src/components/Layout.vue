@@ -2,8 +2,12 @@
   <div class="layout">
     <section class="hero is-info is-fullheight bg-clouds">
       <div class="hero-head">
-        <Navbar :showBrand="!largeLogo" :currentUser="currentUser" />
-        <img v-if="largeLogo" src="../assets/logo.svg"/>
+        <Navbar
+          :showBrand="!largeLogo"
+          :currentUser="currentUser"
+          :isAuthenticated="isAuthenticated"
+        />
+        <img v-if="largeLogo" src="../assets/logo.svg">
       </div>
       <div class="hero-body has-text-centered">
         <slot></slot>
@@ -13,7 +17,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 import Navbar from "@/components/Navbar.vue";
 
 export default {
@@ -26,8 +30,7 @@ export default {
   },
   computed: {
     // mix the getters into computed with object spread operator
-    ...mapGetters([
-      'currentUser'])
+    ...mapGetters(["currentUser", "isAuthenticated"])
   }
 };
 </script>

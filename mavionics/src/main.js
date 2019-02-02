@@ -17,10 +17,9 @@ Vue.config.productionTip = false;
 
 // handle page reloads. Needs to know auth state before creating router
 let app;
-auth.onAuthStateChanged(() => {
-  if (auth.currentUser != null) {
-    store.commit("setCurrentUser", auth.currentUser);
-    store.dispatch("login");
+auth.onAuthStateChanged(async user => {
+  if (user) {
+    await store.dispatch("login");
   }
 
   if (!app) {

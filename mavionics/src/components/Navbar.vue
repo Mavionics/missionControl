@@ -62,11 +62,6 @@ export default {
       navIsActive: false
     };
   },
-  computed: {
-    isAuthenticated: function() {
-      return this.currentUser != null;
-    }
-  },
   methods: {
     showHamburger: function() {
       this.navIsActive = !this.navIsActive;
@@ -77,7 +72,8 @@ export default {
       type: Boolean,
       default: true
     },
-    currentUser: Object
+    currentUser: Object,
+    isAuthenticated: Boolean
   }
 };
 </script>

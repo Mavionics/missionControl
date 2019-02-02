@@ -143,6 +143,7 @@ export default {
       this.updatePosition(this.userpin, userPos);
     },
     vehicles(val) {
+      // TODO: Handle when items are removed from array
       val.forEach(vehicle => this.updateVehicle(vehicle));
     }
   }

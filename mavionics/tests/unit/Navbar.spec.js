@@ -26,7 +26,7 @@ describe("Navbar.vue", () => {
   }),
     it("show logout if logged in", () => {
       const wrapper = createMount();
-      wrapper.setProps({ currentUser: "Username" });
+      wrapper.setProps({ isAuthenticated: true });
       expect(wrapper.find("router-link-stub[name='Logout']").isVisible()).to.be
         .true;
     }),
@@ -37,7 +37,7 @@ describe("Navbar.vue", () => {
     }),
     it("show controlroom if logged in", () => {
       const wrapper = createMount();
-      wrapper.setProps({ currentUser: "Username" });
+      wrapper.setProps({ isAuthenticated: true });
       expect(wrapper.find("router-link-stub[name='ControlRoom']").isVisible())
         .to.be.true;
     }),

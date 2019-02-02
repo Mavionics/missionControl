@@ -8,7 +8,7 @@ class PhySim {
   // Step in seconds
   step(s) {
     this._state.timestamp += s * 1000;
-    this._state.longitude += 0.0000001 * this._state.speed * s;
+    this._state.longitude += 0.00001 * this._state.speed * s;
   }
   getTime() {
     return this._state.timestamp;
