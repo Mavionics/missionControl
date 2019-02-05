@@ -51,6 +51,7 @@ matrix:
       - ./scripts/extract.sh
       install:
       - cd app/android
+      - npm install bit-bin -g -y
       - npm install
       - npm run postinstall
       script:
@@ -82,6 +83,7 @@ matrix:
 
       install:
       - cd mavionics
+      - npm install bit-bin -g -y
       - npm install
       - npm ci
       - npm install -g firebase-tools
