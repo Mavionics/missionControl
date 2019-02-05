@@ -37,7 +37,16 @@ export function SET_ACTIVE_VEHICLE (
   { commit, dispatch },
   vehicle) {
     commit('SET_ACTIVE_VEHICLE', vehicle)
+    dispatch('SET_ACTIVE_VEHICLE_REF', vehicle.id);
 }
+
+export function SET_ACTIVE_VEHICLE_REF(
+  { commit, dispatch },
+  vehicleId)
+  {
+    commit('SET_ACTIVE_VEHICLE_REF',
+      vehiclesCollection.doc(vehicleId));
+  }
 
 export function SET_POSITION (
   { commit, dispatch },

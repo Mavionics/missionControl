@@ -52,6 +52,7 @@ matrix:
       install:
       - cd app/android
       - npm install
+      - npm run postinstall
       script:
       - "./gradlew assembleRelease"
       deploy:

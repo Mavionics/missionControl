@@ -38,3 +38,7 @@ export function UPDATE_VEHICLE_POSITION(state, position){
 export function UPDATE_VEHICLE_TIMESTAMP(state, timestamp){
   state.activeVehicle.timestamp = timestamp;
 }
+
+export function SET_ACTIVE_VEHICLE_REF(state, activeVehicleRef){
+  state.activeVehicleRef = activeVehicleRef;
+}

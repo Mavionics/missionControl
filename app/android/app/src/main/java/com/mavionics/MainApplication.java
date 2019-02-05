@@ -4,6 +4,9 @@ import android.app.Application;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.react.ReactApplication;
+import com.oney.WebRTCModule.WebRTCModulePackage;
+import com.bitgo.randombytes.*;
+import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
@@ -29,6 +32,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+              new RandomBytesPackage(),
               new RNFirebasePackage(),
               new RNFirebaseAuthPackage(),
               new RNFirebaseFirestorePackage(),
