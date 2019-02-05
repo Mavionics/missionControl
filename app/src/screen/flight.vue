@@ -105,8 +105,11 @@ export default {
     }, 3000)
     },
     initWebRTC(stream){
-      this.rtc = new RtcModule(this.activeVehicleRef,
-        true,stream)
+      this.rtc = new RtcModule(
+        this.activeVehicleRef,
+        true,
+        stream,
+        WebRTC)
 
       this.rtc.onMessage = msg => {
         console.log("flight.vue:  rtc.onMessage, ", msg);

@@ -88,3 +88,7 @@ $RECYCLE.BIN/
 mavionics/.cache/
 
 shim.js
+
+# Bit
+.bit
+dist/

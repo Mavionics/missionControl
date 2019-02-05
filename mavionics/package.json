@@ -22,7 +22,8 @@
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
-    "vuex-easy-firestore": "^1.28.0"
+    "vuex-easy-firestore": "^1.28.0",
+    "@bit/owodunni.mavionics.rtc-module": "file:./src/modules"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^4.1.6",

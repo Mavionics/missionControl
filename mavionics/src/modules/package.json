@@ -1,0 +1,13 @@
+{
+    "name": "@bit/owodunni.mavionics.rtc-module",
+    "version": "1.2.0",
+    "homepage": "https://bitsrc.io/owodunni/mavionics/rtc-module",
+    "main": "dist/RtcModule.js",
+    "dependencies": {
+        "simple-peer": "^9.2.1"
+    },
+    "devDependencies": {},
+    "peerDependencies": {},
+    "componentRootFolder": "src/modules",
+    "license": "SEE LICENSE IN LICENSE"
+}

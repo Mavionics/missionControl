@@ -1,14 +1,18 @@
 /* eslint-disable no-console */
 import Peer from "simple-peer";
-import  WebRTC from "react-native-webrtc"
 
 class RtcModule {
-  constructor(dbRef, initiator, stream) {
+  constructor(
+    dbRef,
+    initiator,
+    stream,
+    WebRTC) {
 
     console.log("RtcModule.js constructor")
     this.initiator = initiator;
     this.dbRef = dbRef;
     this.stream = stream;
+    this.WebRTC = WebRTC;
     this.onMessage = () => {};
     this.onStream = () => {};
 
@@ -42,7 +46,7 @@ class RtcModule {
     console.log("RtcModule.js connect, create new peer")
     this.peer = new Peer({
       initiator: this.initiator,
-      wrtc: WebRTC,
+      wrtc: this.WebRTC,
       trickle: false,
       objectMode: true,
       config: {

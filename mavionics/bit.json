@@ -1,0 +1,8 @@
+{
+    "env": {},
+    "dependencies": {
+        "owodunni.mavionics/rtc-module": "1.2.0"
+    },
+    "componentsDefaultDirectory": "components/{name}",
+    "packageManager": "npm"
+}
