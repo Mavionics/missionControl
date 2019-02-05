@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
-    "postinstall": "./node_modules/.bin/rn-nodeify --install buffer,events,crypto,stream,util,process,vm --hack --overwrite && bit import",
+    "postinstall": "./node_modules/.bin/rn-nodeify --install buffer,events,crypto,stream,util,process,vm --hack --overwrite && echo no | bit import",
     "test": "jest"
   },
   "dependencies": {
