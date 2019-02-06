@@ -65,8 +65,6 @@ class RtcModule {
 
     this.peer._debug = console.log
 
-
-
     this.inMessages.onSnapshot(querySnapshot => {
       querySnapshot.forEach(doc => {
         this.peer.signal(doc.data());
@@ -95,17 +93,17 @@ class RtcModule {
 
   sendMessage(data) {
     console.log("RtcModule.js sendMessage ", JSON.stringify(data));
-    if (this.p !== null) this.peer.send(JSON.stringify(data));
+    if (this.peer !== null) this.peer.send(JSON.stringify(data));
   }
 
   disconnect() {
-    console.log("RtcModule.js sendMessdisconnectge ");
+    console.log("RtcModule.js sendMessage disconnect");
     this.peer.destroy();
   }
 
   isConnected() {
     console.log("RtcModule.js isConnected");
-    return this.p && this.peer.connected;
+    return this.peer && this.peer.connected;
   }
 }
 
