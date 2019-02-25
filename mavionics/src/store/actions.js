@@ -137,17 +137,14 @@ var actions = {
       );
   },
   connectToVehicle({ commit }, { avId }) {
-    return vehicles
-      .doc(avId)
-      .get()
-      .then(
-        res => {
-          commit("setActiveVehicle", { val: res.data(), ref: res.ref() });
-        },
-        err => {
-          log.error(err);
-        }
-      );
+    return vehicles.doc(avId).onSnapshot(
+      function(res) {
+        commit("setActiveVehicle", { val: res.data(), ref: res.ref });
+      },
+      err => {
+        log.error(err);
+      }
+    );
   },
   addVehicle({ getters }, { name, description, isSim }) {
     vehicles.add({

@@ -3,7 +3,7 @@
     <div id="top" class="top-panel parent">
       <router-link name="ControlRoom" class="navbar-item" to="/controlroom">Home</router-link>
     </div>
-    <video id="video" class="fullscreen-panel parent" autoplay playsinline></video>
+    <video id="video" ref="video" class="fullscreen-panel parent" autoplay playsinline></video>
     <div id="map" class="secondary-panel parent">
       <div class="middle">Map</div>
     </div>
@@ -108,7 +108,6 @@ export default {
   },
   created() {
     // const yourVideo = document.getElementById("yourVideo");
-    const friendsVideo = document.getElementById("video");
 
     this.$store
       .dispatch("connectToVehicle", {
@@ -117,7 +116,7 @@ export default {
       .then(() => {
         if (this.$store.state.avRef == null) return;
         let rtc = new RtcModule(this.$store.state.avRef, false);
-        rtc.onStream = stream => (friendsVideo.srcObject = stream);
+        rtc.onStream = stream => (this.$refs.video.srcObject = stream);
         rtc.onMessage = data => {
           this.lastData = data;
           this.altitude = data.altitude;
@@ -135,7 +134,7 @@ export default {
   },
   computed: {
     vehicle() {
-      return this.$store.state.vehicleModule.data;
+      return this.$store.state.currentVehicle;
     }
   },
   props: {

@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
 import Peer from "simple-peer";
-import  WebRTC from "react-native-webrtc"
+import WebRTC from "react-native-webrtc";
 
 class RtcModule {
   constructor(dbRef, initiator, stream) {
-
-    console.log("RtcModule.js constructor")
+    console.log("RtcModule.js constructor");
     this.initiator = initiator;
     this.dbRef = dbRef;
     this.stream = stream;
@@ -13,11 +12,11 @@ class RtcModule {
     this.onStream = () => {};
 
     if (initiator) {
-      this.inMessages = this.dbRef.collection("sig_offerer");
-      this.outMessages = this.dbRef.collection("sig_responder");
-    } else {
       this.inMessages = this.dbRef.collection("sig_responder");
       this.outMessages = this.dbRef.collection("sig_offerer");
+    } else {
+      this.inMessages = this.dbRef.collection("sig_offerer");
+      this.outMessages = this.dbRef.collection("sig_responder");
     }
   }
 
@@ -30,7 +29,7 @@ class RtcModule {
   }
 
   async connect() {
-    console.log("RtcModule.js connect")
+    console.log("RtcModule.js connect");
     if (this.initiator) {
       await Promise.all([
         this.clearCollection(this.inMessages),
@@ -39,7 +38,7 @@ class RtcModule {
 
       await this.dbRef.update({ status: "offer" });
     }
-    console.log("RtcModule.js connect, create new peer")
+    console.log("RtcModule.js connect, create new peer");
     this.peer = new Peer({
       initiator: this.initiator,
       wrtc: WebRTC,
@@ -59,9 +58,7 @@ class RtcModule {
       stream: this.stream
     });
 
-    this.peer._debug = console.log
-
-
+    this.peer._debug = console.log;
 
     this.inMessages.onSnapshot(querySnapshot => {
       querySnapshot.forEach(doc => {
@@ -91,7 +88,7 @@ class RtcModule {
 
   sendMessage(data) {
     console.log("RtcModule.js sendMessage ", JSON.stringify(data));
-    if (this.p !== null) this.peer.send(JSON.stringify(data));
+    if (this.peer !== null) this.peer.send(JSON.stringify(data));
   }
 
   disconnect() {
@@ -101,7 +98,7 @@ class RtcModule {
 
   isConnected() {
     console.log("RtcModule.js isConnected");
-    return this.p && this.peer.connected;
+    return this.peer && this.peer.connected;
   }
 }
 

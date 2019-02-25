@@ -10,11 +10,11 @@ class RtcModule {
     this.onStream = () => {};
 
     if (initiator) {
-      this.inMessages = this.dbRef.collection("sig_offerer");
-      this.outMessages = this.dbRef.collection("sig_responder");
-    } else {
       this.inMessages = this.dbRef.collection("sig_responder");
       this.outMessages = this.dbRef.collection("sig_offerer");
+    } else {
+      this.inMessages = this.dbRef.collection("sig_offerer");
+      this.outMessages = this.dbRef.collection("sig_responder");
     }
   }
 
