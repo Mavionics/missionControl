@@ -3,8 +3,16 @@
     <div id="top" class="top-panel parent">
       <router-link name="ControlRoom" class="navbar-item" to="/controlroom">Home</router-link>
     </div>
-    <video id="video" ref="video" class="fullscreen-panel parent" autoplay playsinline></video>
+    <video
+      id="video"
+      ref="video"
+      class="fullscreen-panel parent"
+      autoplay
+      playsinline
+      :src="videoURL"
+    ></video>
     <div id="map" class="secondary-panel parent">
+      {{ $route.params.vehicle }}
       <div class="middle">Map</div>
     </div>
     <div class="lower-panel parent" id="debug">
@@ -89,8 +97,6 @@
 </style>
 
 <script>
-import RtcModule from "@/modules/RtcModule";
-
 export default {
   name: "cockpit",
   data() {
@@ -106,35 +112,23 @@ export default {
       lastData: ""
     };
   },
-  created() {
+  mounted() {
     // const yourVideo = document.getElementById("yourVideo");
-
+    console.log("Cockpit.vue ", this.$route.params.vehicle);
     this.$store
       .dispatch("connectToVehicle", {
-        avId: this.avId
+        avId: this.$route.params.vehicle
       })
       .then(() => {
-        if (this.$store.state.avRef == null) return;
-        let rtc = new RtcModule(this.$store.state.avRef, false);
-        rtc.onStream = stream => (this.$refs.video.srcObject = stream);
-        rtc.onMessage = data => {
-          this.lastData = data;
-          this.altitude = data.altitude;
-          this.verticalSpeed = data.verticalSpeed;
-          this.speed = data.speed;
-          this.acceleration = data.acceleration;
-          this.heading = data.heading;
-          this.turnRate = data.turnRate;
-          this.longitude = data.longitude;
-          this.latitude = data.latitude;
-          this.speed = data.speed;
-        };
-        rtc.connect();
+        //if (this.$store.state.avRef == null) return;
       });
   },
   computed: {
     vehicle() {
       return this.$store.state.currentVehicle;
+    },
+    videoURL() {
+      return this.$store.state.videoURL;
     }
   },
   props: {

@@ -58,13 +58,23 @@ class RtcModule {
       stream: this.stream
     });
 
-    this.peer._debug = console.log;
+    this.peer._debug = (msg, par1, par2) =>
+      console.log("SIMPLE_PEER", msg, par1, par2);
 
-    this.inMessages.onSnapshot(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        this.peer.signal(doc.data());
-      });
-    });
+    if (this.signalListnerUnsubscribe) this.signalListnerUnsubscribe();
+    this.signalListnerUnsubscribe = this.inMessages.onSnapshot(
+      querySnapshot => {
+        querySnapshot.forEach(doc => {
+          console.warn("Achtung! Incomming ", doc.data());
+          this.peer.signal(doc.data());
+        });
+        // querySnapshot.docChanges().forEach(change => {
+        //   if (change.type === "added") {
+        //     this.peer.signal(change.doc.data());
+        //   }
+        // });
+      }
+    );
 
     this.peer.on("signal", data => this.outMessages.add(data));
     this.peer.on("stream", this.onStream);
@@ -80,7 +90,10 @@ class RtcModule {
       });
 
       this.peer.on("connect", () => {
-        this.dbRef.update({ status: "connected" });
+        console.log("SIMPLE_PEER: CONNECTED");
+        if (this.initiator) {
+          this.dbRef.update({ status: "connected" });
+        }
         resolve();
       });
     });
@@ -93,6 +106,7 @@ class RtcModule {
 
   disconnect() {
     console.log("RtcModule.js sendMessdisconnectge ");
+    if (this.signalListnerUnsubscribe) this.signalListnerUnsubscribe();
     this.peer.destroy();
   }
 

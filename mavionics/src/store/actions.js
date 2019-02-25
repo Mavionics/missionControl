@@ -3,6 +3,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import SimController from "@/sim/simController";
+import RtcModule from "@/modules/RtcModule";
 import * as log from "loglevel";
 
 // Initialize Firebase
@@ -26,6 +27,7 @@ const auth = firebase.auth();
 const vehicles = db.collection("vehicles");
 
 let sim;
+let rtc;
 let fetchingKeys = false;
 
 var actions = {
@@ -137,6 +139,22 @@ var actions = {
       );
   },
   connectToVehicle({ commit }, { avId }) {
+    let rtc = new RtcModule(vehicles.doc(avId), false);
+    rtc.onStream = stream => commit("setVideoURL", stream.toURL());
+    rtc.onMessage = data => {
+      this.lastData = data;
+      this.altitude = data.altitude;
+      this.verticalSpeed = data.verticalSpeed;
+      this.speed = data.speed;
+      this.acceleration = data.acceleration;
+      this.heading = data.heading;
+      this.turnRate = data.turnRate;
+      this.longitude = data.longitude;
+      this.latitude = data.latitude;
+      this.speed = data.speed;
+    };
+    rtc.connect().then(() => rtc.sendMessage("We are connected!"));
+
     return vehicles.doc(avId).onSnapshot(
       function(res) {
         commit("setActiveVehicle", { val: res.data(), ref: res.ref });
