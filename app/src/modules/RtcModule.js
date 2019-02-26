@@ -101,7 +101,9 @@ class RtcModule {
 
   sendMessage(data) {
     console.log("RtcModule.js sendMessage ", JSON.stringify(data));
-    if (this.peer !== null) this.peer.send(JSON.stringify(data));
+    if (this.peer !== null || this.peer != undefined){
+      this.peer.send(JSON.stringify(data));
+    }
   }
 
   disconnect() {
