@@ -96,6 +96,9 @@ export default {
       this.watchId = navigator.geolocation.watchPosition(
         position => {
           store.dispatch("SET_POSITION", position);
+          if(this.rtc != null && this.rtc != undefined){
+            this.rtc.sendMessage(position)
+          }
         },
         error =>
           console.log("flight.vue, getPositionContinous error: " + error),

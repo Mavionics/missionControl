@@ -35,9 +35,9 @@ class RtcModule {
         this.clearCollection(this.inMessages),
         this.clearCollection(this.outMessages)
       ]);
-
       await this.dbRef.update({ status: "offer" });
     }
+
     console.log("RtcModule.js connect, create new peer");
     this.peer = new Peer({
       initiator: this.initiator,
@@ -59,13 +59,13 @@ class RtcModule {
     });
 
     this.peer._debug = (msg, par1, par2) =>
-      console.log("SIMPLE_PEER", msg, par1, par2);
+      console.log("RtcModule.js SIMPLE_PEER", msg, par1, par2);
 
     if (this.signalListnerUnsubscribe) this.signalListnerUnsubscribe();
     this.signalListnerUnsubscribe = this.inMessages.onSnapshot(
       querySnapshot => {
         querySnapshot.forEach(doc => {
-          console.warn("Achtung! Incomming ", doc.data());
+          console.log("RtcModule.js new inMessage: ", doc.data());
           this.peer.signal(doc.data());
         });
         // querySnapshot.docChanges().forEach(change => {
@@ -79,7 +79,7 @@ class RtcModule {
     this.peer.on("signal", data => this.outMessages.add(data));
     this.peer.on("stream", this.onStream);
     this.peer.on("data", data => {
-      console.warn(data);
+      console.log("RtcModule.js on data: " + data);
       this.onMessage(JSON.parse(data));
     });
 
@@ -90,7 +90,7 @@ class RtcModule {
       });
 
       this.peer.on("connect", () => {
-        console.log("SIMPLE_PEER: CONNECTED");
+        console.log("RtcModule.js SIMPLE_PEER: CONNECTED");
         if (this.initiator) {
           this.dbRef.update({ status: "connected" });
         }

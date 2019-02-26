@@ -96,7 +96,8 @@ class RtcModule {
   }
 
   sendMessage(data) {
-    if (this.p !== null) this.p.send(JSON.stringify(data));
+    if (this.p !== null)
+      this.p.send(JSON.stringify(data));
   }
 
   disconnect() {
