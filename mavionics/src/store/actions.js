@@ -140,7 +140,7 @@ var actions = {
   },
   connectToVehicle({ commit }, { avId }) {
     let rtc = new RtcModule(vehicles.doc(avId), false);
-    rtc.onStream = stream => commit("setVideoURL", stream.toURL());
+    rtc.onStream = stream => commit("setVideoStream", stream);
     rtc.onMessage = data => {
       this.lastData = data;
       this.altitude = data.altitude;

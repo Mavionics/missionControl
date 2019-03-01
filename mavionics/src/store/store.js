@@ -24,7 +24,7 @@ const store = new Vuex.Store({
     vehicles: [],
     currentVehicle: null,
     isLoggedIn: false,
-    videoURL: ""
+    videoStream: null
   },
   mutations: {
     setCesiumKey(state, val) {
@@ -34,9 +34,9 @@ const store = new Vuex.Store({
       state.currentVehicle = val;
       state.avRef = ref;
     },
-    setVideoURL(state, videoURL) {
-      console.warn("VideoURL set ", videoURL);
-      state.videoURL = videoURL;
+    setVideoStream(state, stream) {
+      console.warn("VideoURL set ", stream);
+      state.videoStream = stream;
     }
   },
   getters: {

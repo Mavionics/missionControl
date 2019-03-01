@@ -3,14 +3,7 @@
     <div id="top" class="top-panel parent">
       <router-link name="ControlRoom" class="navbar-item" to="/controlroom">Home</router-link>
     </div>
-    <video
-      id="video"
-      ref="video"
-      class="fullscreen-panel parent"
-      autoplay
-      playsinline
-      :src="videoURL"
-    ></video>
+    <video id="video" ref="video" class="fullscreen-panel parent" autoplay playsinline></video>
     <div id="map" class="secondary-panel parent">
       {{ $route.params.vehicle }}
       <div class="middle">Map</div>
@@ -127,8 +120,14 @@ export default {
     vehicle() {
       return this.$store.state.currentVehicle;
     },
-    videoURL() {
-      return this.$store.state.videoURL;
+    videoStream() {
+      return this.$store.state.videoStream;
+    }
+  },
+  watch: {
+    videoStream(stream) {
+      document.querySelector("#video").srcObject = stream;
+      // this.$ref.video.srcObject = stream
     }
   },
   props: {
