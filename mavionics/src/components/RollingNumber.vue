@@ -10,7 +10,8 @@ export default {
   name: "RollingNumber",
   props: {
     value: Number,
-    step: Number
+    step: Number,
+    fontsize: { type: Number, default: 16 }
   },
   data: () => {
     return { tweenedValue: 0 };
@@ -27,23 +28,34 @@ export default {
     this.$refs["my-canvas"].height = this.$refs[
       "my-canvas"
     ].parentElement.clientHeight;
+
+    this.stripLength = 12 * this.fontsize;
+    this.stripCanvas = new OffscreenCanvas(20, this.stripLength);
+    const ctx = this.stripCanvas.getContext("2d");
+    ctx.fillStyle = "#000";
+    ctx.font = this.fontsize + "px sans-serif";
+    ctx.textAlign = "right";
+
+    for (let i = 0; i < 13; i++) {
+      ctx.fillText((21 - i) % 10, 20, i * this.fontsize - 2);
+    }
+    // ctx.rect(0, 0, 20, this.stripLength);
+    // ctx.stroke();
     this.render();
+
     TweenLite.ticker.addEventListener("tick", this.render);
   },
   watch: {
     value: {
       immediate: true,
       handler(newValue, oldVal) {
-        console.log("Value change", newValue, this.value);
-        // this.tweenedValue = this.value;
         TweenLite.to(this.$data, 0.5, { tweenedValue: newValue });
-        // this.render();
       }
     }
   },
   computed: {
     animatedNumber: function() {
-      return this.tweenedValue; //.toFixed(0);
+      return this.tweenedValue;
     }
   },
   methods: {
@@ -55,43 +67,47 @@ export default {
       const width = 200;
       const height = 16;
       const padding = 3;
-      const rollingDigits = 1;
-      const step = Math.pow(10, rollingDigits);
-      const rollingWidth = 10;
+      // const rollingDigits = 2;
+      // const step = Math.pow(10, rollingDigits);
 
-      // Split number into 3 parts:
+      // Split number into parts:
       //  * Fix: Not rolling (spd 10ths)
       //  * Roll: Rolling part (single)
 
-      let roll = this.animatedNumber % step;
-      let fix = this.animatedNumber - roll;
-      let fixStr = Math.trunc(fix / step);
+      let v = this.animatedNumber;
 
       ctx.save();
-      // Draw box
-      // Clip a rectangular area
-      ctx.beginPath();
+      // // Draw box
+      // // Clip a rectangular area
       ctx.clearRect(0, 0, width + padding, height + 2 * padding);
-      ctx.rect(0, 0, width + padding, height + 2 * padding);
-      ctx.stroke();
+      ctx.beginPath();
+      ctx.rect(0, 0, width + padding, height);
       ctx.clip();
+      let digits = Math.floor(v)
+        .toString()
+        .split("")
+        .map(Number);
 
-      // Draw the text
-      ctx.fillStyle = "#000";
-      ctx.font = height.toString() + "px sans-serif";
-      ctx.textAlign = "right";
-      let rollY = height * (roll % 1);
-      if (roll + 1 >= step) {
-        ctx.fillText(fixStr + 1, width - rollingWidth, rollY);
-        ctx.fillText(fixStr, width - rollingWidth, rollY + height);
-      } else {
-        ctx.fillText(fixStr, width - rollingWidth, height);
+      let rollY = v % 1;
+      for (let i = 0; i < digits.length; i++) {
+        // Start with least significant
+        const element = digits[digits.length - i - 1];
+
+        ctx.drawImage(
+          this.stripCanvas,
+          width - i * 10 - 50,
+          this.fontsize * (element + 2 + rollY) - this.stripLength + rollY
+        );
+        if (element != 9) {
+          rollY = 0;
+        } else if (element == 9 && i == digits.length - 1) {
+          ctx.drawImage(
+            this.stripCanvas,
+            width - (i + 1) * 10 - 50,
+            this.fontsize * (2 + rollY) - this.stripLength + rollY
+          );
+        }
       }
-      ctx.fillText(Math.trunc(roll), width, rollY + height);
-      ctx.fillText(Math.trunc((roll + 1) % step), width, rollY);
-      //   newBox.x + newBox.w / 2,
-      //   newBox.y - 14
-      // );
       ctx.restore();
     }
   }

@@ -19,38 +19,38 @@ storiesOf("RollingNumber", module)
     },
     template: "<RollingNumber :value='speed' :step='10' />"
   }))
-  .add("Value 22.5", () => ({
+  .add("Value 20.5", () => ({
     components: { RollingNumber },
     props: {
-      speed: { type: Number, default: number("speed", 22.5) }
+      speed: { type: Number, default: number("speed", 20.5) }
     },
     template: "<RollingNumber :value='speed' :step='10' />"
   }))
-  .add("Value 22.9", () => ({
+  .add("Value 20.9", () => ({
     components: { RollingNumber },
     props: {
-      speed: { type: Number, default: number("speed", 22.9) }
+      speed: { type: Number, default: number("speed", 20.9) }
     },
     template: "<RollingNumber :value='speed' :step='10' />"
   }))
-  .add("Value 23", () => ({
+  .add("Value 21", () => ({
     components: { RollingNumber },
     props: {
-      speed: { type: Number, default: number("speed", 23) }
+      speed: { type: Number, default: number("speed", 21) }
     },
     template: "<RollingNumber :value='speed' :step='10' />"
   }))
-  .add("Value 27", () => ({
+  .add("Value 29", () => ({
     components: { RollingNumber },
     props: {
-      speed: { type: Number, default: number("speed", 27) }
+      speed: { type: Number, default: number("speed", 29) }
     },
     template: "<RollingNumber :value='speed' :step='10' />"
   }))
-  .add("Value 29.1", () => ({
+  .add("Value 29.2", () => ({
     components: { RollingNumber },
     props: {
-      speed: { type: Number, default: number("speed", 29.1) }
+      speed: { type: Number, default: number("speed", 29.2) }
     },
     template: "<RollingNumber :value='speed' :step='10' />"
   }))
