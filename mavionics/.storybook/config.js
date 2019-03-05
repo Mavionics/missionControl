@@ -1,16 +1,17 @@
-import { configure } from '@storybook/vue';
+import { configure } from "@storybook/vue";
+import "@storybook/addon-knobs/register";
 
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from "vue";
+import Vuex from "vuex";
 
-import Buefy from 'buefy'
-import 'buefy/dist/buefy.css'
+import Buefy from "buefy";
+import "buefy/dist/buefy.css";
 
 // Install Vue plugins.
-Vue.use(Buefy)
-Vue.use(Vuex)
+Vue.use(Buefy);
+Vue.use(Vuex);
 
-const req = require.context('../tests/stories', true, /\.stories\.js$/)
+const req = require.context("../tests/stories", true, /\.stories\.js$/);
 
 function loadStories() {
   // Load a stories in test/stories folder
