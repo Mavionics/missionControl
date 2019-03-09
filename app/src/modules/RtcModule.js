@@ -44,10 +44,6 @@ class RtcModule {
       wrtc: WebRTC,
       objectMode: true,
       stream: this.stream,
-      offerConstraints: {
-        offerToReceiveAudio: true,
-        offerToReceiveVideo: true
-      },
       config: {
         iceServers: [
           { urls: "stun:stun.services.mozilla.com" },

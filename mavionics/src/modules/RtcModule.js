@@ -39,10 +39,6 @@ class RtcModule {
     this.p = new Peer({
       initiator: this.initiator,
       objectMode: true,
-      answerConstraints: {
-        offerToReceiveAudio: false,
-        offerToReceiveVideo: false
-      },
       config: {
         iceServers: [
           { urls: "stun:stun.services.mozilla.com" },
