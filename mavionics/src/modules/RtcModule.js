@@ -7,7 +7,7 @@ class RtcModule {
     this.dbRef = dbRef;
     this.stream = stream;
     this.onMessage = () => {};
-    this.onStream = () => {};
+    this.onStream = () => { console.log("RtcModule, onStream");};
 
     if (initiator) {
       this.inMessages = this.dbRef.collection("sig_responder");
@@ -38,8 +38,11 @@ class RtcModule {
 
     this.p = new Peer({
       initiator: this.initiator,
-      trickle: false,
       objectMode: true,
+      answerConstraints: {
+        offerToReceiveAudio: false,
+        offerToReceiveVideo: false
+      },
       config: {
         iceServers: [
           { urls: "stun:stun.services.mozilla.com" },
@@ -50,8 +53,7 @@ class RtcModule {
             username: "alex.o.poole@gmail.com"
           }
         ]
-      },
-      stream: this.stream
+      }
     });
 
     this.p._debug = (msg, par1, par2) =>
@@ -63,7 +65,7 @@ class RtcModule {
       querySnapshot => {
         querySnapshot.docChanges().forEach(change => {
           if (change.type === "added") {
-            console.warn("Achtung! Incomming ", change.doc.data());
+            console.debug("RtcModule.js new inMessage: ", change.doc.data());
             this.p.signal(change.doc.data());
           }
         });

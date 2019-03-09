@@ -42,8 +42,12 @@ class RtcModule {
     this.peer = new Peer({
       initiator: this.initiator,
       wrtc: WebRTC,
-      trickle: false,
       objectMode: true,
+      stream: this.stream,
+      offerConstraints: {
+        offerToReceiveAudio: true,
+        offerToReceiveVideo: true
+      },
       config: {
         iceServers: [
           { urls: "stun:stun.services.mozilla.com" },
@@ -54,8 +58,7 @@ class RtcModule {
             username: "alex.o.poole@gmail.com"
           }
         ]
-      },
-      stream: this.stream
+      }
     });
 
     this.peer._debug = (msg, par1, par2) =>
@@ -64,15 +67,12 @@ class RtcModule {
     if (this.signalListnerUnsubscribe) this.signalListnerUnsubscribe();
     this.signalListnerUnsubscribe = this.inMessages.onSnapshot(
       querySnapshot => {
-        querySnapshot.forEach(doc => {
-          console.log("RtcModule.js new inMessage: ", doc.data());
-          this.peer.signal(doc.data());
+        querySnapshot.docChanges.forEach(change => {
+          if (change.type === "added") {
+            console.debug("RtcModule.js new inMessage: ", change.doc.data());
+            this.peer.signal(change.doc.data());
+          }
         });
-        // querySnapshot.docChanges().forEach(change => {
-        //   if (change.type === "added") {
-        //     this.peer.signal(change.doc.data());
-        //   }
-        // });
       }
     );
 
