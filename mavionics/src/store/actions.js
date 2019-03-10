@@ -116,7 +116,7 @@ var actions = {
   connectToVehicle({ commit }, { avId }) {
     let rtc = new RtcModule(vehicles.doc(avId), false);
     rtc.onStream = stream => {
-      console.debug("RtcModule onStream");
+      console.debug("RtcModule onStream callback");
       commit("setVideoStream", stream);
     }
     rtc.onMessage = data => {

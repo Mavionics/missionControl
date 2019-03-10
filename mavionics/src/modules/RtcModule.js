@@ -7,7 +7,7 @@ class RtcModule {
     this.dbRef = dbRef;
     this.stream = stream;
     this.onMessage = () => {};
-    this.onStream = () => { console.log("RtcModule, onStream");};
+    this.onStream = () => { };
 
     if (initiator) {
       this.inMessages = this.dbRef.collection("sig_responder");
@@ -69,12 +69,16 @@ class RtcModule {
     );
 
     this.p.on("signal", data => {
-      console.warn("Achtung! Outgoing ", data);
+      console.debug("Achtung! Outgoing ", data);
       this.outMessages.add(data);
     });
-    this.p.on("stream", this.onStream);
+    this.p.on('stream', stream => {
+      console.debug("RtcModule.js stream: ", stream);
+      this.onStream(stream);
+    })
+
     this.p.on("data", data => {
-      console.warn(data);
+      console.debug("RtcModule.js data: ", data);
       this.onMessage(JSON.parse(data));
     });
 
