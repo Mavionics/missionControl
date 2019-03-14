@@ -5,14 +5,17 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "dev-build": "vue-cli-service build --mode development",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit",
+    "dev-build": "vue-cli-service build --mode development",
+    "storybook:build": "vue-cli-service storybook:build -c config/storybook",
+    "storybook:serve": "vue-cli-service storybook:serve -p 6006 -c config/storybook",
     "test:e2e": "vue-cli-service test:e2e",
-    "watch:unit": "vue-cli-service test:unit -w",
-    "storybook": "start-storybook -p 9001 -c .storybook"
+    "test:unit": "vue-cli-service test:unit",
+    "vue": "vue ui",
+    "watch:unit": "vue-cli-service test:unit -w"
   },
   "dependencies": {
+    "ajv": "^6.10.0",
     "buefy": "^0.7.3",
     "firebase": "^5.8.5",
     "firebaseui": "^3.5.2",
@@ -23,12 +26,21 @@
     "vue": "^2.6.8",
     "vue-router": "^3.0.2",
     "vuex": "^3.1.0",
-    "vuex-easy-firestore": "^1.29.2"
+    "vuex-easy-firestore": "^1.29.2",
+    "webpack": "^4.29.6"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^4.1.13",
-    "@storybook/addon-knobs": "^4.1.13",
-    "@storybook/vue": "^4.1.13",
+    "@storybook/addon-a11y": "4.1.1",
+    "@storybook/addon-knobs": "4.1.1",
+    "@storybook/addon-links": "4.1.1",
+    "@storybook/addon-options": "4.1.1",
+    "@storybook/addon-storyshots": "4.1.1",
+    "@storybook/addon-storysource": "4.1.1",
+    "@storybook/addon-viewport": "4.1.1",
+    "@storybook/addons": "4.1.1",
+    "@storybook/vue": "4.1.1",
+    "@storybook/addon-actions": "4.1.1",
+    "@storybook/addon-notes": "4.1.1",
     "@vue/cli-plugin-babel": "^3.4.1",
     "@vue/cli-plugin-e2e-cypress": "^3.4.1",
     "@vue/cli-plugin-eslint": "^3.4.1",
@@ -40,10 +52,12 @@
     "babel-preset-vue": "^2.0.2",
     "cesium": "^1.55.0",
     "chai": "^4.1.2",
-    "copy-webpack-plugin": "^4.5.2",
+    "copy-webpack-plugin": "^5.0.0",
+    "file-loader": "^3.0.1",
+    "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
-    "storybook-vue-router": "^1.0.2",
+    "vue-cli-plugin-storybook": "^0.5.2",
     "vue-template-compiler": "^2.6.8"
   },
   "eslintConfig": {

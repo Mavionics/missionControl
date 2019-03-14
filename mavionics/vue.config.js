@@ -40,5 +40,16 @@ module.exports = {
         CESIUM_BASE_URL: JSON.stringify('../')
       }),
     ],
+  },
+
+  publicPath: undefined,
+  outputDir: undefined,
+  assetsDir: undefined,
+  runtimeCompiler: undefined,
+  productionSourceMap: undefined,
+  parallel: undefined,
+
+  css: {
+    modules: true
   }
 }

@@ -10,8 +10,7 @@ export default {
   name: "RollingNumber",
   props: {
     value: Number,
-    step: Number,
-    fontsize: { type: Number, default: 16 }
+    step: Number
   },
   data: () => {
     return { tweenedValue: 0 };
@@ -28,7 +27,10 @@ export default {
     this.$refs["my-canvas"].height = this.$refs[
       "my-canvas"
     ].parentElement.clientHeight;
-
+    this.padding = 2;
+    this.width = this.$refs["my-canvas"].width;
+    this.height = this.$refs["my-canvas"].height;
+    this.fontsize = this.height - 2 * this.padding;
     this.stripLength = 12 * this.fontsize;
     this.stripCanvas = new OffscreenCanvas(20, this.stripLength);
     const ctx = this.stripCanvas.getContext("2d");
@@ -48,8 +50,8 @@ export default {
   watch: {
     value: {
       immediate: true,
-      handler(newValue, oldVal) {
-        TweenLite.to(this.$data, 0.5, { tweenedValue: newValue });
+      handler(newValue) {
+        TweenLite.to(this.$data, 1, { tweenedValue: newValue });
       }
     }
   },
@@ -64,9 +66,6 @@ export default {
       // injected by the time this render function runs the first time.
       if (!this.context) return;
       const ctx = this.context;
-      const width = 200;
-      const height = 16;
-      const padding = 3;
       // const rollingDigits = 2;
       // const step = Math.pow(10, rollingDigits);
 
@@ -79,34 +78,67 @@ export default {
       ctx.save();
       // // Draw box
       // // Clip a rectangular area
-      ctx.clearRect(0, 0, width + padding, height + 2 * padding);
+      ctx.clearRect(0, 0, this.width, this.height);
       ctx.beginPath();
-      ctx.rect(0, 0, width + padding, height);
+      ctx.rect(0, 0, this.width, this.height);
       ctx.clip();
+
+      let x = this.width - 10;
+
+      if (this.value === undefined || this.value == null) {
+        ctx.beginPath();
+        const h = this.height / 2 - 1;
+        ctx.moveTo(x + 10, h);
+        ctx.lineTo(x, h);
+        ctx.moveTo(x - 2, h);
+        ctx.lineTo(x - 12, h);
+        ctx.moveTo(x - 14, h);
+        ctx.lineTo(x - 24, h);
+        ctx.stroke();
+
+        ctx.restore();
+        return;
+      }
+
       let digits = Math.floor(v)
         .toString()
         .split("")
         .map(Number);
-
-      let rollY = v % 1;
+      let rollY = (v % 1) * Math.sign(v);
       for (let i = 0; i < digits.length; i++) {
         // Start with least significant
         const element = digits[digits.length - i - 1];
+        x -= 10;
 
         ctx.drawImage(
           this.stripCanvas,
-          width - i * 10 - 50,
-          this.fontsize * (element + 2 + rollY) - this.stripLength + rollY
+          x,
+          this.fontsize * (element + 2 + rollY) -
+            this.stripLength +
+            rollY +
+            this.padding
         );
         if (element != 9) {
           rollY = 0;
         } else if (element == 9 && i == digits.length - 1) {
+          x -= 10;
           ctx.drawImage(
             this.stripCanvas,
-            width - (i + 1) * 10 - 50,
-            this.fontsize * (2 + rollY) - this.stripLength + rollY
+            x,
+            this.fontsize * (2 + rollY) -
+              this.stripLength +
+              rollY +
+              this.padding
           );
         }
+      }
+
+      if (v < 0) {
+        x -= 10;
+        ctx.beginPath();
+        ctx.moveTo(x, this.height / 2);
+        ctx.lineTo(x + 8, this.height / 2);
+        ctx.stroke();
       }
       ctx.restore();
     }

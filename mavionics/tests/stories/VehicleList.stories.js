@@ -7,7 +7,7 @@ storiesOf("VehicleList", module).add("Normal not logged in", () => ({
   template: '<VehicleList :vehicles="vehicles"/>',
   store: {
     getters: {
-      currentUser(state) {
+      currentUser() {
         return "Henry von Humongous";
       }
     }
