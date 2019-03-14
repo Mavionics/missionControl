@@ -21,7 +21,7 @@
     "react-native-randombytes": "^3.5.2",
     "react-native-webrtc": "^1.67.1",
     "readable-stream": "^1.0.33",
-    "simple-peer": "^9.2.1",
+    "simple-peer": "github:Mavionics/simple-peer",
     "stream-browserify": "^1.0.0",
     "util": "^0.10.4",
     "vm-browserify": "0.0.4",

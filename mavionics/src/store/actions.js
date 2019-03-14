@@ -63,31 +63,6 @@ var actions = {
     // open the DB channel
     await dispatch("user/openDBChannel");
 
-    // usersCollection
-    //   .doc(state.currentUser.uid)
-    //   .get()
-    //   .then(res => {
-    //     if (res.exists) {
-    //       commit("setUserProfile", res.data());
-    //     } else {
-    //       // Create user if not existing
-    //       let userData = { name: state.currentUser.displayName, photo: "" }; //authResult.user.photourl || ""
-    //       usersCollection
-    //         .doc(state.currentUser.uid)
-    //         .set(userData)
-    //         .then(() => {
-    //           commit("setUserProfile", res.data());
-    //         });
-    //     }
-    //   })
-    //   .then(() => router.push("/controlroom"))
-    //   .catch(err => {
-    //     // eslint-disable-next-line
-    //     log.error(err);
-    //     // router.push("/home");
-    //     return false;
-    //   });
-
     state.vehicles = [];
     await vehicles.where("owner", "==", getters.getUid).onSnapshot(
       querySnapshot => {
@@ -140,8 +115,12 @@ var actions = {
   },
   connectToVehicle({ commit }, { avId }) {
     let rtc = new RtcModule(vehicles.doc(avId), false);
-    rtc.onStream = stream => commit("setVideoStream", stream);
+    rtc.onStream = stream => {
+      console.debug("RtcModule onStream callback");
+      commit("setVideoStream", stream);
+    }
     rtc.onMessage = data => {
+      console.debug("RtcModule onMessage");
       this.lastData = data;
       this.altitude = data.altitude;
       this.verticalSpeed = data.verticalSpeed;

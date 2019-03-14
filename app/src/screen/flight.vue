@@ -86,9 +86,9 @@ export default {
     streams: []
   },
   created() {
-    this.watchPosition();
     this.updateActiveVehicle();
     this.getLocalStream(true, this.initWebRTC);
+    this.watchPosition();
   },
   methods: {
     watchPosition() {
@@ -103,11 +103,11 @@ export default {
         },
         error =>
           console.log("flight.vue, getPositionContinous error: " , JSON.stringify(error)),
-        {
+        /*{
           enableHighAccuracy: true,
           timeout: 20000,
           maximumAge: 1000
-        }
+        }*/
       );
     },
     updateActiveVehicle() {
@@ -118,6 +118,9 @@ export default {
           position: store.state.position,
           timestamp: createTimestamp()
         });
+        if(this.rtc != null && this.rtc != undefined){
+            this.rtc.sendMessage(store.state.position)
+         }
         this.updateActiveVehicle();
       }, 3000);
     },
