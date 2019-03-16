@@ -31,7 +31,7 @@ storiesOf("HUD", module)
       return {
         veh: {
           speed: number("speed", 20.1, speedKnobOptions),
-          altitude: number("altitude", 2000)
+          altitude: number("altitude", 0)
         }
       };
     },
@@ -44,11 +44,11 @@ storiesOf("HUD", module)
     methods: {
       runUp() {
         clearInterval(this.timer);
-        this.timer = setInterval(() => (this.veh.speed += 2), 500);
+        this.timer = setInterval(() => {this.veh.speed += 2;this.veh.altitude+=20}, 500);
       },
       runDown() {
         clearInterval(this.timer);
-        this.timer = setInterval(() => (this.veh.speed -= 2), 500);
+        this.timer = setInterval(() => {this.veh.speed -= 2;this.veh.altitude-=20}, 500);
       },
       stop() {
         clearInterval(this.timer);
