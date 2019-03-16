@@ -9,6 +9,10 @@ import Buefy from "buefy";
 import "buefy/dist/buefy.css";
 Vue.use(Buefy);
 
+import "vue-resize/dist/vue-resize.css";
+import VueResize from "vue-resize";
+Vue.use(VueResize);
+
 const req = require.context("../../tests/stories", true, /.stories.js$/);
 
 function loadStories() {

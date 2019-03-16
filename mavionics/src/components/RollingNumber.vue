@@ -6,6 +6,8 @@
 
 <script>
 import { TweenLite } from "gsap";
+const padding = 2;
+
 export default {
   name: "RollingNumber",
   props: {
@@ -16,31 +18,7 @@ export default {
     return { tweenedValue: 0 };
   },
   mounted() {
-    // We can't access the rendering context until the canvas is mounted to the DOM.
-    // Once we have it, provide it to all child components.
-    this.context = this.$refs["my-canvas"].getContext("2d");
-    // Resize the canvas to fit its parent's width.
-    // Normally you'd use a more flexible resize system.
-    this.$refs["my-canvas"].width = this.$refs[
-      "my-canvas"
-    ].parentElement.clientWidth;
-    this.$refs["my-canvas"].height = this.$refs[
-      "my-canvas"
-    ].parentElement.clientHeight;
-    this.padding = 2;
-    this.width = this.$refs["my-canvas"].width;
-    this.height = this.$refs["my-canvas"].height;
-    this.fontsize = this.height - 2 * this.padding;
-    this.stripLength = 12 * this.fontsize;
-    this.stripCanvas = new OffscreenCanvas(20, this.stripLength);
-    const ctx = this.stripCanvas.getContext("2d");
-    ctx.fillStyle = "#000";
-    ctx.font = this.fontsize + "px sans-serif";
-    ctx.textAlign = "right";
-
-    for (let i = 0; i < 13; i++) {
-      ctx.fillText((21 - i) % 10, 20, i * this.fontsize - 2);
-    }
+    this.resize();
     // ctx.rect(0, 0, 20, this.stripLength);
     // ctx.stroke();
     this.render();
@@ -61,6 +39,32 @@ export default {
     }
   },
   methods: {
+    resize() {
+      // We can't access the rendering context until the canvas is mounted to the DOM.
+      // Once we have it, provide it to all child components.
+      // Resize the canvas to fit its parent's width.
+      // Normally you'd use a more flexible resize system.
+      this.$refs["my-canvas"].width = this.$refs[
+        "my-canvas"
+      ].parentElement.clientWidth;
+      this.$refs["my-canvas"].height = this.$refs[
+        "my-canvas"
+      ].parentElement.clientHeight;
+      this.context = this.$refs["my-canvas"].getContext("2d");
+      this.width = this.$refs["my-canvas"].width;
+      this.height = this.$refs["my-canvas"].height;
+      this.fontsize = this.height - 2 * padding;
+      this.stripLength = 12 * this.fontsize;
+      this.stripCanvas = new OffscreenCanvas(20, this.stripLength);
+      const ctx = this.stripCanvas.getContext("2d");
+      ctx.fillStyle = "#000";
+      ctx.font = this.fontsize + "px sans-serif";
+      ctx.textAlign = "right";
+
+      for (let i = 0; i < 13; i++) {
+        ctx.fillText((21 - i) % 10, 20, i * this.fontsize - 2);
+      }
+    },
     render() {
       // Since the parent canvas has to mount first, it's *possible* that the context may not be
       // injected by the time this render function runs the first time.
@@ -83,7 +87,7 @@ export default {
       ctx.rect(0, 0, this.width, this.height);
       ctx.clip();
 
-      let x = this.width - 10;
+      let x = this.width - 10 - padding;
 
       if (this.value === undefined || this.value == null) {
         ctx.beginPath();
@@ -116,7 +120,7 @@ export default {
           this.fontsize * (element + 2 + rollY) -
             this.stripLength +
             rollY +
-            this.padding
+            padding
         );
         if (element != 9) {
           rollY = 0;
@@ -125,10 +129,7 @@ export default {
           ctx.drawImage(
             this.stripCanvas,
             x,
-            this.fontsize * (2 + rollY) -
-              this.stripLength +
-              rollY +
-              this.padding
+            this.fontsize * (2 + rollY) - this.stripLength + rollY + padding
           );
         }
       }
