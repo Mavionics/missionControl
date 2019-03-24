@@ -1,4 +1,5 @@
 import { storiesOf } from "@storybook/vue";
+import { withKnobs, number } from "@storybook/addon-knobs";
 import StoryRouter from "storybook-vue-router";
 import Cockpit from "../../src/views/Cockpit.vue";
 import Vue from "vue";
@@ -6,14 +7,28 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
+const speedKnobOptions = {
+  range: true,
+  min: 0,
+  max: 250,
+  step: 1
+};
 export const storeLI = new Vuex.Store({
   state: {
-    avRef: null,
-    avId: null
+    currentVehicle: {
+      state: {
+        speed: number("speed", 20.1, speedKnobOptions),
+        heading: 156,
+        altitude: 1985
+      }
+    }
   },
   getters: {
     currentUser: function() {
       return { name: "Test Testerson" };
+    },
+    getActiveVehicle(state) {
+      return state.currentVehicle;
     }
   },
   actions: {
@@ -25,6 +40,7 @@ export const storeLI = new Vuex.Store({
 
 storiesOf("Cockpit", module)
   .addDecorator(StoryRouter())
+  .addDecorator(withKnobs)
   .add("No data", () => ({
     components: { Cockpit },
     template: "<Cockpit/>",
@@ -33,16 +49,10 @@ storiesOf("Cockpit", module)
   .add("Some data", () => ({
     components: { Cockpit },
     template: "<Cockpit/>",
-    store: storeLI,
-    data() {
-      return { speed: 20 };
-    }
+    store: storeLI
   }))
   .add("All data", () => ({
     components: { Cockpit },
     template: "<Cockpit/>",
-    store: storeLI,
-    data() {
-      return { speed: 20, heading: 156, altiude: 1985 };
-    }
+    store: storeLI
   }));

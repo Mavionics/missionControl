@@ -19,10 +19,21 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   plugins: [easyFirestore],
   state: {
-    avRef: null,
     cesiumKey: null,
     vehicles: [],
-    currentVehicle: null,
+    currentVehicle: {
+      state: {
+        altitude: null,
+        verticalSpeed: null,
+        speed: null,
+        acceleration: null,
+        heading: null,
+        turnRate: null,
+        longitude: null,
+        latitude: null
+      }
+    },
+    lastData: "",
     isLoggedIn: false,
     videoStream: null
   },
@@ -30,13 +41,23 @@ const store = new Vuex.Store({
     setCesiumKey(state, val) {
       state.cesiumKey = val;
     },
-    setActiveVehicle(state, { val, ref }) {
-      state.currentVehicle = val;
-      state.avRef = ref;
-    },
     setVideoStream(state, stream) {
       console.warn("VideoURL set ", stream);
       state.videoStream = stream;
+    },
+    mergeVehicleData(state, { data, source }) {
+      if (source) {
+        // TODO: Handle DB or RTC source
+      }
+      state.currentVehicle.altitude = data.altitude;
+      state.currentVehicle.verticalSpeed = data.verticalSpeed;
+      state.currentVehicle.speed = data.speed;
+      state.currentVehicle.acceleration = data.acceleration;
+      state.currentVehicle.heading = data.heading;
+      state.currentVehicle.turnRate = data.turnRate;
+      state.currentVehicle.longitude = data.longitude;
+      state.currentVehicle.latitude = data.latitude;
+      state.lastData = data;
     }
   },
   getters: {

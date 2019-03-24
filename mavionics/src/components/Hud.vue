@@ -1,8 +1,8 @@
 <template>
   <div>
-    <RollingNumber id="speed" :value="speed"/>
+    <RollingNumber id="speed" :value="vehicle.speed"/>
     <RollingNumber id="altitude" :value="vehicle.altitude"/>
-    <Tape id="speedTape" :value="speed"></Tape>
+    <Tape id="speedTape" :value="vehicle.speed"></Tape>
     <AltitudeTape id="altitudeTape" :value="vehicle.altitude"></AltitudeTape>
   </div>
 </template>
@@ -10,17 +10,12 @@
 <script>
 import RollingNumber from "../../src/components/RollingNumber.vue";
 import Tape from "../../src/components/Tape.vue";
-import AltitudeTape from "../../src/components/AltitudeTape.vue"
+import AltitudeTape from "../../src/components/AltitudeTape.vue";
 export default {
   name: "hud",
   components: { RollingNumber, Tape, AltitudeTape },
   props: {
     vehicle: Object
-  },
-  computed: {
-    speed() {
-      return this.vehicle.speed;
-    }
   }
 };
 </script>
@@ -35,9 +30,9 @@ export default {
 }
 #altitude {
   left: 80%;
-  top: 50%;
+  top: 10%;
   height: 18px;
-  width: 10%;
+  width: 65px;
   position: absolute;
 }
 #speedTape {

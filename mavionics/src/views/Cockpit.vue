@@ -3,20 +3,33 @@
     <div id="top" class="top-panel parent">
       <router-link name="ControlRoom" class="navbar-item" to="/controlroom">Home</router-link>
     </div>
-    <video id="video" ref="video" class="fullscreen-panel parent" autoplay playsinline></video>
+    <div class="fullscreen-panel parent">
+      <hud :vehicle="vehicle.state"/>
+      <video id="video" ref="video" class autoplay playsinline></video>
+    </div>
     <div id="map" class="secondary-panel parent">
-      {{ $route.params.vehicle }}
       <div class="middle">Map</div>
     </div>
     <div class="lower-panel parent" id="debug">
-      <div class="middle">Debug</div>
+      <!-- <div class="middle">Debug</div> -->
+      {{ $route.params.vehicle }}
+      {{ vehicle.state }}
       <!-- <video id="yourVideo" autoplay muted playsinline></video> -->
-      <div>{{lastData}}</div>
-      <div>{{vehicle}}</div>
+      <div>{{this.$store.state.lastData}}</div>
+      <!-- <div>{{vehicle}}</div> -->
       <div class="columns">
-        <div class="column is-one-third" :class="{'invalid':speed==null}">{{speed}} m/s</div>
-        <div class="column is-one-third" :class="{'invalid':heading==null}">{{heading}} &deg;</div>
-        <div class="column is-one-third" :class="{'invalid':altitude==null}">{{altitude}} m</div>
+        <div
+          class="column is-one-third"
+          :class="{'invalid':vehicle.state.speed==null}"
+        >{{vehicle.state.speed}} m/s</div>
+        <div
+          class="column is-one-third"
+          :class="{'invalid':vehicle.state.heading==null}"
+        >{{vehicle.state.heading}} &deg;</div>
+        <div
+          class="column is-one-third"
+          :class="{'invalid':vehicle.state.altitude==null}"
+        >{{vehicle.state.altitude}} m</div>
       </div>
     </div>
   </div>
@@ -70,12 +83,12 @@
 }
 
 .lower-panel {
-  left: 35vh;
+  left: 36vh;
   margin: 8px;
   bottom: 0;
-  height: 35vh;
-  background: rgba(0, 0, 0, 0.5);
-  right: 35vh;
+  height: 12vh;
+  background: rgba(0, 0, 0, 0.3);
+  right: 36vh;
 }
 
 #debug {
@@ -90,24 +103,16 @@
 </style>
 
 <script>
+import { mapGetters } from "vuex";
+import Hud from "@/components/Hud";
+
 export default {
   name: "cockpit",
-  data() {
-    return {
-      altitude: null,
-      verticalSpeed: null,
-      speed: null,
-      acceleration: null,
-      heading: null,
-      turnRate: null,
-      longitude: null,
-      latitude: null,
-      lastData: ""
-    };
-  },
+  components: { Hud },
   mounted() {
     // const yourVideo = document.getElementById("yourVideo");
-    console.log("Cockpit.vue ", this.$route.params.vehicle);
+    // console.log("Cockpit.vue ", this.$route.params.vehicle);
+    // console.log(this.state);
     this.$store
       .dispatch("connectToVehicle", {
         avId: this.$route.params.vehicle
@@ -117,12 +122,13 @@ export default {
       });
   },
   computed: {
-    vehicle() {
-      return this.$store.state.currentVehicle;
-    },
     videoStream() {
       return this.$store.state.videoStream;
-    }
+    },
+    ...mapGetters({
+      // map `this.vehicle` to `this.$store.getters.getActiveVehicle`
+      vehicle: "getActiveVehicle"
+    })
   },
   watch: {
     videoStream(stream) {

@@ -21,14 +21,14 @@ export default {
       type: Number,
       default: 3
     },
-    maxValue:  {
+    maxValue: {
       type: Number,
       default: 250
     },
     minValue: {
       type: Number,
       default: 0
-    },
+    }
   },
   data: () => {
     return { tweenedValue: 0 };
@@ -67,7 +67,7 @@ export default {
       this.context = this.$refs["my-canvas"].getContext("2d");
       this.width = this.$refs["my-canvas"].width;
       this.height = this.$refs["my-canvas"].height;
-      
+
       this.stripLength = this.resolution * (this.maxValue - this.minValue); // px = u*px/u
       this.stripCanvas = new OffscreenCanvas(this.width, this.stripLength);
       const ctx = this.stripCanvas.getContext("2d");
@@ -81,14 +81,14 @@ export default {
       const linelength = 10;
       ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
       ctx.textAlign = "right";
-      ctx.textBaseline = "middle"
+      ctx.textBaseline = "middle";
       ctx.font = fontsize + "px sans-serif";
-      const xline = this.width-linelength-2
+      const xline = this.width - linelength - 2;
       for (let value = this.minValue; value < this.maxValue; value += step) {
-        const y = this.stripLength-value*this.resolution;
+        const y = this.stripLength - value * this.resolution;
         ctx.moveTo(xline, y);
-        ctx.lineTo(this.width-2, y);
-        ctx.fillText(value, xline-2, y+1);
+        ctx.lineTo(this.width - 2, y);
+        ctx.fillText(value, xline - 2, y + 1);
       }
       ctx.stroke();
     },
@@ -97,10 +97,10 @@ export default {
       // injected by the time this render function runs the first time.
       if (!this.context) return;
       const ctx = this.context;
-      ctx.clearRect(0, 0, this.width, this.height);      
+      ctx.clearRect(0, 0, this.width, this.height);
       ctx.beginPath();
-      ctx.rect(0, 0, this.width, this.height/2-10);
-      ctx.rect(0,this.height/2+10, this.width, this.height/2-10);
+      ctx.rect(0, 0, this.width, this.height / 2 - 10);
+      ctx.rect(0, this.height / 2 + 10, this.width, this.height / 2 - 10);
       ctx.clip();
       let v = this.animatedNumber;
       const x = 10;
@@ -121,17 +121,25 @@ export default {
         return;
       } else {
         // context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
-        const y = this.stripLength- this.height/2- v * this.resolution;
-ctx.drawImage(
-            this.stripCanvas,
-            0, y,this.width,this.height, 
-            0, 0, this.width,this.height
-          );
+        const y = Math.round(
+          this.stripLength - this.height / 2 - v * this.resolution
+        );
+        ctx.drawImage(
+          this.stripCanvas,
+          0,
+          y,
+          this.width,
+          this.height,
+          0,
+          0,
+          this.width,
+          this.height
+        );
       }
       ctx.restore();
     },
     toPosition(value) {
-      return this.height/2-value * this.resolution;
+      return this.height / 2 - value * this.resolution;
     }
   }
 };

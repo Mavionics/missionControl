@@ -118,19 +118,10 @@ var actions = {
     rtc.onStream = stream => {
       console.debug("RtcModule onStream callback");
       commit("setVideoStream", stream);
-    }
+    };
     rtc.onMessage = data => {
       console.debug("RtcModule onMessage");
-      this.lastData = data;
-      this.altitude = data.altitude;
-      this.verticalSpeed = data.verticalSpeed;
-      this.speed = data.speed;
-      this.acceleration = data.acceleration;
-      this.heading = data.heading;
-      this.turnRate = data.turnRate;
-      this.longitude = data.longitude;
-      this.latitude = data.latitude;
-      this.speed = data.speed;
+      this.mergeVehicleData(data);
     };
     rtc.connect().then(() => rtc.sendMessage("We are connected!"));
 
