@@ -1,27 +1,25 @@
 import { storiesOf } from "@storybook/vue";
-import { withKnobs, number } from "@storybook/addon-knobs";
+import { withKnobs } from "@storybook/addon-knobs";
 import StoryRouter from "storybook-vue-router";
 import Cockpit from "../../src/views/Cockpit.vue";
 import Vue from "vue";
 import Vuex from "vuex";
+import TestKeys from "../../tests/testkey";
 
 Vue.use(Vuex);
 
-const speedKnobOptions = {
-  range: true,
-  min: 0,
-  max: 250,
-  step: 1
-};
 export const storeLI = new Vuex.Store({
   state: {
     currentVehicle: {
       state: {
-        speed: number("speed", 20.1, speedKnobOptions),
+        speed: 20.1,
         heading: 156,
-        altitude: 1985
+        altitude: 1985,
+        longitude: 34,
+        latitude: 18
       }
-    }
+    },
+    cesiumKey: TestKeys.CesiumKey
   },
   getters: {
     currentUser: function() {
@@ -29,11 +27,21 @@ export const storeLI = new Vuex.Store({
     },
     getActiveVehicle(state) {
       return state.currentVehicle;
+    },
+    cesiumKey(state) {
+      return state.cesiumKey;
     }
   },
   actions: {
     connectToVehicle({ state }, avId) {
       state.avId = avId;
+    },
+    getMapKeys() {
+      return new Promise(function(resolve) {
+        setTimeout(function() {
+          resolve("");
+        }, 700);
+      });
     }
   }
 });

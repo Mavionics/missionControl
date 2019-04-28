@@ -121,18 +121,9 @@ var actions = {
     };
     rtc.onMessage = data => {
       console.debug("RtcModule onMessage");
-      this.mergeVehicleData(data);
+      commit("mergeVehicleData", { data });
     };
     rtc.connect().then(() => rtc.sendMessage("We are connected!"));
-
-    return vehicles.doc(avId).onSnapshot(
-      function(res) {
-        commit("setActiveVehicle", { val: res.data(), ref: res.ref });
-      },
-      err => {
-        log.error(err);
-      }
-    );
   },
   addVehicle({ getters }, { name, description, isSim }) {
     vehicles.add({

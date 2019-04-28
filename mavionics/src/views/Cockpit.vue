@@ -8,7 +8,12 @@
       <video id="video" ref="video" class autoplay playsinline></video>
     </div>
     <div id="map" class="secondary-panel parent">
-      <div class="middle">Map</div>
+      <Map
+        class="fill"
+        :cesiumKey="cesiumKey"
+        :userPosition="myPosition"
+        :vehicle="this.$store.state.currentVehicle.state"
+      />
     </div>
     <div class="lower-panel parent" id="debug">
       <!-- <div class="middle">Debug</div> -->
@@ -19,14 +24,17 @@
       <!-- <div>{{vehicle}}</div> -->
       <div class="columns">
         <div
+          style="text-align:left"
           class="column is-one-third"
           :class="{'invalid':vehicle.state.speed==null}"
         >{{vehicle.state.speed}} m/s</div>
         <div
+          style="text-align:center"
           class="column is-one-third"
           :class="{'invalid':vehicle.state.heading==null}"
         >{{vehicle.state.heading}} &deg;</div>
         <div
+          style="text-align:right"
           class="column is-one-third"
           :class="{'invalid':vehicle.state.altitude==null}"
         >{{vehicle.state.altitude}} m</div>
@@ -96,6 +104,14 @@
   z-index: 1;
 }
 
+.fill {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
 .invalid {
   color: grey;
   opacity: 0.4;
@@ -105,11 +121,16 @@
 <script>
 import { mapGetters } from "vuex";
 import Hud from "@/components/Hud";
+import Map from "@/components/Map";
 
 export default {
   name: "cockpit",
-  components: { Hud },
+  components: { Hud, Map },
+  created() {
+    this.$store.dispatch("getMapKeys").then(() => (this.loading = false));
+  },
   mounted() {
+    this.loadingComponent = this.$loading.open();
     // const yourVideo = document.getElementById("yourVideo");
     // console.log("Cockpit.vue ", this.$route.params.vehicle);
     // console.log(this.state);
@@ -120,8 +141,16 @@ export default {
       .then(() => {
         //if (this.$store.state.avRef == null) return;
       });
+
+    console.log(this.$store.state.currentVehicle.state);
+  },
+  data() {
+    return { loading: true, myPosition: { longitude: 15, latitude: 58 } };
   },
   computed: {
+    cesiumKey() {
+      return this.$store.state.cesiumKey;
+    },
     videoStream() {
       return this.$store.state.videoStream;
     },
@@ -134,6 +163,11 @@ export default {
     videoStream(stream) {
       document.querySelector("#video").srcObject = stream;
       // this.$ref.video.srcObject = stream
+    },
+    loading(isTrue) {
+      if (!isTrue) {
+        this.loadingComponent.close();
+      }
     }
   },
   props: {

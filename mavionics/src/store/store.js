@@ -23,15 +23,18 @@ const store = new Vuex.Store({
     vehicles: [],
     currentVehicle: {
       state: {
-        altitude: null,
-        verticalSpeed: null,
-        speed: null,
-        acceleration: null,
-        heading: null,
+        altitude: null, // The altitude in meters above the mean sea level. MSL = WGS84 Geoid height?
+        verticalSpeed: null, // The altitude change rate in meters per second
+        speed: null, // The ground speed in meters per second
+        acceleration: null, // The rate of change of ground speed in meters per second^2
+        heading: null, // The heading as degrees clockwise from North (True North)
         turnRate: null,
-        longitude: null,
-        latitude: null
-      }
+        longitude: null, // The longitude as a decimal number
+        latitude: null, // The latitude as a decimal number
+        accuracy: null, //	The accuracy of position
+        altitudeAccuracy: null //	The altitude accuracy of position
+      },
+      timestamp: null // The date / time of the response(returned if available)
     },
     lastData: "",
     isLoggedIn: false,
@@ -49,14 +52,7 @@ const store = new Vuex.Store({
       if (source) {
         // TODO: Handle DB or RTC source
       }
-      state.currentVehicle.altitude = data.altitude;
-      state.currentVehicle.verticalSpeed = data.verticalSpeed;
-      state.currentVehicle.speed = data.speed;
-      state.currentVehicle.acceleration = data.acceleration;
-      state.currentVehicle.heading = data.heading;
-      state.currentVehicle.turnRate = data.turnRate;
-      state.currentVehicle.longitude = data.longitude;
-      state.currentVehicle.latitude = data.latitude;
+      Vue.set(state.currentVehicle, "state", data);
       state.lastData = data;
     }
   },
