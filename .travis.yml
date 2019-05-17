@@ -53,8 +53,9 @@ matrix:
       - cd app
       - npm install
       - npm run postinstall
-      - cd android
       script:
+      - npm run android-bundle
+      - cd android
       - ./gradlew assembleRelease
       deploy:
         # Deploy app
