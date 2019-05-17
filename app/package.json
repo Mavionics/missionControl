@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
+    "android-release": "node node_modules/react-native/local-cli/cli.js run-android --variant=release",
     "postinstall": "./node_modules/.bin/rn-nodeify --install buffer,events,crypto,stream,util,process,vm --hack --overwrite",
     "test": "jest"
   },
