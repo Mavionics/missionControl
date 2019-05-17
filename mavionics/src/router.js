@@ -36,7 +36,7 @@ const router = new Router({
       }
     },
     {
-      path: "/cockpit",
+      path: "/cockpit/:vehicle",
       name: "cockpit",
       component: () =>
         import(/* webpackChunkName: "cockpit" */ "./views/Cockpit.vue"),

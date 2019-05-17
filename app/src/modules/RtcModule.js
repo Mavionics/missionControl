@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
 import Peer from "simple-peer";
-import  WebRTC from "react-native-webrtc"
+import WebRTC from "react-native-webrtc";
 
 class RtcModule {
   constructor(dbRef, initiator, stream) {
-
-    console.log("RtcModule.js constructor")
+    console.log("RtcModule.js constructor");
     this.initiator = initiator;
     this.dbRef = dbRef;
     this.stream = stream;
@@ -13,11 +12,11 @@ class RtcModule {
     this.onStream = () => {};
 
     if (initiator) {
-      this.inMessages = this.dbRef.collection("sig_offerer");
-      this.outMessages = this.dbRef.collection("sig_responder");
-    } else {
       this.inMessages = this.dbRef.collection("sig_responder");
       this.outMessages = this.dbRef.collection("sig_offerer");
+    } else {
+      this.inMessages = this.dbRef.collection("sig_offerer");
+      this.outMessages = this.dbRef.collection("sig_responder");
     }
   }
 
@@ -30,21 +29,21 @@ class RtcModule {
   }
 
   async connect() {
-    console.log("RtcModule.js connect")
+    console.log("RtcModule.js connect");
     if (this.initiator) {
       await Promise.all([
         this.clearCollection(this.inMessages),
         this.clearCollection(this.outMessages)
       ]);
-
       await this.dbRef.update({ status: "offer" });
     }
-    console.log("RtcModule.js connect, create new peer")
+
+    console.log("RtcModule.js connect, create new peer");
     this.peer = new Peer({
       initiator: this.initiator,
       wrtc: WebRTC,
-      trickle: false,
       objectMode: true,
+      stream: this.stream,
       config: {
         iceServers: [
           { urls: "stun:stun.services.mozilla.com" },
@@ -55,24 +54,28 @@ class RtcModule {
             username: "alex.o.poole@gmail.com"
           }
         ]
-      },
-      stream: this.stream
+      }
     });
 
-    this.peer._debug = console.log
+    this.peer._debug = (msg, par1, par2) =>
+      console.log("RtcModule.js SIMPLE_PEER", msg, par1, par2);
 
-
-
-    this.inMessages.onSnapshot(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        this.peer.signal(doc.data());
-      });
-    });
+    if (this.signalListnerUnsubscribe) this.signalListnerUnsubscribe();
+    this.signalListnerUnsubscribe = this.inMessages.onSnapshot(
+      querySnapshot => {
+        querySnapshot.docChanges.forEach(change => {
+          if (change.type === "added") {
+            console.debug("RtcModule.js new inMessage: ", change.doc.data());
+            this.peer.signal(change.doc.data());
+          }
+        });
+      }
+    );
 
     this.peer.on("signal", data => this.outMessages.add(data));
     this.peer.on("stream", this.onStream);
     this.peer.on("data", data => {
-      console.warn(data);
+      console.log("RtcModule.js on data: " + data);
       this.onMessage(JSON.parse(data));
     });
 
@@ -83,7 +86,10 @@ class RtcModule {
       });
 
       this.peer.on("connect", () => {
-        this.dbRef.update({ status: "connected" });
+        console.log("RtcModule.js SIMPLE_PEER: CONNECTED");
+        if (this.initiator) {
+          this.dbRef.update({ status: "connected" });
+        }
         resolve();
       });
     });
@@ -91,17 +97,20 @@ class RtcModule {
 
   sendMessage(data) {
     console.log("RtcModule.js sendMessage ", JSON.stringify(data));
-    if (this.p !== null) this.peer.send(JSON.stringify(data));
+    if (this.peer !== null && this.peer !== undefined) {
+      this.peer.send(JSON.stringify(data));
+    }
   }
 
   disconnect() {
     console.log("RtcModule.js sendMessdisconnectge ");
+    if (this.signalListnerUnsubscribe) this.signalListnerUnsubscribe();
     this.peer.destroy();
   }
 
   isConnected() {
     console.log("RtcModule.js isConnected");
-    return this.p && this.peer.connected;
+    return this.peer && this.peer.connected;
   }
 }
 

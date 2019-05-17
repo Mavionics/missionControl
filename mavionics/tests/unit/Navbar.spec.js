@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, RouterLinkStub } from "@vue/test-utils";
+import { shallowMount, createLocalVue } from "@vue/test-utils";
 import { expect } from "chai";
 import Navbar from "@/components/Navbar.vue";
 
@@ -7,14 +7,10 @@ import Router from "vue-router";
 const localVue = createLocalVue();
 localVue.use(Router);
 
-const stubs = {
-  RouterLink: RouterLinkStub
-};
-
 function createMount() {
   return shallowMount(Navbar, {
     localVue,
-    stubs
+    stubs: ["router-link"]
   });
 }
 

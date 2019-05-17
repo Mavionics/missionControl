@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     connectToVehicle(avId) {
-      this.$router.push({ name: "cockpit", params: { avId: avId } });
+      this.$router.push("cockpit/" + avId); // { name: "cockpit", params: { vehicle: avId } });
     },
     updateTime() {
       this.currentTime = Date.now() / 1000;

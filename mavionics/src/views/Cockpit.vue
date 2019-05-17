@@ -3,19 +3,41 @@
     <div id="top" class="top-panel parent">
       <router-link name="ControlRoom" class="navbar-item" to="/controlroom">Home</router-link>
     </div>
-    <video id="video" class="fullscreen-panel parent" autoplay playsinline></video>
+    <div class="fullscreen-panel parent">
+      <hud :vehicle="vehicle.state"/>
+      <video id="video" ref="video" class autoplay playsinline></video>
+    </div>
     <div id="map" class="secondary-panel parent">
-      <div class="middle">Map</div>
+      <Map
+        class="fill"
+        :cesiumKey="cesiumKey"
+        :userPosition="myPosition"
+        :vehicle="this.$store.state.currentVehicle.state"
+      />
     </div>
     <div class="lower-panel parent" id="debug">
-      <div class="middle">Debug</div>
+      <!-- <div class="middle">Debug</div> -->
+      {{ $route.params.vehicle }}
+      {{ vehicle.state }}
       <!-- <video id="yourVideo" autoplay muted playsinline></video> -->
-      <div>{{lastData}}</div>
-      <div>{{vehicle}}</div>
+      <div>{{this.$store.state.lastData}}</div>
+      <!-- <div>{{vehicle}}</div> -->
       <div class="columns">
-        <div class="column is-one-third" :class="{'invalid':speed==null}">{{speed}} m/s</div>
-        <div class="column is-one-third" :class="{'invalid':heading==null}">{{heading}} &deg;</div>
-        <div class="column is-one-third" :class="{'invalid':altitude==null}">{{altitude}} m</div>
+        <div
+          style="text-align:left"
+          class="column is-one-third"
+          :class="{'invalid':vehicle.state.speed==null}"
+        >{{vehicle.state.speed}} m/s</div>
+        <div
+          style="text-align:center"
+          class="column is-one-third"
+          :class="{'invalid':vehicle.state.heading==null}"
+        >{{vehicle.state.heading}} &deg;</div>
+        <div
+          style="text-align:right"
+          class="column is-one-third"
+          :class="{'invalid':vehicle.state.altitude==null}"
+        >{{vehicle.state.altitude}} m</div>
       </div>
     </div>
   </div>
@@ -69,17 +91,25 @@
 }
 
 .lower-panel {
-  left: 35vh;
+  left: 36vh;
   margin: 8px;
   bottom: 0;
-  height: 35vh;
-  background: rgba(0, 0, 0, 0.5);
-  right: 35vh;
+  height: 12vh;
+  background: rgba(0, 0, 0, 0.3);
+  right: 36vh;
 }
 
 #debug {
   color: beige;
   z-index: 1;
+}
+
+.fill {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
 .invalid {
@@ -89,53 +119,55 @@
 </style>
 
 <script>
-import RtcModule from "@/modules/RtcModule";
+import { mapGetters } from "vuex";
+import Hud from "@/components/Hud";
+import Map from "@/components/Map";
 
 export default {
   name: "cockpit",
-  data() {
-    return {
-      altitude: null,
-      verticalSpeed: null,
-      speed: null,
-      acceleration: null,
-      heading: null,
-      turnRate: null,
-      longitude: null,
-      latitude: null,
-      lastData: ""
-    };
-  },
+  components: { Hud, Map },
   created() {
+    this.$store.dispatch("getMapKeys").then(() => (this.loading = false));
+  },
+  mounted() {
+    this.loadingComponent = this.$loading.open();
     // const yourVideo = document.getElementById("yourVideo");
-    const friendsVideo = document.getElementById("video");
-
+    // console.log("Cockpit.vue ", this.$route.params.vehicle);
+    // console.log(this.state);
     this.$store
       .dispatch("connectToVehicle", {
-        avId: this.avId
+        avId: this.$route.params.vehicle
       })
       .then(() => {
-        if (this.$store.state.avRef == null) return;
-        let rtc = new RtcModule(this.$store.state.avRef, false);
-        rtc.onStream = stream => (friendsVideo.srcObject = stream);
-        rtc.onMessage = data => {
-          this.lastData = data;
-          this.altitude = data.altitude;
-          this.verticalSpeed = data.verticalSpeed;
-          this.speed = data.speed;
-          this.acceleration = data.acceleration;
-          this.heading = data.heading;
-          this.turnRate = data.turnRate;
-          this.longitude = data.longitude;
-          this.latitude = data.latitude;
-          this.speed = data.speed;
-        };
-        rtc.connect();
+        //if (this.$store.state.avRef == null) return;
       });
+
+    console.log(this.$store.state.currentVehicle.state);
+  },
+  data() {
+    return { loading: true, myPosition: { longitude: 15, latitude: 58 } };
   },
   computed: {
-    vehicle() {
-      return this.$store.state.vehicleModule.data;
+    cesiumKey() {
+      return this.$store.state.cesiumKey;
+    },
+    videoStream() {
+      return this.$store.state.videoStream;
+    },
+    ...mapGetters({
+      // map `this.vehicle` to `this.$store.getters.getActiveVehicle`
+      vehicle: "getActiveVehicle"
+    })
+  },
+  watch: {
+    videoStream(stream) {
+      document.querySelector("#video").srcObject = stream;
+      // this.$ref.video.srcObject = stream
+    },
+    loading(isTrue) {
+      if (!isTrue) {
+        this.loadingComponent.close();
+      }
     }
   },
   props: {

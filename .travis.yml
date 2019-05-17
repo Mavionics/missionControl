@@ -50,23 +50,23 @@ matrix:
       - openssl aes-256-cbc -K $encrypted_ac356ff71e5e_key -iv $encrypted_ac356ff71e5e_iv -in buildFiles.tar.enc -out buildFiles.tar -d
       - ./scripts/extract.sh
       install:
-      - cd app/android
+      - cd app
       - npm install
       - npm run postinstall
       script:
-      - "./gradlew assembleRelease"
+      - cd android
+      - ./gradlew assembleRelease
       deploy:
         # Deploy app
-        #provider: releases
-        #file: app/build/outputs/apk/release/app-release.apk
-        #skip_cleanup: true
-        #api-key: $GITHUB_TOKEN
-        #on:
-        #  branch: master
-        #  repo: Mavionics/flightData
-        #  jdk: oraclejdk8
-
-
+        provider: releases
+        file: app/build/outputs/apk/release/app-release.apk
+        skip_cleanup: true
+        api-key: $GITHUB_TOKEN
+        on:
+          all_branches: true
+          condition: $TRAVIS_BRANCH =~ ^master|develop$
+          repo: Mavionics/missionControl
+          jdk: oraclejdk8
 
     - name: Build website 
       language: node_js

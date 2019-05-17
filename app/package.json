@@ -5,6 +5,8 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
+    "android-release": "node node_modules/react-native/local-cli/cli.js run-android --variant=release",
+    "android-bundle": "node node_modules/react-native/local-cli/cli.js bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "postinstall": "./node_modules/.bin/rn-nodeify --install buffer,events,crypto,stream,util,process,vm --hack --overwrite",
     "test": "jest"
   },
@@ -21,7 +23,7 @@
     "react-native-randombytes": "^3.5.2",
     "react-native-webrtc": "^1.67.1",
     "readable-stream": "^1.0.33",
-    "simple-peer": "^9.2.1",
+    "simple-peer": "github:Mavionics/simple-peer",
     "stream-browserify": "^1.0.0",
     "util": "^0.10.4",
     "vm-browserify": "0.0.4",

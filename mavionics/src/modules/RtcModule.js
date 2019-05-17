@@ -7,14 +7,14 @@ class RtcModule {
     this.dbRef = dbRef;
     this.stream = stream;
     this.onMessage = () => {};
-    this.onStream = () => {};
+    this.onStream = () => { };
 
     if (initiator) {
-      this.inMessages = this.dbRef.collection("sig_offerer");
-      this.outMessages = this.dbRef.collection("sig_responder");
-    } else {
       this.inMessages = this.dbRef.collection("sig_responder");
       this.outMessages = this.dbRef.collection("sig_offerer");
+    } else {
+      this.inMessages = this.dbRef.collection("sig_offerer");
+      this.outMessages = this.dbRef.collection("sig_responder");
     }
   }
 
@@ -38,7 +38,6 @@ class RtcModule {
 
     this.p = new Peer({
       initiator: this.initiator,
-      trickle: false,
       objectMode: true,
       config: {
         iceServers: [
@@ -50,20 +49,36 @@ class RtcModule {
             username: "alex.o.poole@gmail.com"
           }
         ]
-      },
-      stream: this.stream
+      }
     });
 
-    this.inMessages.onSnapshot(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        this.p.signal(doc.data());
-      });
-    });
+    this.p._debug = (msg, par1, par2) =>
+      console.log("SIMPLE_PEER", msg, par1, par2);
 
-    this.p.on("signal", data => this.outMessages.add(data));
-    this.p.on("stream", this.onStream);
+    if (this.signalListnerUnsubscribe) this.signalListnerUnsubscribe();
+
+    this.signalListnerUnsubscribe = this.inMessages.onSnapshot(
+      querySnapshot => {
+        querySnapshot.docChanges().forEach(change => {
+          if (change.type === "added") {
+            console.debug("RtcModule.js new inMessage: ", change.doc.data());
+            this.p.signal(change.doc.data());
+          }
+        });
+      }
+    );
+
+    this.p.on("signal", data => {
+      console.debug("Achtung! Outgoing ", data);
+      this.outMessages.add(data);
+    });
+    this.p.on('stream', stream => {
+      console.debug("RtcModule.js stream: ", stream);
+      this.onStream(stream);
+    })
+
     this.p.on("data", data => {
-      console.warn(data);
+      console.debug("RtcModule.js data: ", data);
       this.onMessage(JSON.parse(data));
     });
 
@@ -74,14 +89,17 @@ class RtcModule {
       });
 
       this.p.on("connect", () => {
-        this.dbRef.update({ status: "connected" });
+        if (this.initiator) {
+          this.dbRef.update({ status: "connected" });
+        }
         resolve();
       });
     });
   }
 
   sendMessage(data) {
-    if (this.p !== null) this.p.send(JSON.stringify(data));
+    if (this.p !== null)
+      this.p.send(JSON.stringify(data));
   }
 
   disconnect() {

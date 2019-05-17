@@ -3,6 +3,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import SimController from "@/sim/simController";
+import RtcModule from "@/modules/RtcModule";
 import * as log from "loglevel";
 
 // Initialize Firebase
@@ -26,6 +27,7 @@ const auth = firebase.auth();
 const vehicles = db.collection("vehicles");
 
 let sim;
+let rtc;
 let fetchingKeys = false;
 
 var actions = {
@@ -60,31 +62,6 @@ var actions = {
 
     // open the DB channel
     await dispatch("user/openDBChannel");
-
-    // usersCollection
-    //   .doc(state.currentUser.uid)
-    //   .get()
-    //   .then(res => {
-    //     if (res.exists) {
-    //       commit("setUserProfile", res.data());
-    //     } else {
-    //       // Create user if not existing
-    //       let userData = { name: state.currentUser.displayName, photo: "" }; //authResult.user.photourl || ""
-    //       usersCollection
-    //         .doc(state.currentUser.uid)
-    //         .set(userData)
-    //         .then(() => {
-    //           commit("setUserProfile", res.data());
-    //         });
-    //     }
-    //   })
-    //   .then(() => router.push("/controlroom"))
-    //   .catch(err => {
-    //     // eslint-disable-next-line
-    //     log.error(err);
-    //     // router.push("/home");
-    //     return false;
-    //   });
 
     state.vehicles = [];
     await vehicles.where("owner", "==", getters.getUid).onSnapshot(
@@ -137,17 +114,16 @@ var actions = {
       );
   },
   connectToVehicle({ commit }, { avId }) {
-    return vehicles
-      .doc(avId)
-      .get()
-      .then(
-        res => {
-          commit("setActiveVehicle", { val: res.data(), ref: res.ref() });
-        },
-        err => {
-          log.error(err);
-        }
-      );
+    let rtc = new RtcModule(vehicles.doc(avId), false);
+    rtc.onStream = stream => {
+      console.debug("RtcModule onStream callback");
+      commit("setVideoStream", stream);
+    };
+    rtc.onMessage = data => {
+      console.debug("RtcModule onMessage");
+      commit("mergeVehicleData", { data });
+    };
+    rtc.connect().then(() => rtc.sendMessage("We are connected!"));
   },
   addVehicle({ getters }, { name, description, isSim }) {
     vehicles.add({

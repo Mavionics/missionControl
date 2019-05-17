@@ -6,12 +6,14 @@ import {} from "./assets/customs.css";
 
 import Buefy from "buefy";
 import "buefy/dist/buefy.css";
-
 Vue.use(Buefy);
 
 import VeeValidate from "vee-validate";
-
 Vue.use(VeeValidate);
+
+import "vue-resize/dist/vue-resize.css";
+import VueResize from "vue-resize";
+Vue.use(VueResize);
 
 Vue.config.productionTip = false;
 
