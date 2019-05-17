@@ -54,9 +54,7 @@ matrix:
       - npm install
       - npm run postinstall
       script:
-      - npm run android-bundle
       - cd android
-      - rm app/src/main/res/drawable-mdpi/*
       - ./gradlew assembleRelease
       deploy:
         # Deploy app
