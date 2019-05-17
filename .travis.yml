@@ -65,7 +65,7 @@ matrix:
         on:
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$
-          repo: Mavionics/flightData
+          repo: Mavionics/missionControl
           jdk: oraclejdk8
 
     - name: Build website 
