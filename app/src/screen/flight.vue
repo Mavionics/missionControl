@@ -97,12 +97,12 @@ export default {
         position => {
           console.log("flight.vue, watchPosition");
           store.dispatch("SET_POSITION", position);
-          if(this.rtc != null && this.rtc != undefined){
-            this.rtc.sendMessage(position)
-          }
         },
         error =>
-          console.log("flight.vue, getPositionContinous error: " , JSON.stringify(error)),
+          console.log(
+            "flight.vue, getPositionContinous error: ",
+            JSON.stringify(error)
+          )
         /*{
           enableHighAccuracy: true,
           timeout: 20000,
@@ -112,17 +112,40 @@ export default {
     },
     updateActiveVehicle() {
       console.log("flight.vue, updateActiveVehicle");
-      setTimeout(() => {
-        store.dispatch("UPDATE_ACTIVE_VEHICLE", {
-          vehicleId: store.state.activeVehicle.id,
-          position: store.state.position,
-          timestamp: createTimestamp()
-        });
-        if(this.rtc != null && this.rtc != undefined){
-            this.rtc.sendMessage(store.state.position)
-         }
-        this.updateActiveVehicle();
+
+      // Update database
+      setInterval(() => {
+        store.dispatch("UPDATE_ACTIVE_VEHICLE");
       }, 3000);
+
+      // Update RTC
+      setInterval(() => {
+        if (this.rtc != null && this.rtc != undefined) {
+          this.rtc.sendMessage(this.packData(store.state));
+        }
+      }, 300);
+    },
+    packData(state) {
+      console.log("flight.vue, packData" + JSON.stringify(state.position));
+      if (
+        state.position.coords == null ||
+        state.position.coords === undefined
+      ) {
+        return {};
+      } else
+        return {
+          altitude: state.position.coords.altitude, // The altitude in meters above the mean sea level. MSL = WGS84 Geoid height?
+          verticalSpeed: null, // The altitude change rate in meters per second
+          speed: state.position.coords.speed, // The ground speed in meters per second
+          acceleration: null, // The rate of change of ground speed in meters per second^2
+          heading: state.position.coords.heading, // The heading as degrees clockwise from North (True North)
+          turnRate: null,
+          longitude: state.position.coords.longitude, // The longitude as a decimal number
+          latitude: state.position.coords.latitude, // The latitude as a decimal number
+          accuracy: state.position.coords.accuracy, //	The accuracy of position
+          altitudeAccuracy: state.position.coords.altitudeAccuracy, //	The altitude accuracy of position
+          timestamp: state.activeVehicle.timestamp
+        };
     },
     initWebRTC(stream) {
       this.videoURL = stream.toURL();
