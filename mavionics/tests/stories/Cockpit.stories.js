@@ -4,7 +4,6 @@ import StoryRouter from "storybook-vue-router";
 import Cockpit from "../../src/views/Cockpit.vue";
 import Vue from "vue";
 import Vuex from "vuex";
-import TestKeys from "../../tests/testkey";
 
 Vue.use(Vuex);
 
@@ -19,7 +18,7 @@ export const storeLI = new Vuex.Store({
         latitude: 18
       }
     },
-    cesiumKey: TestKeys.CesiumKey
+    cesiumKey: process.env.VUE_APP_CESIUM_KEY
   },
   getters: {
     currentUser: function() {

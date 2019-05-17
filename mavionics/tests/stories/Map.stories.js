@@ -1,9 +1,8 @@
 import { storiesOf } from "@storybook/vue";
 import Map from "../../src/components/Map.vue";
-import TestKeys from "../../tests/testkey";
 
 const data = {
-  cesiumKey: TestKeys.CesiumKey,
+  cesiumKey: process.env.VUE_APP_CESIUM_KEY,
   myPosition: {
     longitude: 14,
     latitude: 52
