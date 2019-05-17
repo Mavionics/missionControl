@@ -53,12 +53,13 @@ matrix:
       - cd app
       - npm install
       - npm run postinstall
+      - cd android
       script:
-      - npm run android-release
+      - ./gradlew assembleRelease
       deploy:
         # Deploy app
         provider: releases
-        file: android/app/build/outputs/apk/release/app-release.apk
+        file: app/build/outputs/apk/release/app-release.apk
         skip_cleanup: true
         api-key: $GITHUB_TOKEN
         on:
