@@ -6,8 +6,9 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
     "android-bundle": "node node_modules/react-native/local-cli/cli.js bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle",
-    "assemble-release": "cd android && ./gradlew assembleRelease",
-    "build-release": "npm run android-bundle && npm run assemble-release",
+    "build-release": "npm run android-bundle && cd android && ./gradlew clean assembleRelease",
+    "deploy-alpha": "cd android && fastlane alpha",
+    "deploy-master": "cd android && fastlane deploy",
     "postinstall": "./node_modules/.bin/rn-nodeify --install buffer,events,crypto,stream,util,process,vm --hack --overwrite",
     "test": "jest"
   },
