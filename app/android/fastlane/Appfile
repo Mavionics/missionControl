@@ -1,0 +1,2 @@
+json_key_file("app/api-8906124737792415557-945249-5af783f6cbeb.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("com.mavionics") # e.g. com.krausefx.app
