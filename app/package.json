@@ -5,8 +5,9 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
-    "android-release": "node node_modules/react-native/local-cli/cli.js run-android --variant=release",
-    "android-bundle": "node node_modules/react-native/local-cli/cli.js bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "android-bundle": "node node_modules/react-native/local-cli/cli.js bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle",
+    "assemble-release": "cd android && ./gradlew assembleRelease",
+    "build-release": "npm run android-bundle && npm run assemble-release",
     "postinstall": "./node_modules/.bin/rn-nodeify --install buffer,events,crypto,stream,util,process,vm --hack --overwrite",
     "test": "jest"
   },

@@ -52,21 +52,19 @@ matrix:
       install:
       - cd app
       - npm install
-      - npm run postinstall
       script:
-      - cd android
-      - ./gradlew assembleRelease
+      - npm run build-release
       deploy:
         # Deploy app
-        provider: releases
-        file: app/build/outputs/apk/release/app-release.apk
-        skip_cleanup: true
-        api-key: $GITHUB_TOKEN
-        on:
-          all_branches: true
-          condition: $TRAVIS_BRANCH =~ ^master|develop$
-          repo: Mavionics/missionControl
-          jdk: oraclejdk8
+        #provider: releases
+        #file: app/build/outputs/apk/release/app-release.apk
+        #skip_cleanup: true
+        #api-key: $GITHUB_TOKEN
+        #on:
+        #  all_branches: true
+        #  condition: $TRAVIS_BRANCH =~ ^master|develop$
+        #  repo: Mavionics/missionControl
+        #  jdk: oraclejdk8
 
     - name: Build website 
       language: node_js
