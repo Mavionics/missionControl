@@ -42,3 +42,7 @@ export function UPDATE_VEHICLE_TIMESTAMP(state, timestamp){
 export function SET_ACTIVE_VEHICLE_REF(state, activeVehicleRef){
   state.activeVehicleRef = activeVehicleRef;
 }
+
+export function SET_STATE(state, newState){
+  state = newState;
+}

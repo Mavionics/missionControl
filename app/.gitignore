@@ -29,6 +29,8 @@ build/
 .gradle
 local.properties
 *.iml
+index.android.bundle
+index.android.bundle.meta
 
 # node.js
 #

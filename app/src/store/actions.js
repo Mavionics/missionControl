@@ -1,6 +1,7 @@
 import firebase from "react-native-firebase";
 import { PermissionNotifier } from "../components/permissions";
 import { createTimestamp } from "../modules/Timestamp";
+import { getEmptyState } from './state';
 
 // firebase utils
 const db = firebase.firestore();
@@ -80,6 +81,16 @@ export function LOGIN({ commit, state }, { userObj, navigate }) {
         navigate("Home");
       }, 1000);
     });
+}
+
+export function LOGOUT({ commit, state }, navigate ) {
+  return auth.signOut().then(function() {
+    console.log("action.js, LOGOUT, success");
+    commit("SET_STATE", getEmptyState())
+    navigate("Login")
+  }, function(error) {
+    console.error("action.js, LOGOUT: " + error);
+  });
 }
 
 export function AUTOLOGIN({ commit, state }, { navigate }) {
