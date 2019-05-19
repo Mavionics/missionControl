@@ -53,6 +53,7 @@ const store = new Vuex.Store({
         // TODO: Handle DB or RTC source
       }
       Vue.set(state.currentVehicle, "state", data);
+      Vue.set(state.currentVehicle, "timestamp", data.timestamp);
       state.lastData = data;
     }
   },
