@@ -82,6 +82,20 @@ export function LOGIN({ commit, state }, { userObj, navigate }) {
     });
 }
 
+export function LOGOUT({ commit, state }, navigate ) {
+  return auth.signOut().then(function() {
+    console.log("action.js, LOGOUT, success");
+    commit("LOGOUT")
+    navigate("Login")
+  }, function(error) {
+    console.error("action.js, LOGOUT: " + error);
+    commit("LOGOUT")
+    navigate("Login")
+  });
+}
+
+
+
 export function AUTOLOGIN({ commit, state }, { navigate }) {
   if (auth.currentUser != null) {
     commit("LOGIN_SUCCESFULL", auth.currentUser);

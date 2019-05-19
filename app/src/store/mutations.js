@@ -42,3 +42,15 @@ export function UPDATE_VEHICLE_TIMESTAMP(state, timestamp){
 export function SET_ACTIVE_VEHICLE_REF(state, activeVehicleRef){
   state.activeVehicleRef = activeVehicleRef;
 }
+
+export function LOGOUT(state){
+  state = {
+    user: null,
+    vehicles: [],
+    activeVehicle: null,
+    activeVehicleRef: null,
+    logging_in: false,
+    permissionStatus: false,
+    position: {longitude: 0, latitude: 0},
+  }
+}
