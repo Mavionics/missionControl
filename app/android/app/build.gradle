@@ -42,8 +42,8 @@ ext{
     versionMajor = 0 % 1000
     versionMinor = 1 % 100
     versionPatch = 0 % 100
-    buildNum = System.getenv('TRAVIS_BUILD_NUMBER') ?: 0
-    buildNum = Integer.parseInt(buildNum) % 1000
+    buildNum = System.getenv('TRAVIS_BUILD_NUMBER') != null ? Integer.parseInt(System.getenv('TRAVIS_BUILD_NUMBER')) : 0
+    buildNum = buildNum % 1000
 }
 
 android {

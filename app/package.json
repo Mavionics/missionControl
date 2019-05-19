@@ -10,7 +10,7 @@
     "deploy-alpha": "cd android && fastlane alpha",
     "deploy-master": "cd android && fastlane deploy",
     "postinstall": "./node_modules/.bin/rn-nodeify --install buffer,events,crypto,stream,util,process,vm --hack --overwrite",
-    "clean": "watchman watch-del-all && cd android && ./gradlew clean && cd ..",
+    "clean": "watchman watch-del-all && npm cache clean --force && cd android && ./gradlew clean && cd ..",
     "test": "jest"
   },
   "dependencies": {
