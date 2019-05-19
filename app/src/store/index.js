@@ -7,6 +7,7 @@ import Vue from 'vue-native-core';
 import Vuex from 'vuex';
 import * as actions from './actions';
 import * as mutations from './mutations';
+import { getEmptyState } from './state';
 
 Vue.use(Vuex);
 
@@ -14,15 +15,7 @@ const store = new Vuex.Store({
   actions,
   mutations,
 
-  state: {
-    user: null,
-    vehicles: [],
-    activeVehicle: null,
-    activeVehicleRef: null,
-    logging_in: false,
-    permissionStatus: false,
-    position: {longitude: 0, latitude: 0},
-  }
+  state: getEmptyState()
 });
 
 export default store;
