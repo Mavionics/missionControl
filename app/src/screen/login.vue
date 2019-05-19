@@ -7,6 +7,17 @@
           </nb-title>
         </nb-body>
       </nb-header>
+          <view :style="{
+            justifyContent: 'center',
+            alignItems: 'center'}">
+        <image :style="{
+            width: '90%',
+            height: 100,
+            margin: 10,
+            resizeMode: 'contain'}"
+          :source="require('../../assets/logo.png')"
+        />
+    </view>
       <nb-content padder>
         <nb-form>
             <nb-item :error="(!$v.emailValue.required || !$v.emailValue.email ) && $v.emailValue.$dirty">
