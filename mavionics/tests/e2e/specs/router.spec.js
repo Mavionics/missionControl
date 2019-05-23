@@ -15,12 +15,12 @@ describe("Navigate", () => {
   it("Navbar on about", () => {
     cy.visit("/about")
       .get(".navbar").should("be.visible")
-      .get(".about").should("be.visible");
+      .get(".about").should("be.visible")
+      .url().should("include", "about");
   });
 
   it("Not possible to go to controlroom when not logged in", () => {
-    // cy.logout();
-    cy.visit("/controlroom")
+    cy.logout().visit("/controlroom")
       .get(".navbar").should("be.visible")
       .get('a[name="ControlRoom"]').should("be.not.visible")
       .get('a[name="Home"]').should("be.visible");

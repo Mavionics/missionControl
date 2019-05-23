@@ -27,7 +27,8 @@
 Cypress.Commands.add(
   "login",
   (email = "test@test.com", password = "testtest") => {
-    cy.visit("/")
+    // cy.visit("/autologin/email/" + email + "/password/" + password);
+    return cy.visit("/")
       .get(".mdl-textfield__input").click()
 
       .get("input.firebaseui-id-email").type(email).should("have.value", email).type("{enter}")
@@ -36,12 +37,13 @@ Cypress.Commands.add(
 
       .url().should("include", "controlroom");
   }
-),
-  // cy.visit("/autologin/email/" + email + "/password/" + password);
+);
 
-  Cypress.Commands.add("logout", () => {
-    return cy.visit("/", { timeout: 10000 })
-      .get('body').then(($body) => {
+Cypress.Commands.add("logout", () => {
+  return cy.visit("/")
+    .get('nav.navbar').then(($body) => {
+      if ($body.find('a[name="Logout"]').length > 0) {
         cy.get('a[name="Logout"]').click();
-      });
-  });
+      }
+    });
+});
