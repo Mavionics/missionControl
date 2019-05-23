@@ -6,52 +6,40 @@ describe("Full user creation", () => {
     const vehicleDesc = "Used in automated testing";
 
     // Register a new user through login dialog
-    cy.visit("/");
-    cy.get(".mdl-textfield__input").click();
+    cy.visit("/")
+      .get(".mdl-textfield__input").click()
+      .get("input.firebaseui-id-email").type(email).should("have.value", email).type("{enter}")
 
-    cy.get("input.firebaseui-id-email")
-      .type(email)
-      .should("have.value", email)
-      .type("{enter}");
+      .get("input.firebaseui-id-name").type(name).type("{enter}")
 
-    cy.get("input.firebaseui-id-name")
-      .type(name)
-      .type("{enter}");
+      .get("input.firebaseui-id-new-password").type("testtest").type("{enter}")
 
-    cy.get("input.firebaseui-id-new-password")
-      .type("testtest")
-      .type("{enter}");
+      // Check it has no vehicles
+      .url().should("include", "controlroom")
+      .get("[data-testid=vehicleName]").should("not.exist")
 
-    // Check it has no vehicles
-    cy.url().should("include", "controlroom");
-    cy.get("[data-testid=vehicleName]").should("not.exist");
+      // Add a new simulated vehicle
+      .get("[data-testid=addVehicle").click()
+      .get("input[name=vehicleName]").type(vehicleName)
+      .get("textarea[name=Description]").type(vehicleDesc)
+      .get("[data-testid=addVehicleModal-submit]").click()
 
-    // Add a new simulated vehicle
-    cy.get("[data-testid=addVehicle").click();
-    cy.get("input[name=vehicleName]").type(vehicleName);
-    cy.get("textarea[name=Description]").type(vehicleDesc);
-    cy.get("[data-testid=addVehicleModal-submit]").click();
+      // Check that it was added
+      .get("[data-testid=vehicleName]").should("exist")
+      .get("[data-testid=vehicleName]").contains(vehicleName)
 
-    // Check tat it was added
-    cy.get("[data-testid=vehicleName]").should("exist");
-    cy.get("[data-testid=vehicleName]").contains(vehicleName);
+      // Start simulation
+      .get("[data-testid=runSimulation").click()
 
-    // Start simulation
-    cy.get("[data-testid=runSimulation").click();
+      .wait(3000)
 
-    cy.wait(3000);
+      // Stop simulation
+      .get("[data-testid=runSimulation").click()
 
-    // Stop simulation
-    cy.get("[data-testid=runSimulation").click();
-
-    // Delete user
-    cy.visit("/profile");
-    cy.get("[data-testid=deleteAccount]").click();
-    cy.get(".dialog > .modal-card > .modal-card-foot > .is-danger").click();
-    cy.contains("You have been logged out!");
-  }),
-    it("Sign-in should be visible", () => {
-      cy.visit("/");
-      cy.get("#firebaseui-auth-container").should("be.visible");
-    });
+      // Delete user
+      .visit("/profile")
+      .get("[data-testid=deleteAccount]").click()
+      .get(".dialog > .modal-card > .modal-card-foot > .is-danger").click()
+      .get("body").contains("You have been logged out!")
+  })
 });

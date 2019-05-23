@@ -31,13 +31,13 @@ let rtc;
 let fetchingKeys = false;
 
 var actions = {
-  loginE({ getters }, { email, password }) {
-    if (getters.isAuthenticated) {
-      auth.signInWithEmailAndPassword(email, password);
-    }
+  async loginE({ getters }, { email, password }) {
+    // if (!getters.isAuthenticated) {
+    await auth.signInWithEmailAndPassword(email, password);
+    // router.push("/controlroom)");
+    // }
   },
   async deleteUser({ getters }) {
-    console.warn("Deleting current logged in user.");
     await vehicles
       .where("owner", "==", getters.getUid)
       .get()
@@ -46,19 +46,17 @@ var actions = {
           doc.ref.delete();
         });
       });
-    console.warn("User's Vehicles deleted.");
 
     await db
       .collection("users")
       .doc(getters.getUid)
       .delete();
-    console.warn("User deleted.");
 
     await auth.currentUser.delete();
-    console.warn("User account deleted.");
   },
   async login({ state, dispatch, getters }) {
     // Try getting userdata
+    console.warn("User login.");
 
     // open the DB channel
     await dispatch("user/openDBChannel");
@@ -89,6 +87,7 @@ var actions = {
     state.isLoggedIn = true;
   },
   logout({ dispatch, state }) {
+    if (!state.isLoggedIn) return;
     auth.signOut().then(() => {
       dispatch("user/closeDBChannel", {
         clearModule: true

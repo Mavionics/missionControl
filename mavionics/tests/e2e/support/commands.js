@@ -24,6 +24,24 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add("login", (email="test@test.com", password="testtest") => {
-  cy.visit('/autologin/email/' + email + '/password/' + password)
-})
+Cypress.Commands.add(
+  "login",
+  (email = "test@test.com", password = "testtest") => {
+    cy.visit("/")
+      .get(".mdl-textfield__input").click()
+
+      .get("input.firebaseui-id-email").type(email).should("have.value", email).type("{enter}")
+
+      .get("input.firebaseui-id-password").type(password).type("{enter}")
+
+      .url().should("include", "controlroom");
+  }
+),
+  // cy.visit("/autologin/email/" + email + "/password/" + password);
+
+  Cypress.Commands.add("logout", () => {
+    return cy.visit("/", { timeout: 10000 })
+      .get('body').then(($body) => {
+        cy.get('a[name="Logout"]').click();
+      });
+  });

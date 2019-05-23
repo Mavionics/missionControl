@@ -72,12 +72,11 @@ const router = new Router({
     },
     {
       path: "/autologin/email/:email/password/:password",
-      redirect: to => {
-        store.dispatch("loginE", {
+      redirect: async to => {
+        await store.dispatch("loginE", {
           email: to.params.email,
           password: to.params.password
         });
-        return "/home";
       },
       meta: {
         requiresAuth: false
