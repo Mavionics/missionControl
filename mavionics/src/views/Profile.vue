@@ -1,29 +1,24 @@
 <template>
   <div class="profile">
-    <Layout>
-      <div class="container">
-        <h1>User profile</h1>
-        <div>Hello {{getUserName}}</div>
-        <button
-          class="button is-medium is-danger"
-          @click="deleteAccount"
-          data-testid="deleteAccount"
-        >Delete Account</button>
-      </div>
-    </Layout>
+    <div class="container">
+      <h1>User profile</h1>
+      <div>Hello {{getUserName}}</div>
+      <button
+        class="button is-medium is-danger"
+        @click="deleteAccount"
+        data-testid="deleteAccount"
+      >Delete Account</button>
+    </div>
   </div>
 </template>
 
 
 <script>
-import Layout from "@/components/Layout.vue";
 import { mapGetters } from "vuex";
 
 export default {
   name: "profile",
-  components: {
-    Layout
-  },
+  components: {},
   computed: {
     appConfig() {
       return process.env.VUE_APP_CONFIG_NAME;
