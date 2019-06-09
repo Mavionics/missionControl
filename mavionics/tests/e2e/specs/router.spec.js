@@ -20,16 +20,17 @@ describe("Navigate", () => {
   });
 
   it("Not possible to go to controlroom when not logged in", () => {
-    cy.logout().visit("/controlroom")
+    cy.visit("/controlroom")
       .get(".navbar").should("be.visible")
-      .get('a[name="ControlRoom"]').should("be.not.visible")
-      .get('a[name="Home"]').should("be.visible");
+      .get('[name="ControlRoom"] > .nav-link').should("be.not.visible")
+      .get('[name="Home"] > .nav-link').should("be.visible");
   });
 
   it("Possible to go to controlroom when logged in", () => {
     cy.login()
-      .get('a[name="ControlRoom"]').should("be.visible")
-      .get('a[name="Home"]').should("be.visible")
-      .get('a[name="Logout"]').should("be.visible").logout();
+      .get('[name="ControlRoom"] > .nav-link').should("be.visible")
+      .get('[name="Home"] > .nav-link').should("be.visible")
+      .get('li[name = "User"]').should("be.visible").click()
+      .get('.dropdown-item[name="Logout"]').should("be.visible").click();
   });
 });

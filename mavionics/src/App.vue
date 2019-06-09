@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <Navbar :showBrand="!largeLogo" :isAuthenticated="isAuthenticated"/>
-    <!-- <img v-if="largeLogo" src="/assets/logo.svg"> -->
     <div class="hero-body has-text-centered">
       <router-view/>
     </div>

@@ -2,11 +2,10 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import { store, auth } from "./store/store";
-import {} from "./assets/customs.css";
 
-import Buefy from "buefy";
-import "buefy/dist/buefy.css";
-Vue.use(Buefy);
+import "./custom.scss";
+import BootstrapVue from 'bootstrap-vue'
+Vue.use(BootstrapVue)
 
 import VeeValidate from "vee-validate";
 Vue.use(VeeValidate);
@@ -14,6 +13,13 @@ Vue.use(VeeValidate);
 import "vue-resize/dist/vue-resize.css";
 import VueResize from "vue-resize";
 Vue.use(VueResize);
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(faUser)
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false;
 

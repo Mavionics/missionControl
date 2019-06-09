@@ -19,8 +19,7 @@ describe("Login", () => {
   })
 
   it("Logout", () => {
-    cy.login()
-      .get('a[name="Logout"]').click()
+    cy.login().logout()
       .url().should("include", "logout");
   });
 });

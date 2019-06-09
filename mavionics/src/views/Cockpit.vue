@@ -142,7 +142,7 @@ export default {
         //if (this.$store.state.avRef == null) return;
       });
 
-    console.log(this.$store.state.currentVehicle.state);
+    // console.log(this.$store.state.currentVehicle.state);
   },
   data() {
     return { loading: true, myPosition: { longitude: 15, latitude: 58 } };
