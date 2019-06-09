@@ -8,20 +8,23 @@
     </td>
     <td>
       <div class="field" v-if="vehicle.isSim">
-        <b-switch
-          data-testid="runSimulation"
+        <b-form-checkbox
           v-model="vehicle.runSim"
+          name="check-button"
+          data-testid="runSimulation"
           @input="toggleSimulation"
-        >Run Simulation</b-switch>
+          switch
+        >Run Simulation</b-form-checkbox>
       </div>
     </td>
     <td>
-      <div
+      <b-button
         name="Connect"
-        class="button is-success is-pulled-right"
+        variant="success"
+        class="float-right"
         :disabled="!isReadyForConnect"
         @click="connectToVehicle(vehicle.id)"
-      >Connect</div>
+      >Connect</b-button>
     </td>
   </tr>
 </template>

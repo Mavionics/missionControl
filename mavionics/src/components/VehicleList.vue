@@ -20,13 +20,11 @@
           <a>Flying</a>
         </p>-->
         <p class="level-item">
-          <button class="button is-primary" data-testid="addVehicle" @click="showAddVehicle = true">
-            <span class="icon is-small">
-              <i class="fas fa-plus"></i>
-            </span>
+          <b-button variant="primary" data-testid="addVehicle" v-b-modal.modal-add-vehicle>
+            <font-awesome-icon icon="faPlus"></font-awesome-icon>
             <span>Add</span>
-          </button>
-          <b-modal :active.sync="showAddVehicle" has-modal-card>
+          </b-button>
+          <b-modal id="modal-add-vehicle">
             <AddVehicleForm :user="user"></AddVehicleForm>
           </b-modal>
         </p>
@@ -85,7 +83,6 @@ export default {
   },
   data: () => {
     return {
-      showAddVehicle: false,
       user: {
         name: "Kalle"
       }
