@@ -27,7 +27,6 @@
     "loglevel": "^1.6.1",
     "simple-peer": "^9.2.1",
     "storybook-vue-router": "^1.0.3",
-    "vee-validate": "^2.2.0",
     "vue": "^2.6.10",
     "vue-resize": "^0.4.5",
     "vue-router": "^3.0.2",

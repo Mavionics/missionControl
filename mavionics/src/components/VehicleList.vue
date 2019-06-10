@@ -19,15 +19,6 @@
         <p class="level-item">
           <a>Flying</a>
         </p>-->
-        <p class="level-item">
-          <b-button variant="primary" data-testid="addVehicle" v-b-modal.modal-add-vehicle>
-            <font-awesome-icon icon="faPlus"></font-awesome-icon>
-            <span>Add</span>
-          </b-button>
-          <b-modal id="modal-add-vehicle">
-            <AddVehicleForm :user="user"></AddVehicleForm>
-          </b-modal>
-        </p>
       </div>
     </nav>
     <table class="table is-hoverable is-striped is-fullwidth" data-testid="vehicleList">
@@ -46,24 +37,16 @@
           :vehicle="vehicle"
           @click.native="selectItem(vehicle)"
         />
+
+        <AddVehicleForm :user="user"></AddVehicleForm>
+        <tr v-b-modal.modal-add-vehicle class="addLine">
+          <td></td>
+          <th>
+            <font-awesome-icon icon="plus" data-testid="addVehicle" style="margin-right: 5px"></font-awesome-icon>Click to add vehicle...
+          </th>
+        </tr>
       </tbody>
     </table>
-    <div class="modal">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Modal title</p>
-          <button class="delete" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body">
-          <!-- Content ... -->
-        </section>
-        <footer class="modal-card-foot">
-          <button class="button is-success">Save changes</button>
-          <button class="button">Cancel</button>
-        </footer>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -97,4 +80,10 @@ export default {
 </script>
 
 <style>
+.addLine {
+  color: #666666;
+  font-style: italic;
+  border: #dddddd 1px dotted;
+  cursor: pointer;
+}
 </style>

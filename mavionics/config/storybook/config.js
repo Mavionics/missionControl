@@ -7,9 +7,6 @@ import "../../src/custom.scss";
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 
-import VeeValidate from "vee-validate";
-Vue.use(VeeValidate);
-
 import "vue-resize/dist/vue-resize.css";
 import VueResize from "vue-resize";
 Vue.use(VueResize);
