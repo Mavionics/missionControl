@@ -5,6 +5,10 @@
   box-shadow: 0px 0px 3px black;
 }
 
+.capitalize:first-letter {
+  text-transform: capitalize;
+}
+
 // Your variable overrides
 $body-bg: transparent;
 $body-color: #2c3e50;
