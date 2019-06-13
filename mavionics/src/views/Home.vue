@@ -1,19 +1,17 @@
 <template>
   <div class="home">
-    <b-img
-      src="../assets/logo.svg"
-      fluid
-      center
-      alt="Mavionics Logo"
-      style="max-width: 90%;margin-top:30px;"
-    ></b-img>
-    <div class="container">
-      <div class="columns">
-        <div class="column is-6 is-offset-3">
+    <b-container>
+      <b-row class="m-3 m-sm-5">
+        <b-col>
+          <b-img src="../assets/logo.svg" fluid alt="Mavionics Logo"></b-img>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
           <Login v-if="!isAuthenticated"/>
-        </div>
-      </div>
-    </div>
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 

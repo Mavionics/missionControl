@@ -1,15 +1,9 @@
 <template>
-  <div class="profile">
-    <div class="container">
-      <h1>User profile</h1>
-      <div>Hello {{getUserName}}</div>
-      <button
-        class="button is-medium is-danger"
-        @click="deleteAccount"
-        data-testid="deleteAccount"
-      >Delete Account</button>
-    </div>
-  </div>
+  <b-container class="profile is-glass">
+    <h1>User profile</h1>
+    <div>Hello {{getUserName}}</div>
+    <b-button md variant="danger" @click="deleteAccount" data-testid="deleteAccount">Delete Account</b-button>
+  </b-container>
 </template>
 
 
@@ -27,19 +21,24 @@ export default {
   },
   methods: {
     deleteAccount() {
-      this.$dialog.confirm({
-        title: "Deleting account",
-        message:
-          "Are you sure you want to <b>delete</b> your account? This action cannot be undone.",
-        confirmText: "Delete Account",
-        type: "is-danger",
-        hasIcon: true,
-        onConfirm: () => {
-          this.$store
-            .dispatch("deleteUser")
-            .then(() => this.$router.push({ name: "logout" }));
-        }
-      });
+      this.$bvModal
+        .msgBoxConfirm(
+          "Are you sure you want to delete your account? This action cannot be undone.",
+          {
+            title: "Deleting account",
+            variant: "danger",
+            okTitle: "Delete Account",
+            okVariant: "danger",
+            hideHeaderClose: true
+          }
+        )
+        .then(value => {
+          if (value) {
+            this.$store
+              .dispatch("deleteUser")
+              .then(() => this.$router.push({ name: "logout" }));
+          }
+        });
     }
   }
 };

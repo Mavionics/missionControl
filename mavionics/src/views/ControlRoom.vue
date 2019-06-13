@@ -1,17 +1,24 @@
 <template>
-  <div class="controlRoom">
-    <div class="box is-glass container is-fluid">
-      <!-- Wait for Cesium Key before loading OverviewMap -->
-      <OverviewMap
-        :vehicles="vehicles"
-        :cesiumKey="cesiumKey"
-        :userPosition="myPosition"
-        :selectedItem="selectedItem"
-        v-if="!loading"
-      />
-      <VehicleList :vehicles="vehicles" :selectedItem="selectedItem" @itemSelect="itemSelect"/>
-    </div>
-  </div>
+  <b-container class="controlRoom is-glass p-2">
+    <b-row>
+      <b-col>
+        <!-- Wait for Cesium Key before loading OverviewMap -->
+        <OverviewMap
+          :vehicles="vehicles"
+          :cesiumKey="cesiumKey"
+          :userPosition="myPosition"
+          :selectedItem="selectedItem"
+          v-if="!loading"
+        />
+        <b-spinner class="m-5" v-if="loading"></b-spinner>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <VehicleList :vehicles="vehicles" :selectedItem="selectedItem" @itemSelect="itemSelect"/>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <style scoped>
@@ -32,7 +39,6 @@ export default {
     this.$store.dispatch("getMapKeys").then(() => (this.loading = false));
   },
   mounted() {
-    this.loadingComponent = this.$loading.open();
     navigator.geolocation.getCurrentPosition(pos => {
       this.myPosition = pos.coords;
     });
@@ -45,17 +51,10 @@ export default {
       return this.$store.state.cesiumKey;
     }
   },
-  watch: {
-    loading(isTrue) {
-      if (!isTrue) {
-        this.loadingComponent.close();
-      }
-    }
-  },
   data() {
     return {
       loading: true,
-      myPosition: "",
+      myPosition: null,
       selectedItem: null
     };
   },

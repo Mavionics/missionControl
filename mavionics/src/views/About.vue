@@ -1,10 +1,8 @@
 <template>
-  <div class="about">
-    <div class="container">
-      <h1>This is an about page</h1>
-      <div>This was build with configuration: {{appConfig}}</div>
-    </div>
-  </div>
+  <b-container class="about is-glass">
+    <h1>This is an about page</h1>
+    <div>This was build with configuration: {{appConfig}}</div>
+  </b-container>
 </template>
 
 
