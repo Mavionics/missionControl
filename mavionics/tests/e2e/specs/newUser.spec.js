@@ -21,8 +21,8 @@ describe("Full user creation", () => {
       // Add a new simulated vehicle
       .get("[data-testid=addVehicle").click()
       .get("input[name=vehicleName]").type(vehicleName)
-      .get("textarea[name=Description]").type(vehicleDesc)
-      .get("[data-testid=addVehicleModal-submit]").click()
+      .get("textarea[name=description]").type(vehicleDesc)
+      .get("div.modal-dialog .btn-primary").click() // Add button
 
       // Check that it was added
       .get("[data-testid=vehicleName]").should("exist")
@@ -39,7 +39,7 @@ describe("Full user creation", () => {
       // Delete user
       .visit("/profile")
       .get("[data-testid=deleteAccount]").click()
-      .get(".dialog > .modal-card > .modal-card-foot > .is-danger").click()
+      .get("div.modal-dialog .btn-danger").click()
       .get("body").contains("You have been logged out!")
   })
 });

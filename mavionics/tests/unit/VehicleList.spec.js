@@ -24,7 +24,7 @@ describe("VehicleList.vue", () => {
       components: {
         "router-link": RouterLinkStub
       },
-      stubs: ["AddVehicleForm", "b-modal"],
+      stubs: ["AddVehicleForm", "b-modal", "b-button", "b-table"],
       methods: {
         updateTime() {
           this.currentTime = timestamp;
@@ -34,7 +34,7 @@ describe("VehicleList.vue", () => {
   });
 
   it("Loads", () => {
-    expect(wrapper.find("table").isVisible()).to.be.true;
+    expect(wrapper.find("b-table").isVisible()).to.be.true;
   });
 });
 
