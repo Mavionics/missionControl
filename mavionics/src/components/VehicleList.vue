@@ -15,7 +15,7 @@
     </template>
 
     <template slot="name" slot-scope="vehicle">
-      <span>
+      <span data-testid="vehicleName">
         <b>{{vehicle.item.name}}</b>
       </span>
     </template>
@@ -43,7 +43,7 @@
     </template>
 
     <template slot="bottom-row">
-      <AddVehicleForm :user="user"></AddVehicleForm>
+      <AddVehicleForm></AddVehicleForm>
       <td colspan="4" v-b-modal.modal-add-vehicle class="addLine">
         <font-awesome-icon icon="plus" data-testid="addVehicle" style="margin-right: 8px"></font-awesome-icon>Click to add vehicle...
       </td>
@@ -52,13 +52,11 @@
 </template>
 
 <script>
-import VehicleListItem from "@/components/VehicleListItem";
 import AddVehicleForm from "@/components/AddVehicleForm";
 
 export default {
   name: "VehicleList",
   components: {
-    VehicleListItem,
     AddVehicleForm
   },
   props: {

@@ -10,10 +10,6 @@
     :ok-disabled="!nameValidation"
   >
     <b-form @submit.stop.prevent="handleSubmit" ref="form">
-      <b-row>
-        <b-form-text>{{user.displayName}}</b-form-text>
-      </b-row>
-
       <b-form-group
         :state="nameValidation"
         label-for="vehicleName"
@@ -23,7 +19,7 @@
           v-model="vehicleName"
           placeholder="Vehicle Name"
           :state="nameValidation"
-          id="vehicleName"
+          name="vehicleName"
           maxlength="30"
           required
         ></b-form-input>
@@ -50,7 +46,6 @@
 export default {
   name: "AddVehicleForm",
   components: {},
-  props: ["user"],
   computed: {
     isAvailable() {
       return this.vehicleName.length;
