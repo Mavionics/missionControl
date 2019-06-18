@@ -1,7 +1,9 @@
 <template>
   <div class="cockpit">
     <div id="top" class="top-panel parent">
-      <router-link name="ControlRoom" class="navbar-item" to="/controlroom">Home</router-link>
+      <router-link name="ControlRoom" class="back-button" to="/controlroom">
+        <font-awesome-icon icon="chevron-left"/>
+      </router-link>
     </div>
     <div class="fullscreen-panel parent">
       <hud :vehicle="vehicle.state"/>
@@ -40,10 +42,20 @@
         >{{vehicle.state.altitude}} m</div>
       </div>
     </div>
+    <Loader v-show="loading"/>
   </div>
 </template>
 
 <style scoped>
+.back-button {
+  margin: 3px;
+  float: left;
+  opacity: 0.7;
+}
+.back-button:hover {
+  opacity: 1;
+}
+
 .parent {
   position: absolute;
   display: block;
@@ -122,15 +134,15 @@
 import { mapGetters } from "vuex";
 import Hud from "@/components/Hud";
 import Map from "@/components/Map";
+import Loader from "@/components/Loader";
 
 export default {
   name: "cockpit",
-  components: { Hud, Map },
+  components: { Hud, Map, Loader },
   created() {
-    this.$store.dispatch("getMapKeys").then(() => (this.loading = false));
+    this.$store.dispatch("getMapKeys");
   },
   mounted() {
-    this.loadingComponent = this.$loading.open();
     // const yourVideo = document.getElementById("yourVideo");
     // console.log("Cockpit.vue ", this.$route.params.vehicle);
     // console.log(this.state);
@@ -139,6 +151,7 @@ export default {
         avId: this.$route.params.vehicle
       })
       .then(() => {
+        this.loading = false;
         //if (this.$store.state.avRef == null) return;
       });
 
@@ -163,11 +176,6 @@ export default {
     videoStream(stream) {
       document.querySelector("#video").srcObject = stream;
       // this.$ref.video.srcObject = stream
-    },
-    loading(isTrue) {
-      if (!isTrue) {
-        this.loadingComponent.close();
-      }
     }
   },
   props: {

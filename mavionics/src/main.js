@@ -12,10 +12,10 @@ import VueResize from "vue-resize";
 Vue.use(VueResize);
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUser, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faPlus, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faUser, faPlus)
+library.add(faUser, faPlus, faChevronLeft)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false;

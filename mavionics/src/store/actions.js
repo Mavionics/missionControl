@@ -123,7 +123,7 @@ var actions = {
       console.debug("RtcModule onMessage");
       commit("mergeVehicleData", { data });
     };
-    rtc.connect().then(() => rtc.sendMessage("We are connected!"));
+    return rtc.connect().then(() => rtc.sendMessage("We are connected!"));
   },
   addVehicle({ getters }, { name, description, isSim }) {
     vehicles.add({

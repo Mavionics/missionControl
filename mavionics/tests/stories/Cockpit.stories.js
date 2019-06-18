@@ -5,6 +5,11 @@ import Cockpit from "../../src/views/Cockpit.vue";
 import Vue from "vue";
 import Vuex from "vuex";
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+library.add(faChevronLeft)
+
 Vue.use(Vuex);
 
 export const storeLI = new Vuex.Store({
@@ -21,7 +26,7 @@ export const storeLI = new Vuex.Store({
     cesiumKey: process.env.VUE_APP_CESIUM_KEY
   },
   getters: {
-    currentUser: function() {
+    currentUser: function () {
       return { name: "Test Testerson" };
     },
     getActiveVehicle(state) {
@@ -36,8 +41,8 @@ export const storeLI = new Vuex.Store({
       state.avId = avId;
     },
     getMapKeys() {
-      return new Promise(function(resolve) {
-        setTimeout(function() {
+      return new Promise(function (resolve) {
+        setTimeout(function () {
           resolve("");
         }, 700);
       });
@@ -49,7 +54,7 @@ storiesOf("Cockpit", module)
   .addDecorator(StoryRouter())
   .addDecorator(withKnobs)
   .add("No data", () => ({
-    components: { Cockpit },
+    components: { Cockpit, FontAwesomeIcon },
     template: "<Cockpit/>",
     store: storeLI
   }))

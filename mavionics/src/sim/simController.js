@@ -13,10 +13,10 @@ class SimController {
     let canvas = document.createElement("canvas");
 
     canvas.id = "SimCanvas";
-    canvas.width = 300;
-    canvas.height = 200;
+    canvas.width = 240;
+    canvas.height = 160;
     canvas.style.zIndex = 8;
-    canvas.style.top = 0;
+    canvas.style.top = 30;
     canvas.style.position = "absolute";
     canvas.style.border = "1px solid";
     document.body.appendChild(canvas);
@@ -60,7 +60,7 @@ class SimController {
         timestamp: firestore.Timestamp.fromMillis(simState.timestamp),
         position: new firestore.GeoPoint(simState.latitude, simState.longitude)
       })
-      .then(function() {
+      .then(function () {
         console.log("Document successfully updated!");
       })
       .catch(err => {
