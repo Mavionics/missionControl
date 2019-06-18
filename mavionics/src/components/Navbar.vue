@@ -40,7 +40,10 @@ export default {
       default: true
     },
     currentUser: Object,
-    isAuthenticated: Boolean
+    isAuthenticated: {
+      type: Boolean,
+      default: false
+    }
   }
 };
 </script>

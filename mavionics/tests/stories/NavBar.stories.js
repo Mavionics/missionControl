@@ -14,14 +14,14 @@ storiesOf("Navbar", module)
   }))
   .add("Normal logged in", () => ({
     components: { Navbar },
-    template: "<Navbar isAuthenticated=true :currentUser='currentUser' style='background: blue'/>",
+    template: '<Navbar :isAuthenticated=true :currentUser="currentUser" style="background: blue"/>',
     data() {
       return { currentUser: { name: "Henrik" } };
     }
   }))
   .add("No brand logged in", () => ({
     components: { Navbar },
-    template: "<Navbar isAuthenticated=true :currentUser='currentUser' :show-brand=false style='background: blue'/>",
+    template: "<Navbar :isAuthenticated=true :show-brand=false style='background: blue'/>",
     data() {
       return { currentUser: { name: "Henrik" } };
     }
