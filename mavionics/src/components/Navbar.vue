@@ -16,15 +16,15 @@
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <b-nav-item name="Home" to="/">Home</b-nav-item>
-        <b-nav-item name="ControlRoom" to="/controlroom" v-show="isAuthenticated">ControlRoom</b-nav-item>
+        <b-nav-item name="ControlRoom" to="/controlroom" v-if="isAuthenticated">ControlRoom</b-nav-item>
         <b-nav-item name="About" to="/about">About</b-nav-item>
-        <b-nav-item-dropdown id="nav-user-dropdown" name="User" right v-show="isAuthenticated">
+        <b-nav-item-dropdown id="nav-user-dropdown" name="User" right v-if="isAuthenticated">
           <template slot="button-content">
             <font-awesome-icon icon="user"></font-awesome-icon>
           </template>
 
-          <b-dropdown-item name="Profile" to="/profile" v-show="isAuthenticated">Profile</b-dropdown-item>
-          <b-dropdown-item name="Logout" to="/logout" v-show="isAuthenticated">Logout</b-dropdown-item>
+          <b-dropdown-item name="Profile" to="/profile">Profile</b-dropdown-item>
+          <b-dropdown-item name="Logout" to="/logout">Logout</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>

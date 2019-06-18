@@ -11,7 +11,7 @@
     @row-selected="selectItem"
   >
     <template slot="status" slot-scope="vehicle">
-      <span class="capitalize">{{getStatus(vehicle.item)}}</span>
+      <span class="capitalize" data-testid="vehicleStatus">{{getStatus(vehicle.item)}}</span>
     </template>
 
     <template slot="name" slot-scope="vehicle">

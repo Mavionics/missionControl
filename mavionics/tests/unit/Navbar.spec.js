@@ -2,35 +2,38 @@ import { shallowMount, createLocalVue } from "@vue/test-utils";
 import { expect } from "chai";
 import Navbar from "@/components/Navbar.vue";
 import BootstrapVue from 'bootstrap-vue'
-import Router from "vue-router";
 
 const localVue = createLocalVue();
-localVue.use(Router);
 localVue.use(BootstrapVue);
 
 function createMount() {
   return shallowMount(Navbar, {
     localVue,
-    stubs: ["router-link", "font-awesome-icon"]
+    stubs: ["font-awesome-icon"]
   });
 }
 
 describe("Navbar.vue", () => {
-  it("Hide logout if not logged in", () => {
+  it("Hide user menu if logged in", () => {
     const wrapper = createMount();
-    expect(wrapper.find("[name='Logout']").isVisible()).to.be.false;
+    wrapper.setProps({ isAuthenticated: false });
+    expect(wrapper.find("[name='User']").exists()).to.be.false;
+    expect(wrapper.find("[name='Logout']").exists()).to.be.false;
   })
 
-  it("Show logout if logged in", () => {
+
+  it("Show user menu if logged in", () => {
     const wrapper = createMount();
     wrapper.setProps({ isAuthenticated: true });
-    expect(wrapper.find("[name='Logout']").isVisible()).to.be.true;
+    expect(wrapper.find("[name='User']").exists()).to.be.true;
+    expect(wrapper.find("[name='Logout']").exists()).to.be.true;
   })
 
   it("Hide controlroom if not logged in", () => {
     const wrapper = createMount();
     wrapper.setProps({ isAuthenticated: false });
-    expect(wrapper.find("[name='ControlRoom']").isVisible()).to.be.false;
+    expect(wrapper.vm.isAuthenticated).to.be.false;
+    expect(wrapper.exists("[name=ControlRoom]")).to.be.true;
   })
 
   it("Show controlroom if logged in", () => {
