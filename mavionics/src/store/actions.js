@@ -33,8 +33,9 @@ let fetchingKeys = false;
 var actions = {
   async loginE({ getters }, { email, password }) {
     // if (!getters.isAuthenticated) {
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
     await auth.signInWithEmailAndPassword(email, password);
-    // router.push("/controlroom)");
+    router.push("/controlroom");
     // }
   },
   async deleteUser({ getters }) {
@@ -57,6 +58,7 @@ var actions = {
   async login({ state, dispatch, getters }) {
     // Try getting userdata
     console.warn("User login.");
+    state.isLoggedIn = true;
 
     // open the DB channel
     await dispatch("user/openDBChannel");
@@ -84,7 +86,6 @@ var actions = {
         log.error(err);
       }
     );
-    state.isLoggedIn = true;
   },
   logout({ dispatch, state }) {
     if (!state.isLoggedIn) return;

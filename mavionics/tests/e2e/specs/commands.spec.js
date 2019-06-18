@@ -3,7 +3,7 @@ describe("Login", () => {
     cy.login();
   })
 
-  it("Login Command", () => {
+  it("Logout Command", () => {
     cy.logout();
   })
 

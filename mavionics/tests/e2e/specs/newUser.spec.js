@@ -29,12 +29,12 @@ describe("Full user creation", () => {
       .get("[data-testid=vehicleName]").contains(vehicleName)
 
       // Start simulation
-      .get("[data-testid=runSimulation").click()
+      .get("[data-testid=runSimulation").click({ force: true })
 
       .wait(3000)
 
       // Stop simulation
-      .get("[data-testid=runSimulation").click()
+      .get("[data-testid=runSimulation").click({ force: true })
 
       // Delete user
       .visit("/profile")
