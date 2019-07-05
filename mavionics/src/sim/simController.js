@@ -1,13 +1,12 @@
 /* eslint-disable no-console */
 import PhySim from "@/sim/simPhysics";
-import { firestore } from "firebase";
 import RtcModule from "@/modules/RtcModule";
 
 class SimController {
-  constructor(firebaseDocument) {
+  constructor(avId) {
     this.physics = new PhySim(Date.now());
     this.timer = 0;
-    this.doc = firebaseDocument;
+    this.avid = avId;
 
     // this.canvas = new Canvas(100, 1);
     let canvas = document.createElement("canvas");
@@ -26,7 +25,7 @@ class SimController {
   }
 
   start() {
-    this.rtc = new RtcModule(this.doc, true, this.stream);
+    this.rtc = new RtcModule(this.avid, true, this.stream);
 
     this.rtc.onMessage = msg => {
       console.log("Sim got: ", msg);
@@ -37,7 +36,7 @@ class SimController {
     });
 
     this.timer = setInterval(() => {
-      this.physics.step(1);
+      this.physics.stepTo(Date.now());
       let simState = this.physics.getState();
       // console.log(simState);
       this.updateVideo(simState);
@@ -45,27 +44,13 @@ class SimController {
 
     this.timerDb = setInterval(() => {
       let simState = this.physics.getState();
-      this.updateDb(simState);
+      this.rtc.sendHeartBeat(simState);
     }, 5000);
 
     this.timerDc = setInterval(() => {
       let simState = this.physics.getState();
       if (this.rtc && this.rtc.isConnected()) this.rtc.sendMessage(simState);
     }, 1000);
-  }
-
-  updateDb(simState) {
-    this.doc
-      .update({
-        timestamp: firestore.Timestamp.fromMillis(simState.timestamp),
-        position: new firestore.GeoPoint(simState.latitude, simState.longitude)
-      })
-      .then(function () {
-        console.log("Document successfully updated!");
-      })
-      .catch(err => {
-        console.error(err);
-      });
   }
 
   updateVideo(simState) {

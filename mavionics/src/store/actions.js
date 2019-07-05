@@ -114,7 +114,7 @@ var actions = {
       );
   },
   connectToVehicle({ commit }, { avId }) {
-    let rtc = new RtcModule(vehicles.doc(avId), false);
+    let rtc = new RtcModule(avId, false);
     rtc.onStream = stream => {
       console.debug("RtcModule onStream callback");
       commit("setVideoStream", stream);
@@ -136,7 +136,7 @@ var actions = {
   startSimulation(_, { avId }) {
     // eslint-disable-next-line no-console
     console.log("Starting simulation of " + avId);
-    sim = new SimController(vehicles.doc(avId));
+    sim = new SimController(avId);
     sim.start();
   },
   stopSimulation(_, { avId }) {
@@ -146,4 +146,4 @@ var actions = {
   }
 };
 
-export { actions, auth };
+export { actions, auth, db };

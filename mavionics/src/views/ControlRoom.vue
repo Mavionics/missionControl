@@ -4,18 +4,23 @@
       <b-col>
         <!-- Wait for Cesium Key before loading OverviewMap -->
         <OverviewMap
-          :vehicles="vehicles"
-          :cesiumKey="cesiumKey"
-          :userPosition="myPosition"
-          :selectedItem="selectedItem"
           v-if="!loading"
+          :vehicles="vehicles"
+          :cesium-key="cesiumKey"
+          :user-position="myPosition"
+          :selected-item="selectedItem"
         />
-        <b-spinner class="m-5" v-if="loading"></b-spinner>
+        <b-spinner 
+          v-if="loading" 
+          class="m-5"/>
       </b-col>
     </b-row>
     <b-row>
       <b-col>
-        <VehicleList :vehicles="vehicles" :selectedItem="selectedItem" @itemSelect="itemSelect"/>
+        <VehicleList 
+          :vehicles="vehicles" 
+          :selected-item="selectedItem" 
+          @itemSelect="itemSelect"/>
       </b-col>
     </b-row>
   </b-container>
@@ -35,6 +40,21 @@ export default {
     OverviewMap,
     VehicleList
   },
+  data() {
+    return {
+      loading: true,
+      myPosition: null,
+      selectedItem: null
+    };
+  },
+  computed: {
+    vehicles() {
+      return Object.values(this.$store.state.vehicles);
+    },
+    cesiumKey() {
+      return this.$store.state.cesiumKey;
+    }
+  },
   created() {
     this.$store.dispatch("getMapKeys").then(() => (this.loading = false));
   },
@@ -42,21 +62,6 @@ export default {
     navigator.geolocation.getCurrentPosition(pos => {
       this.myPosition = pos.coords;
     });
-  },
-  computed: {
-    vehicles() {
-      return this.$store.state.vehicles;
-    },
-    cesiumKey() {
-      return this.$store.state.cesiumKey;
-    }
-  },
-  data() {
-    return {
-      loading: true,
-      myPosition: null,
-      selectedItem: null
-    };
   },
   methods: {
     itemSelect(item) {
