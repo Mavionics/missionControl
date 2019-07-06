@@ -103,8 +103,7 @@ export default {
   },
   methods: {
     selectItem(item) {
-      console.log(item)
-      this.$emit("itemSelect", item[0]);
+      this.$emit("itemSelect", item);
     },
     updateTime() {
       this.currentTime = Date.now() / 1000;
