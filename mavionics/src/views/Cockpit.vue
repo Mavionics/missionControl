@@ -107,6 +107,12 @@
   text-align: center;
 }
 
+.fullscreen-panel video {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
 .secondary-panel {
   left: 0;
   bottom: 0;

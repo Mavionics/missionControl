@@ -67,9 +67,12 @@ class SimController {
 
   stop() {
     console.log("Stoped at " + this.physics.getState().timestamp);
+    clearInterval(this.timer);
+    clearInterval(this.timerDb);
+    clearInterval(this.timerDc);
     this.rtc.disconnect();
     this.rtc = null;
-    clearInterval(this.timer);
+    this.canvas.remove();
   }
 }
 

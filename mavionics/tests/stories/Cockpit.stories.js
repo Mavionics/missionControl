@@ -37,9 +37,9 @@ export const storeLI = new Vuex.Store({
     }
   },
   actions: {
-    connectToVehicle({ state }, avId) {
-      state.avId = avId;
-    },
+    // connectToVehicle({ state }, avId) {
+    //   state.avId = avId;
+    // },
     getMapKeys() {
       return new Promise(function (resolve) {
         setTimeout(function () {

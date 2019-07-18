@@ -13,8 +13,7 @@ class RtcModule {
   }
 
   async connect() {
-    await this.signal.connect();
-
+    
     this.p = new Peer({
       initiator: this.initiator,
       objectMode: true,
@@ -30,19 +29,21 @@ class RtcModule {
         ]
       }
     });
-
+    
     this.p._debug = (msg, par1, par2) =>
-      console.log("SIMPLE_PEER", msg, par1, par2);
-
+    console.log("SIMPLE_PEER", msg, par1, par2);
+    
     // Message from other side
     this.signal.onMessage = (data) => {
-      console.debug("Signal Message: ", data);
+      console.debug("In Message: ", data);
       this.p.signal(data);
     }
 
+    await this.signal.connect();
+    
     // Message from this side
     this.p.on("signal", data => {
-      console.debug("Achtung! Outgoing ", data);
+      console.debug("Out Message: ", data);
       this.signal.sendMessage(data);
     });
     this.p.on('stream', stream => {
@@ -61,8 +62,9 @@ class RtcModule {
         reject(err);
       });
 
-      this.p.on("connect", () => {
-        this.signal.setConnected();
+      this.p.on("connect", async () => {
+        await this.signal.setStatus("connected");
+        console.log("connected");
         resolve();
       });
     });
@@ -77,7 +79,8 @@ class RtcModule {
     this.signal.sendHeartBeat(data);
   }
 
-  disconnect() {
+  async disconnect() {
+    await this.signal.setStatus("disconnected")
     this.p.destroy();
   }
 

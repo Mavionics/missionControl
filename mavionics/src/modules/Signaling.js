@@ -44,17 +44,17 @@ class SignalingModule {
       }
     );
 
-    await this.dbRef.update({ status: "offer" });
+    await this.setStatus("offer");
   }
 
-  async setConnected() {
+  async setStatus(status) {
     if (this.initiator) {
-      await this.dbRef.update({ status: "connected" });
+      await this.dbRef.update({ status: status });
     }
   }
 
   async sendMessage(data) {
-    this.outMessages.add(data);
+    await this.outMessages.add(data);
   }
 
   async sendHeartBeat(data) {

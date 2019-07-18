@@ -80,11 +80,11 @@ export default {
   props: {
     vehicles: {
       type: Array,
-      default: () => {}
+      default: () => []
     },
     selectedItem: {
-      type: Object,
-      default: null
+      type: Array,
+      default: ()=> []
     }
   },
   data: () => {
