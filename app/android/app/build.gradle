@@ -69,6 +69,7 @@ android {
                     String.valueOf(versionMinor) + "." +
                     String.valueOf(versionPatch) + "." +
                     String.valueOf(buildNum)
+        project.logger.info('VersionName: ' + versionName)
         multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
