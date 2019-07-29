@@ -32,7 +32,7 @@ matrix:
       install:
       - cd app
       script:
-      - docker run --rm -v "$PWD":/root/tmp -w /root/tmp/ owodunni/mavionics-android:0.1.0 /bin/sh -c "npm install; npm run build-release"
+      - docker run --rm -v "$PWD":/root/tmp -w /root/tmp/ owodunni/mavionics-android:0.1.0 /bin/sh -c "npm install; npm run postinstall; npm run build-release"
       - ./../scripts/deployApp.sh
 
     - name: Build website 
