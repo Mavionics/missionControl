@@ -1,14 +1,17 @@
 <template>
   <div class="home">
-    <Layout :large-logo="true">
-      <div class="container">
-        <div class="columns">
-          <div class="column is-6 is-offset-3">
-            <Login v-if="!isAuthenticated"/>
-          </div>
-        </div>
-      </div>
-    </Layout>
+    <b-container>
+      <b-row class="m-3 m-sm-5">
+        <b-col>
+          <b-img src="../assets/logo.svg" fluid alt="Mavionics Logo"></b-img>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <Login v-if="!isAuthenticated"/>
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
@@ -18,15 +21,13 @@
 
 <script>
 // @ is an alias to /src
-import Layout from "@/components/Layout.vue";
 import Login from "@/components/Login.vue";
 import { mapGetters } from "vuex";
 
 export default {
   name: "home",
   components: {
-    Login,
-    Layout
+    Login
   },
   computed: {
     ...mapGetters(["isAuthenticated"])

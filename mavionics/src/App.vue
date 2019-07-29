@@ -1,10 +1,18 @@
 <template>
   <div id="app">
+    <Navbar :showBrand="!largeLogo" :isAuthenticated="isAuthenticated"/>
     <router-view/>
   </div>
 </template>
 
 <style lang="scss">
+html {
+  background: url("assets/clouds.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -12,18 +20,23 @@
   text-align: center;
   color: #2c3e50;
 }
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
 </style>
 
 <script>
-export default {};
+import { mapGetters } from "vuex";
+import Navbar from "@/components/Navbar.vue";
+
+export default {
+  name: "App",
+  components: {
+    Navbar
+  },
+  props: {
+    largeLogo: { type: Boolean, default: false }
+  },
+  computed: {
+    // mix the getters into computed with object spread operator
+    ...mapGetters(["currentUser", "isAuthenticated"])
+  }
+};
 </script>

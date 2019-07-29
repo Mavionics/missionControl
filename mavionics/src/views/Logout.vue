@@ -1,21 +1,15 @@
 <template>
-  <div class="logout">   
-     <Layout>
-      <div class="container">
-        <h1>You have been logged out!</h1>
-      </div>
-    </Layout>
+  <div class="logout">
+    <div class="container">
+      <h1>You have been logged out!</h1>
+    </div>
   </div>
 </template>
 
 <script>
-import Layout from "@/components/Layout.vue";
-
 export default {
   name: "logout",
-  components: {
-    Layout
-  },
+  components: {},
   mounted() {
     this.$store.dispatch("logout");
   }

@@ -1,19 +1,29 @@
 <template>
-  <div class="controlRoom">
-    <Layout>
-      <div class="box is-glass container is-fluid">
+  <b-container class="controlRoom is-glass p-2">
+    <b-row>
+      <b-col>
         <!-- Wait for Cesium Key before loading OverviewMap -->
         <OverviewMap
-          :vehicles="vehicles"
-          :cesiumKey="cesiumKey"
-          :userPosition="myPosition"
-          :selectedItem="selectedItem"
           v-if="!loading"
+          :vehicles="vehicles"
+          :cesium-key="cesiumKey"
+          :user-position="myPosition"
+          :selected-item="selectedItem"
         />
-        <VehicleList :vehicles="vehicles" :selectedItem="selectedItem" @itemSelect="itemSelect"/>
-      </div>
-    </Layout>
-  </div>
+        <b-spinner 
+          v-if="loading" 
+          class="m-5"/>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <VehicleList 
+          :vehicles="vehicles" 
+          :selected-item="selectedItem" 
+          @itemSelect="itemSelect"/>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <style scoped>
@@ -21,47 +31,37 @@
 
 
 <script>
-import Layout from "@/components/Layout.vue";
 import OverviewMap from "@/components/OverviewMap.vue";
 import VehicleList from "@/components/VehicleList.vue";
 
 export default {
   name: "ControlRoom",
   components: {
-    Layout,
     OverviewMap,
     VehicleList
   },
-  created() {
-    this.$store.dispatch("getMapKeys").then(() => (this.loading = false));
-  },
-  mounted() {
-    this.loadingComponent = this.$loading.open();
-    navigator.geolocation.getCurrentPosition(pos => {
-      this.myPosition = pos.coords;
-    });
+  data() {
+    return {
+      loading: true,
+      myPosition: null,
+      selectedItem: null
+    };
   },
   computed: {
     vehicles() {
-      return this.$store.state.vehicles;
+      return Object.values(this.$store.state.vehicles);
     },
     cesiumKey() {
       return this.$store.state.cesiumKey;
     }
   },
-  watch: {
-    loading(isTrue) {
-      if (!isTrue) {
-        this.loadingComponent.close();
-      }
-    }
+  created() {
+    this.$store.dispatch("getMapKeys").then(() => (this.loading = false));
   },
-  data() {
-    return {
-      loading: true,
-      myPosition: "",
-      selectedItem: null
-    };
+  mounted() {
+    navigator.geolocation.getCurrentPosition(pos => {
+      this.myPosition = pos.coords;
+    });
   },
   methods: {
     itemSelect(item) {

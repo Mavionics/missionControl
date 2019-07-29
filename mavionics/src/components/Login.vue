@@ -1,7 +1,6 @@
 <template>
   <div class>
     <div id="firebaseui-auth-container"></div>
-    <div id="loader">Loading...</div>
   </div>
 </template>
 
@@ -38,11 +37,6 @@ export default {
 
           // Actual login handled by aut.onAuthStateChanged
           return true;
-        },
-        uiShown: function() {
-          // The widget is rendered.
-          // Hide the loader.
-          document.getElementById("loader").style.display = "none";
         }
       }
     };

@@ -1,0 +1,20 @@
+// TODO: Put customization here
+.is-glass {
+  margin: 4rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+  border-radius: 2px;
+}
+
+.capitalize:first-letter {
+  text-transform: capitalize;
+}
+
+// Your variable overrides
+$body-bg: transparent;
+$body-color: #2c3e50;
+$font-family-sans-serif: "Avenir", -apple-system, BlinkMacSystemFont, "Segoe UI",
+  Roboto, Helvetica, Arial, sans-serif;
+
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap-vue/src/index.scss";
