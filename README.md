@@ -23,5 +23,5 @@ Production:
 The app can be built using docker. To remove some docker complexity I wrapped the docker command in bash. You can run it with the command bellow:
 
 ```
-./scripts/build.sh -b build
+./scripts/buildApp.sh -b build
 ```
