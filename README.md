@@ -18,11 +18,10 @@ Production:
 ./scripts/setup.sh -m production
 ```
 
-
 ## Build
 
-The app can be built using docker.
+The app can be built using docker. To remove some docker complexity I wrapped the docker command in bash. You can run it with the command bellow:
 
 ```
-sudo docker run --privileged -p 5037:5037 --rm -v "$PWD":/root/tmp -w /root/tmp/ owodunni/mavionics-android:0.2.0 /bin/sh -c "cd app; npm run build-develop"
+./scripts/build.sh -b build
 ```

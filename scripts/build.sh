@@ -1,25 +1,32 @@
 #!/bin/bash
 
-echo "$TRAVIS_PULL_REQUEST_BRANCH"
+echo "Build app for development"
 
-# Only push this update to the server if the current branch is the Master branch
-if [ "$TRAVIS_PULL_REQUEST_BRANCH" != "" ]; then
+while getopts b: option
+do
+case "${option}"
+in
+b) BUILD_MODE=${OPTARG};;
+esac
+done
 
-  echo "Current commit is on a Pull request skipping deploy"
-
-elif [ "$TRAVIS_BRANCH" == "master" ]; then
-
-  echo "Compiling and deploying $TRAVIS_BRANCH to production..."
-
-  npm run build
-  firebase deploy -P default --token $FIREBASE_TOKEN --only hosting
-
-elif [ "$TRAVIS_BRANCH" == "develop" ]; then
-  echo "Compiling and deploying $TRAVIS_BRANCH to development..."
-
-  npm run dev-build
-  firebase deploy -P develop --token $FIREBASE_TOKEN --only hosting
-
-else
-    echo "Current branch is $TRAVIS_BRANCH, Not master or develop so no deployment will be done"
+if [ -z "$BUILD_MODE" ]; then
+  echo ""
+  echo "*** Error ***"
+  echo ""
+  echo "Usage:  build.sh [Options]"
+  echo "Options:"
+  echo "-b, Set build mode (build|clean)"
+  exit -1
 fi
+
+if [ "$BUILD_MODE" == "build" ]; then
+
+sudo docker run --privileged -p 5037:5037 --name mavionics-android --rm -v "$PWD":/root/tmp -w /root/tmp/ owodunni/mavionics-android:0.2.0 /bin/sh -c "cd app; npm run build-develop"
+
+elif [ "$BUILD_MODE" == "clean" ]; then
+
+sudo docker kill mavionics-android
+
+fi
+
