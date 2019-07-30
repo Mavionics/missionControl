@@ -30,7 +30,7 @@ matrix:
       install:
       - cd app
       script:
-      - docker run --rm -v "$PWD":/root/tmp -w /root/tmp/ -e TRAVIS_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER owodunni/mavionics-android:0.2.0 /bin/sh -c "npm install; npm run postinstall; npm run build-release; ./../scripts/deployApp.sh"
+      - docker run --rm -v "$PWD":/root/tmp -w /root/tmp/ -e TRAVIS_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER owodunni/mavionics-android:0.2.0 /bin/sh -c "npm run build-and-deploy"
 
     - name: Build website 
       language: node_js
