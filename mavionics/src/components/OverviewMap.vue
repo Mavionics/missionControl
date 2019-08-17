@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div id="cesiumContainer" class="fullscreen"></div>
+    <div 
+      id="cesiumContainer" 
+      class="fullscreen" />
   </div>
 </template>
 
@@ -22,6 +24,48 @@ require("cesium/Widgets/widgets.css");
 
 export default {
   name: "OverviewMap",
+  props: {
+    userPosition: {
+      validator: function(value) {
+        return (
+          value == null ||
+          (value.longitude !== undefined && value.latitude !== undefined)
+        );
+      },
+      type: Object,
+      default: () => null
+    },
+    vehicles: { type: Array, default: () => [] },
+    cesiumKey: { type: String, default: "" },
+    selectedItem: { type: Array, default: () => [] }
+  },
+  data() {
+    return {};
+  },
+  watch: {
+    selectedItem(item) {
+      if (item.length > 0) {
+        var v = this.viewer.entities.getById(item[0].name);
+        this.viewer.trackedEntity = v;
+        if (v) {
+          this.viewer.flyTo(v, {
+            offset: new Cesium.HeadingPitchRange(0, -1, 1000)
+          });
+        }
+      } else {
+        this.viewer.flyTo(this.viewer.entities, {
+          offset: new Cesium.HeadingPitchRange(0, -1, 0)
+        });
+      }
+    },
+    userPosition(userPos) {
+      this.updatePosition(this.userpin, userPos.coords);
+    },
+    vehicles(val) {
+      // TODO: Handle when items are removed from array
+      val.forEach(vehicle => this.updateVehicle(vehicle));
+    }
+  },
   mounted() {
     Cesium.Ion.defaultAccessToken = this.cesiumKey;
     this.viewer = new Cesium.Viewer("cesiumContainer", {
@@ -67,34 +111,17 @@ export default {
 
     //   };
   },
-  props: {
-    userPosition: {
-      validator: function(value) {
-        return (
-          value == null ||
-          (value.longitude !== undefined && value.latitude !== undefined)
-        );
-      }
-    },
-    vehicles: Array,
-    cesiumKey: String,
-    selectedItem: Object
-  },
-  data() {
-    return {};
-  },
   methods: {
     updatePosition(entity, position) {
       if (
         entity !== undefined &&
         position !== undefined &&
-        position.coords !== undefined &&
-        position.coords.longitude !== undefined &&
-        position.coords.latitude !== undefined
+        position.longitude !== undefined &&
+        position.latitude !== undefined
       ) {
         entity.position = Cesium.Cartesian3.fromDegrees(
-          position.coords.longitude,
-          position.coords.latitude
+          position.longitude,
+          position.latitude
         );
       }
     },
@@ -128,23 +155,6 @@ export default {
           });
         }
       }
-    }
-  },
-  watch: {
-    selectedItem(item) {
-      var v = this.viewer.entities.getById(item.name);
-      if (v) {
-        this.viewer.flyTo(v, {
-          offset: new Cesium.HeadingPitchRange(0, -1, 10000)
-        });
-      }
-    },
-    userPosition(userPos) {
-      this.updatePosition(this.userpin, userPos);
-    },
-    vehicles(val) {
-      // TODO: Handle when items are removed from array
-      val.forEach(vehicle => this.updateVehicle(vehicle));
     }
   }
 };

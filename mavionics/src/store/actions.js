@@ -33,8 +33,9 @@ let fetchingKeys = false;
 var actions = {
   async loginE({ getters }, { email, password }) {
     // if (!getters.isAuthenticated) {
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
     await auth.signInWithEmailAndPassword(email, password);
-    // router.push("/controlroom)");
+    router.push("/controlroom");
     // }
   },
   async deleteUser({ getters }) {
@@ -57,6 +58,7 @@ var actions = {
   async login({ state, dispatch, getters }) {
     // Try getting userdata
     console.warn("User login.");
+    state.isLoggedIn = true;
 
     // open the DB channel
     await dispatch("user/openDBChannel");
@@ -84,7 +86,6 @@ var actions = {
         log.error(err);
       }
     );
-    state.isLoggedIn = true;
   },
   logout({ dispatch, state }) {
     if (!state.isLoggedIn) return;
@@ -113,7 +114,7 @@ var actions = {
       );
   },
   connectToVehicle({ commit }, { avId }) {
-    let rtc = new RtcModule(vehicles.doc(avId), false);
+    rtc = new RtcModule(avId, false);
     rtc.onStream = stream => {
       console.debug("RtcModule onStream callback");
       commit("setVideoStream", stream);
@@ -122,7 +123,7 @@ var actions = {
       console.debug("RtcModule onMessage");
       commit("mergeVehicleData", { data });
     };
-    rtc.connect().then(() => rtc.sendMessage("We are connected!"));
+    return rtc.connect().then(() => rtc.sendMessage("We are connected!"));
   },
   addVehicle({ getters }, { name, description, isSim }) {
     vehicles.add({
@@ -135,7 +136,7 @@ var actions = {
   startSimulation(_, { avId }) {
     // eslint-disable-next-line no-console
     console.log("Starting simulation of " + avId);
-    sim = new SimController(vehicles.doc(avId));
+    sim = new SimController(avId);
     sim.start();
   },
   stopSimulation(_, { avId }) {
@@ -145,4 +146,4 @@ var actions = {
   }
 };
 
-export { actions, auth };
+export { actions, auth, db };

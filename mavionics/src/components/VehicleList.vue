@@ -1,103 +1,156 @@
 <template>
-  <div class="container">
-    <nav class="level">
-      <!-- Left side -->
-      <div class="level-left"></div>
+  <b-table
+    :items="vehicles"
+    :fields="fields"
+    striped
+    hover
+    data-testid="vehicleList"
+    thead-class="d-none"
+    selectable
+    select-mode="single"
+    @row-selected="selectItem"
+  >
+    <template 
+      slot="status" 
+      slot-scope="vehicle">
+      <span 
+        class="capitalize" 
+        data-testid="vehicleStatus">{{ getStatus(vehicle.item) }}</span>
+    </template>
 
-      <!-- Right side -->
-      <div class="level-right">
-        <!-- Add filtering later -->
-        <!-- <p class="level-item">
-          <strong>All</strong>
-        </p>
-        <p class="level-item">
-          <a>Online</a>
-        </p>
-        <p class="level-item">
-          <a>Simulated</a>
-        </p>
-        <p class="level-item">
-          <a>Flying</a>
-        </p>-->
-        <p class="level-item">
-          <button class="button is-primary" data-testid="addVehicle" @click="showAddVehicle = true">
-            <span class="icon is-small">
-              <i class="fas fa-plus"></i>
-            </span>
-            <span>Add</span>
-          </button>
-          <b-modal :active.sync="showAddVehicle" has-modal-card>
-            <AddVehicleForm :user="user"></AddVehicleForm>
-          </b-modal>
-        </p>
+    <template 
+      slot="name" 
+      slot-scope="vehicle">
+      <span data-testid="vehicleName">
+        <b>{{ vehicle.item.name }}</b>
+      </span>
+    </template>
+
+    <template 
+      slot="sim" 
+      slot-scope="vehicle">
+      <div 
+        v-if="vehicle.item.isSim" 
+        class="field">
+        <b-form-checkbox
+          v-model="vehicle.item.runSim"
+          name="check-button"
+          data-testid="runSimulation"
+          switch
+          @input="(state)=>toggleSimulation(state, vehicle.item.id)"
+        >Run Simulation</b-form-checkbox>
       </div>
-    </nav>
-    <table class="table is-hoverable is-striped is-fullwidth" data-testid="vehicleList">
-      <!-- <thead>
-      <tr>
-        <th>Status</th>
-        <th>Name</th>
-        <th class="is-hidden-touch">Location</th>
-        <th>Action</th>
-      </tr>
-      </thead>-->
-      <tbody>
-        <VehicleListItem
-          v-for="vehicle in vehicles"
-          :key="vehicle.id"
-          :vehicle="vehicle"
-          @click.native="selectItem(vehicle)"
-        />
-      </tbody>
-    </table>
-    <div class="modal">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Modal title</p>
-          <button class="delete" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body">
-          <!-- Content ... -->
-        </section>
-        <footer class="modal-card-foot">
-          <button class="button is-success">Save changes</button>
-          <button class="button">Cancel</button>
-        </footer>
-      </div>
-    </div>
-  </div>
+    </template>
+
+    <template 
+      slot="connect" 
+      slot-scope="vehicle">
+      <b-button
+        :disabled="!isReadyForConnect(vehicle.item)"
+        name="Connect"
+        variant="success"
+        class="float-right"
+        @click="connectToVehicle(vehicle.item.id)"
+      >Connect</b-button>
+    </template>
+
+    <template slot="bottom-row">
+      <AddVehicleForm/>
+      <td 
+        v-b-modal.modal-add-vehicle 
+        colspan="4" 
+        class="addLine">
+        <font-awesome-icon 
+          icon="plus" 
+          data-testid="addVehicle" 
+          style="margin-right: 8px"/>Click to add vehicle...
+      </td>
+    </template>
+  </b-table>
 </template>
 
 <script>
-import VehicleListItem from "@/components/VehicleListItem";
 import AddVehicleForm from "@/components/AddVehicleForm";
 
 export default {
   name: "VehicleList",
   components: {
-    VehicleListItem,
     AddVehicleForm
   },
   props: {
-    vehicles: Array,
-    selectedItem: Object
+    vehicles: {
+      type: Array,
+      default: () => []
+    },
+    selectedItem: {
+      type: Array,
+      default: ()=> []
+    }
   },
   data: () => {
     return {
-      showAddVehicle: false,
-      user: {
-        name: "Kalle"
-      }
+      fields: ["status", "name", "sim", "connect"],
+      currentTime: Number
     };
+  },
+  computed: {},
+  mounted() {
+    this.updateTime();
+    this.$options.interval = setInterval(this.updateTime, 1000);
+  },
+  beforeDestroy() {
+    clearInterval(this.$options.interval);
   },
   methods: {
     selectItem(item) {
       this.$emit("itemSelect", item);
+    },
+    updateTime() {
+      this.currentTime = Date.now() / 1000;
+    },
+    isLive(vehicle) {
+      // console.log(
+      //   vehicle.name,
+      //   this.currentTime,
+      //   vehicle.timestamp.seconds,
+      //   this.currentTime - vehicle.timestamp.seconds
+      // );
+      return (
+        vehicle.timestamp !== undefined &&
+        this.currentTime - vehicle.timestamp.seconds < 10
+      );
+    },
+    isReadyForConnect(vehicle) {
+      return this.isLive(vehicle) && vehicle.status === "offer";
+    },
+    getStatus(vehicle) {
+      if (this.isLive(vehicle)) {
+        return vehicle.status;
+      } else {
+        return "Offline";
+      }
+    },
+    toggleSimulation(start, avId) {
+      if (start) {
+        this.$store.dispatch("startSimulation", { avId: avId });
+      } else {
+        this.$store.dispatch("stopSimulation", { avId: avId });
+      }
+    },
+    connectToVehicle(avId) {
+      this.$router.push("cockpit/" + avId); // { name: "cockpit", params: { vehicle: avId } });
     }
   }
 };
 </script>
 
 <style>
+.table {
+  text-align: left;
+}
+.addLine {
+  color: #666666;
+  font-style: italic;
+  cursor: pointer;
+}
 </style>

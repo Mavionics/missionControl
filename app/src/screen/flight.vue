@@ -14,7 +14,8 @@
       <text class="title">{{activeVehicle.name}}</text>
       <text class="title">latitude: {{latitude}}</text>
       <text class="title">longitude: {{longitude}}</text>
-      <text class="title">{{activeVehicle.timestamp}}</text>
+      <text class="title">altitude: {{altitude}}</text>
+      <text class="title">time: {{activeVehicle.timestamp.seconds}}</text>
     </view>
   </nb-container>
 </template>
@@ -76,6 +77,16 @@ export default {
       ) {
         return store.state.activeVehicle.position.coords.longitude;
       }
+    },
+    altitude() {
+      if (
+        store.state.activeVehicle != null &&
+        store.state.activeVehicle.position != null &&
+        store.state.activeVehicle.position.coords != null &&
+        store.state.activeVehicle.position.coords.altitude != null
+      ) {
+        return store.state.activeVehicle.position.coords.altitude;
+      }
     }
   },
   props: {
@@ -98,16 +109,16 @@ export default {
           console.log("flight.vue, watchPosition");
           store.dispatch("SET_POSITION", position);
         },
-        error =>
+        error => {
           console.log(
             "flight.vue, getPositionContinous error: ",
             JSON.stringify(error)
-          )
-        /*{
+          )},
+        {
           enableHighAccuracy: true,
           timeout: 20000,
           maximumAge: 1000
-        }*/
+        }
       );
     },
     updateActiveVehicle() {

@@ -1,84 +1,58 @@
 <template>
-  <div class="content">
-    <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <router-link class="navbar-item" v-if="showBrand" to="/">
-          <img
-            id="navbar-brand-img"
-            src="../assets/logo.svg"
-            alt="Mavionics"
-            width="112"
-            height="28"
-          >
-        </router-link>
+  <b-navbar toggleable="sm" type="dark" variant="faded">
+    <b-navbar-brand to="/" class="no-active-indication">
+      <img
+        id="navbar-brand-img"
+        src="../assets/logo.svg"
+        alt="Mavionics"
+        width="112"
+        height="28"
+        v-if="showBrand"
+      >
+    </b-navbar-brand>
+    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-        <a
-          role="button"
-          class="navbar-burger"
-          @click="showHamburger"
-          :class="{'is-active':navIsActive}"
-          data-target="navMenu"
-          aria-label="menu"
-          aria-expanded="false"
-        >
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-      </div>
-      <div class="navbar-menu" :class="{'is-active':navIsActive}"></div>
-      <div class="navbar-end">
-        <router-link name="Home" class="navbar-item" to="/">Home</router-link>
-        <router-link
-          name="ControlRoom"
-          class="navbar-item"
-          to="/controlroom"
-          v-show="isAuthenticated"
-        >ControlRoom</router-link>
-        <router-link name="About" class="navbar-item" to="/about">About</router-link>
-        <router-link
-          name="Profile"
-          class="navbar-item"
-          to="/profile"
-          v-show="isAuthenticated"
-        >Profile</router-link>
-        <router-link
-          name="Logout"
-          class="navbar-item is-light"
-          to="/logout"
-          v-show="isAuthenticated"
-        >Logout</router-link>
-      </div>
-    </nav>
-  </div>
+    <b-collapse id="nav-collapse" is-nav>
+      <!-- Right aligned nav items -->
+      <b-navbar-nav class="ml-auto">
+        <b-nav-item name="Home" to="/">Home</b-nav-item>
+        <b-nav-item name="ControlRoom" to="/controlroom" v-if="isAuthenticated">ControlRoom</b-nav-item>
+        <b-nav-item name="About" to="/about">About</b-nav-item>
+        <b-nav-item-dropdown id="nav-user-dropdown" name="User" right v-if="isAuthenticated">
+          <template slot="button-content">
+            <font-awesome-icon icon="user"></font-awesome-icon>
+          </template>
+
+          <b-dropdown-item name="Profile" to="/profile">Profile</b-dropdown-item>
+          <b-dropdown-item name="Logout" to="/logout">Logout</b-dropdown-item>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+    </b-collapse>
+  </b-navbar>
 </template>
 
 <script>
 export default {
   name: "Navbar",
-
-  data() {
-    return {
-      navIsActive: false
-    };
-  },
-  methods: {
-    showHamburger: function() {
-      this.navIsActive = !this.navIsActive;
-    }
-  },
   props: {
     showBrand: {
       type: Boolean,
       default: true
     },
     currentUser: Object,
-    isAuthenticated: Boolean
+    isAuthenticated: {
+      type: Boolean,
+      default: false
+    }
   }
 };
 </script>
 
 <style>
+.no-active-indication.router-link-exact-active {
+  border-bottom: 0px;
+}
+
 .router-link-exact-active {
   border-bottom: 2px solid;
   border-radius: 2px;

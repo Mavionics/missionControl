@@ -1,11 +1,11 @@
 {
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        {
-            "language": "vue",
-            "autoFix": true
-          },
-    ],
-    "editor.tabSize": 2
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    {
+      "language": "vue",
+      "autoFix": true
+    }
+  ],
+  "editor.tabSize": 2
 }

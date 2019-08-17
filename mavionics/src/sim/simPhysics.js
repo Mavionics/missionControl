@@ -11,6 +11,11 @@ class PhySim {
     this._state.speed = 20; // speed in m/s
   }
 
+  // Step to a new time in milliseconds
+  stepTo(newTime) {
+    this.step((newTime - this._state.timestamp) / 1000.0)
+  }
+
   // Step in seconds
   step(s) {
     this._state.timestamp += s * 1000;

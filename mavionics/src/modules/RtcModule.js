@@ -1,41 +1,19 @@
 /* eslint-disable no-console */
 import Peer from "simple-peer";
+import SignalingModule from "@/modules/Signaling"
 
 class RtcModule {
-  constructor(dbRef, initiator, stream) {
+  constructor(avId, initiator, stream) {
     this.initiator = initiator;
-    this.dbRef = dbRef;
+    this.avId = avId;
     this.stream = stream;
-    this.onMessage = () => {};
+    this.onMessage = () => { };
     this.onStream = () => { };
-
-    if (initiator) {
-      this.inMessages = this.dbRef.collection("sig_responder");
-      this.outMessages = this.dbRef.collection("sig_offerer");
-    } else {
-      this.inMessages = this.dbRef.collection("sig_offerer");
-      this.outMessages = this.dbRef.collection("sig_responder");
-    }
-  }
-
-  async clearCollection(collectionRef) {
-    return collectionRef.get().then(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        doc.ref.delete();
-      });
-    });
+    this.signal = new SignalingModule(avId, initiator)
   }
 
   async connect() {
-    if (this.initiator) {
-      await Promise.all([
-        this.clearCollection(this.inMessages),
-        this.clearCollection(this.outMessages)
-      ]);
-
-      await this.dbRef.update({ status: "offer" });
-    }
-
+    
     this.p = new Peer({
       initiator: this.initiator,
       objectMode: true,
@@ -51,26 +29,22 @@ class RtcModule {
         ]
       }
     });
-
+    
     this.p._debug = (msg, par1, par2) =>
-      console.log("SIMPLE_PEER", msg, par1, par2);
+    console.log("SIMPLE_PEER", msg, par1, par2);
+    
+    // Message from other side
+    this.signal.onMessage = (data) => {
+      console.debug("In Message: ", data);
+      this.p.signal(data);
+    }
 
-    if (this.signalListnerUnsubscribe) this.signalListnerUnsubscribe();
-
-    this.signalListnerUnsubscribe = this.inMessages.onSnapshot(
-      querySnapshot => {
-        querySnapshot.docChanges().forEach(change => {
-          if (change.type === "added") {
-            console.debug("RtcModule.js new inMessage: ", change.doc.data());
-            this.p.signal(change.doc.data());
-          }
-        });
-      }
-    );
-
+    await this.signal.connect();
+    
+    // Message from this side
     this.p.on("signal", data => {
-      console.debug("Achtung! Outgoing ", data);
-      this.outMessages.add(data);
+      console.debug("Out Message: ", data);
+      this.signal.sendMessage(data);
     });
     this.p.on('stream', stream => {
       console.debug("RtcModule.js stream: ", stream);
@@ -83,15 +57,14 @@ class RtcModule {
     });
 
     return new Promise((resolve, reject) => {
-      this.p.on("error", function(err) {
+      this.p.on("error", function (err) {
         console.log("error", err);
         reject(err);
       });
 
-      this.p.on("connect", () => {
-        if (this.initiator) {
-          this.dbRef.update({ status: "connected" });
-        }
+      this.p.on("connect", async () => {
+        await this.signal.setStatus("connected");
+        console.log("connected");
         resolve();
       });
     });
@@ -102,7 +75,12 @@ class RtcModule {
       this.p.send(JSON.stringify(data));
   }
 
-  disconnect() {
+  sendHeartBeat(data) {
+    this.signal.sendHeartBeat(data);
+  }
+
+  async disconnect() {
+    await this.signal.setStatus("disconnected")
     this.p.destroy();
   }
 

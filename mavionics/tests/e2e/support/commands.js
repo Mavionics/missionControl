@@ -24,8 +24,14 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
+Cypress.Commands.add("login",
+  (email = "test@test.com", password = "testtest") => {
+    return cy.visit("/autologin/email/" + email + "/password/" + password);
+  }
+);
+
 Cypress.Commands.add(
-  "login",
+  "login_visit",
   (email = "test@test.com", password = "testtest") => {
     // cy.visit("/autologin/email/" + email + "/password/" + password);
     return cy.visit("/")
@@ -35,15 +41,23 @@ Cypress.Commands.add(
 
       .get("input.firebaseui-id-password").type(password).type("{enter}")
 
-      .url().should("include", "controlroom");
+      .url().should("include", "controlroom").wait(2000);
   }
 );
 
-Cypress.Commands.add("logout", () => {
+Cypress.Commands.add("logout_visit", () => {
   return cy.visit("/")
     .get('nav.navbar').then(($body) => {
-      if ($body.find('a[name="Logout"]').length > 0) {
-        cy.get('a[name="Logout"]').click();
+      if ($body.find('li[name="User"]').length > 0) {
+        cy.get('li[name="User"]').click().then(($body) => {
+          if ($body.find('.dropdown-item[name="Logout"]').length > 0) {
+            cy.get('.dropdown-item[name="Logout"]').click()
+          }
+        });
       }
     });
+});
+
+Cypress.Commands.add("logout", () => {
+  return cy.visit("/logout");
 });
