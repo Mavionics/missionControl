@@ -1,70 +1,83 @@
 <template>
-  <nb-list-item>
-    <touchable-opacity class="container" :active-opacity="0.5">
-      <view class="detail">
-        <text class="title">{{data.name}}</text>
-      </view>
-    <button
+  <nb-list-item thumbnail >
+    <nb-left>
+      <!-- <nb-thumbnail square :source="uri: data.icon" /> -->
+    </nb-left>
+    <nb-body>
+      <nb-text>{{data.name}}</nb-text>
+      <nb-text note :numberOfLines="1">{{data.description}}</nb-text>
+    </nb-body>
+
+    <nb-right>
+      <nb-text v-if="data.isSim" class="sim-text">Simulator</nb-text>
+      <nb-text v-else-if="isLive(data)" class="flying-text">Flying</nb-text>
+      <nb-button
+        v-else
         :on-press="connectToVehicle"
-        title="Fly!"
         color="#841584"
         accessibility-label="Vehicle ready for flight"
-    />
-    </touchable-opacity>
+      >
+        <nb-text>Fly</nb-text>
+      </nb-button>
+    </nb-right>
   </nb-list-item>
 </template>
 <script>
-
-import store from '../store';
+import store from "../store";
 
 export default {
   props: {
     data: Object
   },
-    computed: {
+  data: () => {
+    return {
+      currentTime: Number
+    };
   },
-    methods: {
-    connectToVehicle(avId) {
-      if(store.state.permissionStatus){
-        store.dispatch('SET_ACTIVE_VEHICLE', this.data);
-        this.data.navigate('Flight');
-      }else{
-        store.dispatch('REQUEST_ALL_PERMISSIONS');
-      }
+  mounted() {
+    this.updateTime();
+    this.$options.interval = setInterval(this.updateTime, 1000);
+  },
+  beforeDestroy() {
+    clearInterval(this.$options.interval);
+  },
+  computed: {
+    hasIcon: () => this.data && this.data.icon != "",
+    isLive: () => {
+      return (
+        ((Date.now() / 1000 - this.data.timestamp.seconds) < 10.0)
+      );
     }
-  }
+  },
+  methods: {
+    connectToVehicle(avId) {
+      if (store.state.permissionStatus) {
+        store.dispatch("SET_ACTIVE_VEHICLE", this.data);
+        this.data.navigate("Flight");
+      } else {
+        store.dispatch("REQUEST_ALL_PERMISSIONS");
+      }
+    },
+    updateTime() {
+      this.currentTime = Date.now() / 1000;
+    },
+    isLive(vehicle) {
+      return (
+        vehicle.timestamp !== undefined &&
+        this.currentTime - vehicle.timestamp.seconds < 10
+      );
+    }
+  },
 };
 </script>
 
 <style>
-  .container {
-    flex: 1;
-    flex-direction: row;
-    padding: 16;
-  }
-  .score {
-    width: 40;
-    height: 40;
-    background-color: #fff;
-    border-radius: 20;
-    justify-content: center;
-    align-items: center;
-    margin-right: 16;
-  }
-  .score-text {
-    color: #ff6600;
-    font-weight: bold;
-  }
-  .detail {
-    flex: 1
-  }
-  .name {
-    color: #666;
-    font-size: 12;
-    margin-bottom: 6;
-  }
-  .title {
-    color: #333;
-    font-size: 14;
-  }
+.flying-text {
+  color: #0066ff;
+  font-weight: bold;
+}
+.sim-text {
+  color: #ff6600;
+  font-weight: bold;
+}
 </style>

@@ -25,3 +25,14 @@ The app can be built using docker. To remove some docker complexity I wrapped th
 ```
 ./scripts/buildApp.sh -b build
 ```
+
+## Local development
+
+To efficiently test the Android app:
+
+```
+cd app
+npm run start
+```
+
+Start Android Studio and build and deploy app in Debug to device or emulator. After making vue code changes reload app with R,R (press R-key twice rapidly) 
