@@ -23,7 +23,7 @@
     "bootstrap-vue": "^2.0.0-rc.22",
     "firebase": "^5.9.1",
     "firebaseui": "^3.5.2",
-    "gsap": "^2.1.2",
+    "gsap": "^3.6.0",
     "loglevel": "^1.6.1",
     "simple-peer": "^9.2.1",
     "storybook-vue-router": "^1.0.3",
